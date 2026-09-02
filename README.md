@@ -19,6 +19,15 @@ and every inter-board signal is clickable and leads to the board it belongs
 to. The engine is assembly-agnostic — each board is a data file plus its
 images — and it is the engine of the Fluke 5700A Interactive Troubleshooter.
 
+![The A3 Pre-Regulator board with CR15 selected: the drawing with every
+designator boxed and colour-coded by component type, and a card giving the
+parts-list entry, the manual paragraphs that mention the part, and a box to
+record what the meter read](docs/screenshots/board.png)
+
+*A3 with CR15 picked out. Type a designator, a signal name, a value or a Fluke
+stock number and the board goes to it; the card carries what the parts list
+says, where the manual mentions it, and somewhere to put your reading.*
+
 ---
 
 ## Safety and disclaimer
@@ -166,6 +175,32 @@ The *Service report* is a standalone printable HTML page.
 | `V` | focus the measurement box |
 | `Z` | fit to view |
 | `Esc` | clear selection |
+
+### What the other modes look like
+
+![Test point mode on A3: the test points coloured by rail on the board, and a
+panel listing them by supply with the expected reading, what to reference each
+against, and the rail's rectifier, filters and regulators](docs/screenshots/testpoints.png)
+
+*Test points, grouped by rail. Each carries its expected reading and the point
+to measure it against — `≤ 60 V`, `+32 V ± 1.6`, or `return` — and says which
+table or paragraph the number came from.*
+
+![The System view: Figure 8-1, the interconnect diagram, with every block and
+inter-board signal boxed, beside a parts list of the assemblies A1 through A7
+and the front and rear panels](docs/screenshots/sys.png)
+
+*The System view is Figure 8-1. Click the A3 block, or any A3 test point drawn
+on it, and* Open A3 › *takes you to the board with that point selected.*
+
+![The Rework tab on A5: the carbon composition family selected, twenty
+positions on the board ranked by value from 27 MΩ down, each with a tick box,
+and a Replacement BOM button](docs/screenshots/rework.png)
+
+*The Rework tab, here on A5's carbon composition resistors — ranked by what has
+already measured out of tolerance, then by value, because the megohm positions
+drift furthest. Tick what you plan to change and* Replacement BOM *exports one
+order for the whole instrument.*
 
 ---
 
