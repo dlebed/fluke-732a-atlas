@@ -1,0 +1,103 @@
+{
+  "_comment": [
+    "Curated A4 test-point data, hand-written from Table 4-3 (PDF p42, manual p4-18)",
+    "and the schematic 732A-1002 (Figure 8-4 cont, PDF p91). The 732A manual has no",
+    "text layer; the values were read from the page and checked against",
+    "docs/manual/04-service-troubleshooting.md and 08-schematic-and-interconnect-notes.md.",
+    "",
+    "Nets, read off the sheet (docs/review-notes.md, 'Test point nets'):",
+    "  TP1  +RAW bus = the +18.6 V rail. R1/R2/R21 right ends, P2-12/13/14, CR1 and",
+    "       CR2 cathodes, C1 (+), C2 (+), C3 (+), Q5 and Q12 emitter side, P2-10/11.",
+    "  TP2  COMMON (ground symbol): P2 pins 2, 3, 4, 5; Q4 collector through R13;",
+    "       Q3 and Q14 collectors; C4/C9/C10 low ends; the R13 far end. The regulated output return.",
+    "       (Q13's collector is NOT on COMMON: it returns to the -2 V line, the Q4 collector / R13 node.)",
+    "  TP3  -RAW / -BATTERY: P2 pins 21-24, C1 (-), Q4 emitter through R12, R11,",
+    "       DS1 cathode, CR10 anode side.",
+    "The regulator is in the NEGATIVE leg: Q4 sits between -RAW and COMMON and drops",
+    "the difference between the 32 V input and the 18.6 V output, so TP1 is at once",
+    "the raw + bus (32 V above TP3) and the regulated + rail (18.6 V above TP2). Both",
+    "expectations therefore hang on TP1, as `states`, with the low-lead position in",
+    "each state's label and setup. TP2 and TP3 are returns.",
+    "",
+    "Table 4-3 prints no tolerance for either A4 row. Both tolerances here are",
+    "assumed and marked inferred: +-5 % (1.6 V) on 32 V, +-0.5 V on the '~18.5V dc'",
+    "row (the sheet and Figure 8-1 letter 18.6 V, inside that band). Edit in Author",
+    "Mode if the bench says otherwise. Every voltage is signed; TP1 is positive with",
+    "respect to both returns."
+  ],
+  "assembly": "A4",
+
+  "rails": {
+    "RAWIN": {
+      "label": "Raw input: +RAW (TP1) to -RAW (TP3), 32 V dc from the A3 pre-regulator, or the battery through CR15",
+      "com": "TP3",
+      "color": "#d97b5a"
+    },
+    "REG": {
+      "label": "+18.6 V regulated: +RAW / TP1 with respect to COMMON (TP2)",
+      "com": "TP2",
+      "color": "#5ec2a8"
+    }
+  },
+
+  "testpoints": [
+    {
+      "ref": "TP1",
+      "signal": "+RAW / +18.6V",
+      "rail": "REG",
+      "kind": "testpoint",
+      "refPoint": "TP2",
+      "unit": "V",
+      "condition": "Instrument energized (§4-52) with ac line power applied — the 32 V row needs the pre-regulator running; Table 4-3 puts its only stated condition (** battery installed, BATTERY OPR switch ON) on the A3 charger rows; neither A4 row carries a condition",
+      "source": "Table 4-3, A4 rows (PDF p42, manual p4-18)",
+      "note": "One pad, two readings. Table 4-3 lists it twice: against TP3 (the raw input, 32 V) and against TP2 (the regulated output, ~18.5 V). Pick the state that matches where the meter's low lead is. Measure with Multimeter A (Table 4-1: 4 1/2-digit DMM, Fluke 8050A/8060A). TP1 is positive with respect to both TP2 and TP3.",
+      "states": [
+        {
+          "label": "Regulator output — low lead on TP2 (COMMON)",
+          "refPoint": "TP2",
+          "setup": "Multimeter A: low lead on TP2 (COMMON), high lead on TP1. Table 4-3 row 'A4 | TP1, TP2 | ~18.5V dc | Regulator'.",
+          "nominal": 18.5,
+          "tolerance": 0.5,
+          "unit": "V",
+          "inferred": true,
+          "source": "Table 4-3 (PDF p42): '≈18.5V dc'. Schematic 732A-1002 (PDF p91) and Figure 8-1 (PDF p85) letter this rail '18.6V'; §3-13 says 'regulates the 32V to 18.6V dc'; §3-4 and Figure 3-1 say 18.5V dc.",
+          "note": "Table 4-3 prints ≈18.5 V with no tolerance; ±0.5 V is assumed (inferred). The nominal is Table 4-3's 18.5; the drawings' 18.6 V is inside the band. Wrong here with TP1–TP3 correct means the A4 regulator (Table 4-3 corrective action: Regulator): the Q1/Q2 error amplifier on the CR2 reference, the Q3/Q4 pass pair, the R22 adjustment on the sense divider. If the reading is right but the IN CAL indicator is out, the fault is in the voltage monitor (Q8, Q5) or the latch (Q7, Q6), not the regulator.",
+          "onFail": ["Q4", "Q3", "Q2", "Q1", "CR2", "CR12", "CR14", "R22", "R12", "DS1", "C9", "C2"]
+        },
+        {
+          "label": "Raw input — low lead on TP3 (-RAW)",
+          "refPoint": "TP3",
+          "setup": "Multimeter A: low lead on TP3 (-RAW / -BATTERY), high lead on TP1. Table 4-3 row 'A4 | TP1, TP3 | 32V dc | Pre-Regulator, Motherboard'.",
+          "nominal": 32,
+          "tolerance": 1.6,
+          "unit": "V",
+          "inferred": true,
+          "source": "Table 4-3 (PDF p42): '32V dc'. The same 32 V is Table 4-3's A3 row TP6 vs TP4 and §3-11 ('approximately 32V dc').",
+          "note": "Table 4-3 prints 32 V with no tolerance; ±5 % (1.6 V) is assumed (inferred). The 32 V is made on A3 (pre-regulator A3Q1) and reaches this board through the motherboard A2 J2 at P2-13/14 (+RAW) and P2-23/24 (-RAW); Table 4-3's corrective action is 'Pre-Regulator, Motherboard'. On A4 itself only reservoir C1 and the battery diode CR15 sit on this bus. On battery alone (ac off) the bus is the battery voltage less the CR15 drop — roughly 24 to 31 V (Table 4-3 rear-panel EXT. PWR ≥24 V dc; Errata #10 §4-45d: charge ends at about 31 V, trickle at 27 V) — not 32 V; the row assumes line power.",
+          "onFail": ["C1", "CR15"]
+        }
+      ],
+      "link": { "assembly": "A3", "ref": "TP6" }
+    },
+
+    {
+      "ref": "TP2",
+      "signal": "COMMON",
+      "rail": "REG",
+      "kind": "testpoint",
+      "isReturn": true,
+      "source": "Schematic 732A-1002 (PDF p91): ground symbol lettered COMMON, P2 pins 2, 3, 4, 5",
+      "note": "Return for the 18.5 V regulator-output reading (TP1 vs TP2). Circuit common: P2-2 (-TEMP REG), P2-3 (-BRIDGE), P2-4 (-REF), P2-5 (GUARD BOX FRONT PANEL), and P2-20 through the motherboard strap to pin 4 (Figure 8-2). In normal operation it sits about 13.5 V above TP3: the series-pass transistor Q4 (through R13, 2.7 Ω) holds it there."
+    },
+
+    {
+      "ref": "TP3",
+      "signal": "-RAW / -BATTERY",
+      "rail": "RAWIN",
+      "kind": "testpoint",
+      "isReturn": true,
+      "source": "Schematic 732A-1002 (PDF p91): -BATTERY / -RAW bus, P2 pins 21-24, below C1",
+      "note": "Return for the 32 V raw-input reading (TP1 vs TP3). The negative input rail: P2-21/22 (-BATTERY) and P2-23/24 (-RAW) strapped together, C1 (-), the Q4 emitter through R12 (0.39 Ω), R11, the DS1 cathode and the CR10 return. Same net as A3 TP1 (-BATTERY) and the -RAW at A3 P3-8. Not the circuit common: COMMON (TP2) is 13.5 V above it."
+    }
+  ]
+}

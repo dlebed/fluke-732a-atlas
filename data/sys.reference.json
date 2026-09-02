@@ -1,0 +1,1075 @@
+{
+ "_comment": [
+  "SYS reference: the system-level context Figures 8-1 / 8-2 and Section 3 give.",
+  "overview from §3-3..3-7 and Figure 3-1; railCircuits for the rails in",
+  "sys.testpoints.json; faultCodes = Table 4-2, one entry per printed row (S1-S17,",
+  "symptom / probable cause / action verbatim, footnotes (1) and (2) carried in",
+  "the action); tables: the inter-board signal map built from Figures 8-1, 8-2,",
+  "8-3, 8-4, 8-5 (docs/manual/08-schematic-and-interconnect-notes.md), the",
+  "Figure 4-5 line-voltage switch table and the fuse ratings; warnings from",
+  "§4-51, §2-22, §2-29 and Figure 8-2; caveats for every place the sources",
+  "disagree. foreignStepRefs lists the bare board designators the Table 4-3",
+  "procedure quotes (TP3, TP4 ...) so no chip is offered for them on SYS - the",
+  "prefixed system copies (A3TP3 ...) are the clickable ones."
+ ],
+ "overview": {
+  "summary": "The 732A dc Voltage Reference Standard is a highly stable 10V, 12 mA power supply (§3-4). AC line input power is full wave rectified (A3 T1, bridge CR1) and fed to a two stage voltage regulator: the Pre-regulator on A3 (Q1) converts the raw dc to 32V dc, and the Regulator on A4 (Q1-Q4) converts this to 18.5V dc, which powers the Oven Controller and the Reference. The Voltage Monitor (A4 Q5-Q8) disables the Oven Controller and latches the IN CAL indicator off when the Regulator output is insufficient; the RESET terminal restores IN CAL after standardization has been verified (§3-5). If ac line power fails, the internal sealed lead-acid battery (A6 BT1-BT4, 24 V) maintains operating power through the BATTERY OPR switch; when ac power is available the battery charger on A3 (Q2-Q6) charges it, shown by BTRY CHG (§3-6). The battery may also be charged, and the instrument run, from an external 24-40 V dc or 24-30 V ac source at the rear-panel POWER INPUT connectors, where the battery voltage can be measured (§3-7). The Reference (A5 U1, U2, Q1, Q2, Q5 with A4 Q12 as series pass element) reduces the 18.6 V to precisely 10 V; two precision dividers in the same oven give 1V and 1.018V (§3-18, 3-21). The oven (48 ± 2 °C) is held by the Oven Controller (A5 U3, U4, U5 with A4 Q13, Q14 driving heaters HR1-HR4) sensing thermistors RT1 (A5), RT3 and RT4 as Figure 8-5 letters them - §3-24 writes \"RT1, series connected RT2, and RT3\", while on the sheets RT2 is the OVEN TEMP THERMISTOR; see the caveat (§3-23, 3-24).",
+  "blocks": "Figure 3-1 blocks: OVEN (dashed) enclosing A5 REFERENCE Q1,Q2,Q5,U1,U2,A4 Q12 with OUTPUT DIVIDER and HEATER, and OVEN CONTROLLER Q3,Q4,U3,U4,U5; A4 REGULATOR Q1,Q2,Q3,Q4 and VOLTAGE MONITOR Q5,Q6,Q7,Q8; A3 PRE-REGULATOR Q1 and BATTERY CHARGER Q2,Q3,Q4,Q5,Q6; A6 BATTERY behind the BATTERY OPR switch; the line transformer, bridge rectifier and rear-panel POWER INPUT (24-40V DC or 24-30V AC) on one unregulated dc bus; front panel 10V, 1.018V, 1V, OVEN TEMP THERMISTOR, RESET and GUARD terminals and the AC PWR, BTRY CHG and IN CAL LEDs. Labels: 32V dc from the pre-regulator to the regulator (and via a diode to the BATTERY OPR switch), 18.5V dc from the regulator into the oven, enable/disable from the voltage monitor to the oven controller. Errata Change #7 adds the 58 °C thermal fuse F2 in the 18.5 V lead to the oven.",
+  "connectors": "A3 P3 (18 pins) mates A2 J3; A4 P2 (27 pins) mates A2 J2; A6 P4 (6 pins) mates A2 J4. A5 is wired to A2 J2 by harness W1 (11 wires, E1-E11) and to the front panel by W3 (E23-E28, E33-E36) and W4 (E21/E22). The A1 LED PCB is wired to A2 J3 and J2 by harness W2 (pads 12-18). Pin numbers are the same on both sides of every card-edge connector. See the signal map table.",
+  "source": "§3-3 to §3-7, §3-10 to §3-28, Figure 3-1 (p21-23 / 3-1 to 3-3); Figures 8-1, 8-2 (p85-87)"
+ },
+ "railCircuits": {
+  "OUTPUT": {
+   "rails": "10V HI, 1.018V HI, 1V HI against the two LO posts",
+   "regulators": [
+    "A5U2",
+    "A5U1",
+    "A5Q1",
+    "A5Q2",
+    "A4Q12"
+   ],
+   "filters": [
+    "FPC1",
+    "FPR1",
+    "FPCR1",
+    "FPDS1",
+    "FPRV1"
+   ],
+   "tps": [
+    "OUT10V",
+    "OUT1V",
+    "OUT1018",
+    "OUTLO",
+    "OUTLO2"
+   ],
+   "note": "The Ref-Amp U2 compares the 10V output to its internal zener, U1 amplifies the error and drives the series pass element A5 Q1 / A4 Q12 (§3-19); the 10V node (A5 E23/E24/E25, then E33) reaches the 10V HI post through the term strip carrying the protection network C1-R1, CR1, RV1 and neon DS1 between 10V HI and LO (Figure 8-5). The dividers (A5 R44-R59, adjusted by R58 / R59; §3-21) give 1.018V at E34 and 1V at E35 with their LO at E36; both have ≈1 kΩ source impedance (Table 1-2). Coarse 10 V adjustment is by jumpers on A7 (§3-19), fine by R20 (±50 µV).",
+   "source": "§3-18 to §3-21 (p22); Figure 8-1 A5 block and FRONT PANEL strip (p85); Figure 8-5 (p93)"
+  },
+  "POWER": {
+   "rails": "Battery + / - at the rear-panel POWER INPUT, 24 V nominal",
+   "rectifier": [
+    "A6CR1"
+   ],
+   "filters": [
+    "A6R1",
+    "A6DS1"
+   ],
+   "regulators": [
+    "A3Q2",
+    "A3Q6"
+   ],
+   "tps": [
+    "EXTPWR",
+    "EXTPWRLO"
+   ],
+   "note": "The + jack (E1, RED) reaches the battery + end (E3) through the ballast lamp DS1; the - jack (E2, BLK) reaches the - bus through CR1 in parallel with R1 51K. An external 24-40 V dc / 24-30 V ac source applied here charges the battery and runs the instrument (§3-7); the lamp limits the current, and an open lamp is Table 4-2's cause for \"Will not run on external ac or dc source\" and \"Battery won't charge from external source\". The battery feeds the instrument through the BATTERY OPR switch (E3 - E4 - P4-1) to A3 P3-9/10 and A4 P2-15 (CR15 to the +RAW line), returning by P4-2 to P3-17/18 and P2-21/22. The charger (A3 Q2 constant current, Q6 constant-voltage trickle) charges it through A3 CR13/CR16 (§3-26 to 3-28).",
+   "source": "§3-6, 3-7, 3-25 to 3-28 (p21-22); Figure 8-2 battery PCB (p87); Table 4-2 (p41)"
+  },
+  "PREREG": {
+   "rails": "Raw rectified dc (≤60 V) and +RAW 32 V (A3 P3-2 / -RAW P3-8)",
+   "rectifier": [
+    "A3CR1"
+   ],
+   "regulators": [
+    "A3Q1"
+   ],
+   "tps": [
+    "A3TP3",
+    "A3TP6",
+    "A3TP4"
+   ],
+   "note": "T1 secondary - bridge CR1 - TP3 (+, top of C1 100 µF) is the raw dc; Q1, an emitter follower biased by R9 / CR25 / CR19, clamps it to approximately 32 V at TP6 after R1 0.5 Ω (§3-11); CR7 / CR12 protect the output. The 32 V leaves on P3-2 (+RAW) and P3-8 (-RAW) to A2 J3-2 / J3-8, across the motherboard to J2-13/14 and J2-23/24, into A4 P2-13/14 and P2-23/24. The filter capacitors C1, C2, C3 are A3 parts not drawn on Figure 8-1.",
+   "source": "§3-10, 3-11 (p21); Table 4-3 rows 1-2 (p42); Figure 8-1 A3 block (p85); Figure 8-3 (p89)"
+  },
+  "CHARGER": {
+   "rails": "Charger output to +BATTERY (A3 P3-9/10), trickle reference 33.0 V at TP5",
+   "regulators": [
+    "A3Q2",
+    "A3Q3",
+    "A3Q4",
+    "A3Q6"
+   ],
+   "tps": [
+    "A3TP2",
+    "A3TP5",
+    "A3TP1"
+   ],
+   "note": "Q2 is the current source for all charging current; Q3 and Q4 form a schmitt trigger that ends constant-current charge at about 32 V battery voltage (threshold R10); Q6 then holds a constant-voltage trickle charge of about 27 V at 23 °C, set by R20 (Figure 8-1's \"R50\") and compensated by A3 RT1; A6 RT1 / RT2 and Q5 inhibit high-current charge below 5 °C and at high temperature (§3-26 to 3-28). Output through CR13 / CR16 to P3-9/10 and the battery. Adjustment §4-44 (A3 procedure); Errata #12 step 27 sets 25.8-27 V at J10.",
+   "source": "§3-25 to 3-28 (p22); Table 4-3 rows 3-4 (p42); §4-44 (p38)"
+  },
+  "REG": {
+   "rails": "+RAW / 18.6 V line, COMMON, -RAW on A4",
+   "regulators": [
+    "A4Q1",
+    "A4Q2",
+    "A4Q3",
+    "A4Q4"
+   ],
+   "filters": [
+    "A4CR15"
+   ],
+   "tps": [
+    "A4TP1",
+    "A4TP2",
+    "A4TP3"
+   ],
+   "note": "Conventional series pass / error-amplifier regulator regulating the 32 V to 18.6 V dc (§3-13). On Figure 8-1 the +RAW line (P2-13/14, TP1) is lettered 18.6V and the pass transistor Q4 sits between the -RAW rail (TP3, P2-23/24) and COMMON (TP2), so TP1 reads 32 V above TP3 and 18.6 V above TP2. CR2 is the reference zener at the Q1/Q2 error amplifier; CR15 brings +BATTERY (P2-15) onto the +RAW line during battery operation (§3-12). COMMON leaves on P2-2/3/4 (and P2-20) to A5 E1/E2/E3 and the front-panel LO; the 18.6 V leaves on P2-10 (GRA, E8) and P2-11 (+HEATER, E1). The voltage monitor Q8 / Q5 and the latch Q6 / Q7 watch this rail and hold IN CAL (§3-15, 3-16).",
+   "source": "§3-12 to 3-16 (p21); Table 4-3 rows 5-6 (p42); Figure 8-1 A4 block (p85); Figure 8-4 (p91)"
+  },
+  "HEATER": {
+   "rails": "Oven heater drive, A2 E1 (+HEATER) to E2 (HEATER return)",
+   "regulators": [
+    "A4Q13",
+    "A4Q14",
+    "A5U5"
+   ],
+   "filters": [
+    "HR1",
+    "HR2",
+    "HR3",
+    "HR4",
+    "F2"
+   ],
+   "tps": [
+    "A2TP1",
+    "A2TP2"
+   ],
+   "note": "The 18.6 V supply reaches E1 on A4 P2-11 / J2-11 (P2-10 and 11 strapped) and the four parallel heaters HR1 / HR2 (110 Ω) and HR3 / HR4 (440 Ω); the return E2 goes to J2-1 / P2-1 (HEATER) into the emitter of the PNP output transistor Q14, whose collector returns to COMMON; Q13 drives Q14's base (R24, R25, R26), itself driven by U5 on A5 through E10 (BLK) / P2-26 (HEAT DRIVE) (Figure 8-4). Thermistors RT3, RT4 (oven), RT1 (A5), R28, R29 form the bridge U3 buffers (§3-23, 3-24; §3-24 names the bridge thermistors RT1, RT2, RT3 - the sheet's RT1, RT3, RT4). From Rev C the 58 °C thermal fuse F2 interrupts the +18.6 V heater connection and the latch supply (Errata Change #7).",
+   "source": "§3-22 to 3-24 (p22); Figure 8-2 (cont) OVEN (p87); Figure 8-1 OVEN HEATER / OVEN HEATER DRIVER (p85)"
+  }
+ },
+ "faultCodes": [
+  {
+   "code": "S1",
+   "title": "732A inoperative.",
+   "measure": "Fuse blown.",
+   "verdict": "Check fuse.",
+   "refs": [
+    "A3F1",
+    "A3XF1",
+    "RP"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "Rear-panel fuse F1 in fuseholder XF1: 3/8A slow-blow for 100/120 V, 3/16A slow-blow for 220/240 V (rear panel legend, §4-27)."
+  },
+  {
+   "code": "S2",
+   "title": "732A inoperative.",
+   "measure": "Battery dead.",
+   "verdict": "Measure battery voltage at rear panel jacks. Recharge battery.",
+   "refs": [
+    "EXTPWR",
+    "EXTPWRLO",
+    "A6",
+    "A6BT1",
+    "A6BT2",
+    "A6BT3",
+    "A6BT4"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "Table 4-3: ≥24V dc at EXT. PWR. §2-22 CAUTION: permanent battery damage below 19 volts. A fully discharged battery needs 24 hours on ac line power (§2-24)."
+  },
+  {
+   "code": "S3",
+   "title": "732A inoperative.",
+   "measure": "Battery opr switch set to OFF.",
+   "verdict": "Visual check.",
+   "refs": [
+    "A6S1",
+    "RP"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)"
+  },
+  {
+   "code": "S4",
+   "title": "732A inoperative.",
+   "measure": "732A not plugged in.",
+   "verdict": "Restore power.",
+   "refs": [
+    "A3",
+    "A1DS1"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "AC PWR (A1 DS1) lights in the presence of ac line power (Table 2-1 item 4)."
+  },
+  {
+   "code": "S5",
+   "title": "IN CAL indicator off.",
+   "measure": "Lost ac power, battery dead.",
+   "verdict": "Charge battery, verify instrument calibration.",
+   "refs": [
+    "A1DS3",
+    "FPRESET",
+    "EXTPWR",
+    "A4TP1",
+    "A4Q6",
+    "A4Q7",
+    "A4Q8",
+    "F2"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "IN CAL is latched off when the regulator output falls below the critical value and stays off until RESET is touched to COMMON after standardization has been re-verified (§3-15, 3-16; §4-37 step 19). From Rev C an open thermal fuse F2 also puts IN CAL out and keeps it out until the fault is corrected (Errata Change #7)."
+  },
+  {
+   "code": "S6",
+   "title": "Repeated fuse blowing.",
+   "measure": "AC line primary circuit.",
+   "verdict": "Visual inspection.",
+   "refs": [
+    "A3F1",
+    "A3S1",
+    "A3S2",
+    "A3T1",
+    "A3"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "Line connector J1, filter FL1, switches S1/S2 and the T1 primaries on the AC Module (Figure 8-3). Check the SUPPLY SETTING marked on the rear panel against the local line voltage (§2-17, §4-29)."
+  },
+  {
+   "code": "S7",
+   "title": "Repeated fuse blowing.",
+   "measure": "Power transformer.",
+   "verdict": "(2) Return instrument to Fluke Technical Service Center for service.",
+   "refs": [
+    "A3T1"
+   ],
+   "source": "Table 4-2 footnote (2) (p41 / 4-17)"
+  },
+  {
+   "code": "S8",
+   "title": "Repeated fuse blowing.",
+   "measure": "Bridge rectifier.",
+   "verdict": "Use ohmmeter.",
+   "refs": [
+    "A3CR1",
+    "A3TP3",
+    "A3TP4"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "A3 CR1 (RECTIFIER BRIDGE, 296509); TP3 is its + output. Power off before an ohmmeter check."
+  },
+  {
+   "code": "S9",
+   "title": "Repeated fuse blowing.",
+   "measure": "Battery charger rectifier.",
+   "verdict": "Use ohmmeter.",
+   "refs": [
+    "A3",
+    "A3CR13",
+    "A3CR16",
+    "A3Q2"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "The charger's rectifiers are A3 parts on Figure 8-3 (CR2/CR3 between the secondary and the bridge, and the charger diodes); Figure 8-1 draws only CR13 / CR16 on the +BATTERY line. Open A3 for the sheet."
+  },
+  {
+   "code": "S10",
+   "title": "Will not run on external ac or dc source.",
+   "measure": "Ballast lamp open.",
+   "verdict": "Replace lamp.",
+   "refs": [
+    "A6DS1",
+    "A6MP8",
+    "A6CR1",
+    "A6R1"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "A6 DS1 LAMP, MINIATURE (643346) in series with the RED (+) POWER INPUT terminal (Figure 8-2); holder XDS1 (103028)."
+  },
+  {
+   "code": "S11",
+   "title": "Output voltage drifts.",
+   "measure": "Oven or reference.",
+   "verdict": "(1) The Reference portion of the Oven/Reference Supply assembly is not field repairable. Refer repair to a Fluke Technical Service Center.",
+   "refs": [
+    "A5",
+    "OUT10V",
+    "A5RT3",
+    "A5RT4",
+    "HR1"
+   ],
+   "source": "Table 4-2 footnote (1) (p41 / 4-17); §4-53, 4-54 (p40)",
+   "note": "§4-54: shifts that cannot be compensated by jumpers on A7 require the entire Oven Assembly to be exchanged. Watch the OVEN TEMP THERMISTOR value first: ±20 Ω day to day indicates probable oven problems (Errata #3). Probe point OVENTHM (the OVEN TEMP THERMISTOR posts) is the resistance to watch."
+  },
+  {
+   "code": "S12",
+   "title": "Temperature sensitive.",
+   "measure": "Oven.",
+   "verdict": "Check oven controller circuit.",
+   "refs": [
+    "A5U5",
+    "A5RT3",
+    "A5RT4",
+    "HR1",
+    "HR2",
+    "HR3",
+    "HR4",
+    "A4Q13",
+    "A4Q14",
+    "A2TP1",
+    "A2TP2",
+    "F2"
+   ],
+   "source": "Table 4-2 (p41 / 4-17); §3-22 to 3-24 (p22)",
+   "note": "Oven Controller: A4 Q13, Q14 (driver and output on A4), A5 Q3, Q4, U3, U4, U5 and the thermistor bridge (§3-23). The heater drive is visible at A2 TP1 / TP2 without opening the oven; §4-19 oven disassembly is allowed only for the controller, never the reference (§4-20). Probe point OVENTHM (the OVEN TEMP THERMISTOR posts) is the resistance to watch."
+  },
+  {
+   "code": "S13",
+   "title": "Output voltage not correct.",
+   "measure": "Reference.",
+   "verdict": "Perform calibration procedure.",
+   "refs": [
+    "OUT10V",
+    "OUT1V",
+    "OUT1018",
+    "A5R20",
+    "A5R58",
+    "A5R59",
+    "A7"
+   ],
+   "source": "Table 4-2 (p41 / 4-17); §4-32 (p32)",
+   "note": "§4-37 Procedure A (certified 732A) or §4-39 Procedure B (standard cells); 10V first, since it affects the other two (Table 2-1 footnote). Adjustment ranges: 10V ±50 µV, 1.018V ±50 µV, 1V ±5 µV (Table 1-2)."
+  },
+  {
+   "code": "S14",
+   "title": "Output voltages not adjustable to specifications.",
+   "measure": "Reference.",
+   "verdict": "(1) The Reference portion of the Oven/Reference Supply assembly is not field repairable. Refer repair to a Fluke Technical Service Center.",
+   "refs": [
+    "A5",
+    "A7",
+    "A5R20",
+    "A5R58",
+    "A5R59"
+   ],
+   "source": "Table 4-2 footnote (1) (p41 / 4-17); §4-54 (p40); Errata #13 §4-55",
+   "note": "Larger 10 V shifts are taken up by jumper changes on A7 (§3-19). From the errata, the 1.0V and 1.018V divider strings ARE field repairable (§4-55/4-56: R44/R46, R45/R47 and trim resistors from Table 4-4) - see the A5 dataset."
+  },
+  {
+   "code": "S15",
+   "title": "Battery won't charge.",
+   "measure": "Defective battery.",
+   "verdict": "Replace.",
+   "refs": [
+    "A6BT1",
+    "A6BT2",
+    "A6BT3",
+    "A6BT4",
+    "EXTPWR"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "Errata §4-45h: individual batteries will accept a charge of 300 to 400 mA at 7.75V max (31V divided by 4) if their terminal voltage is below 6V. Replacement BT1-BT4: 501379, later 739961 (Rev C)."
+  },
+  {
+   "code": "S16",
+   "title": "Battery won't charge.",
+   "measure": "Battery charger defective.",
+   "verdict": "Troubleshoot and repair.",
+   "refs": [
+    "A3",
+    "A3TP2",
+    "A3TP5",
+    "A3TP1",
+    "A3Q2",
+    "A3Q3",
+    "A3Q4",
+    "A3Q6",
+    "A3R10",
+    "A3R20",
+    "A1DS2"
+   ],
+   "source": "Table 4-2 (p41 / 4-17); Table 4-3 rows 3-4 (p42); §4-44 (p38)",
+   "note": "Table 4-3: TP2 ≤31V and TP5 33.0V against TP1 with the battery installed and BATTERY OPR ON. Then the §4-44 Battery Charger Adjustment on A3 (CAUTION: it causes loss of standardization). Errata §4-45d: constant-current mode about 200-400 mA until about 31 V, then constant-voltage 27 V trickle."
+  },
+  {
+   "code": "S17",
+   "title": "Battery won't charge from external source.",
+   "measure": "Ballast lamp open.",
+   "verdict": "Replace lamp.",
+   "refs": [
+    "A6DS1",
+    "A6MP8",
+    "A6MP9"
+   ],
+   "source": "Table 4-2 (p41 / 4-17)",
+   "note": "Same lamp as S10: A6 DS1 between the RED (+) POWER INPUT terminal and the battery + end (Figure 8-2)."
+  }
+ ],
+ "warnings": [
+  "§4-51 WARNING: TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+  "§4-51 CAUTION: The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+  "§4-51 CAUTION: To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness.",
+  "§2-22 CAUTION: PERMANENT BATTERY DAMAGE WILL RESULT IF THE BATTERY IS ALLOWED TO DISCHARGE BELOW 19 VOLTS. THE DEGREE OF DAMAGE IS A FUNCTION OF THE DEPTH OF OVER-DISCHARGE AND THE BATTERY TEMPERATURE. Errata #2 adds: Unit must be in upright position during charging to avoid possible venting of electrolyte. The battery unit should be kept in upright position at all times except during transit.",
+  "Figure 8-2 CAUTION (rear panel): TO PREVENT INSTRUMENT DAMAGE DO NOT CONNECT POWER INPUT TERMINALS TO FRONT PANEL TERMINALS OF SAME UNIT. USE FLOATING SOURCE ONLY.",
+  "§2-29 WARNING: LETHAL VOLTAGES MAY BE PRESENT WHEN OPERATING THE 732A WITH THE GUARD AND CHASSIS GROUND CONNECTIONS SEPARATED. A MAXIMUM POTENTIAL DIFFERENCE OF 60V RMS MAY APPEAR BETWEEN ANY COMBINATION OF THE GUARD TERMINAL, CHASSIS GROUND, REFERENCE STANDARD OUTPUT, OR OVEN TEMPERATURE THERMISTOR OUTPUT. IF THIS LIMITATION IS EXCEEDED, DAMAGE TO THE INSTRUMENT MAY RESULT.",
+  "§4-13 NOTE: Either module, but NOT both, may be removed without loss of standardization. If the AC Module is removed, ensure that the rear panel, BATTERY OPR switch is set to ON and that the battery is charged before removing the AC Module. This will insure continued standardization. §4-15 NOTE: Since the Regulator PCB Assembly removal requires the removal of BOTH rear modules, standardization will not be maintained after this procedure."
+ ],
+ "caveats": [
+  {
+   "title": "Figures 8-1 and 8-2 are simplified",
+   "text": "The interconnect diagram (Figure 8-1) and the motherboard / battery / LED sheet (Figure 8-2) are high-level: they omit most parts (A3's filter capacitors, the charger's rectifiers, A4's latch detail, all of A5's dividers), letter some parts without a designator (A3's thermistor, the bridge, the A5 ADJ pots, A4's CR15) and print no component values except the heaters and battery-pack parts. Use them to see how a signal crosses from one board to another, then open the board (the items here link to it) for the real sheet. Every A3 / A4 / A5 designator drawn on Figure 8-1 is an item here named with its assembly prefix (A3Q1, A4TP1, A5U2).",
+   "refs": [
+    "A3",
+    "A4",
+    "A5",
+    "A6",
+    "A1",
+    "A2"
+   ],
+   "source": "Figures 8-1, 8-2 (p85-87)"
+  },
+  {
+   "title": "\"R50\" on the A3 block is R20",
+   "text": "Figure 8-1 letters the trickle-charge potentiometer on the A3 block R50. A3 has no R50: Table 5-4 ends at R20 and the Figure 8-3 REF DESIG box says last used R20. The pot in that position on the schematic is R20, 50 kΩ, the one §4-44 step 10 sets for 33.0 V at TP5 (and Errata #12 step 27 for 25.8-27 V at J10). The item A3R20 carries the alias R50.",
+   "refs": [
+    "A3R20",
+    "A3TP5"
+   ],
+   "source": "Figure 8-1 (p85) vs Table 5-4 (p55) and Figure 8-3 (p89); docs/review-notes.md"
+  },
+  {
+   "title": "Figure 8-1 draws A3 TP3 on the wrong side of the bridge",
+   "text": "On Figure 8-1 the A3 test point TP3 hangs on the transformer secondary lead that enters the top (ac) vertex of the bridge rectifier; the bridge's + output is its right vertex, feeding R9, CR25 and CR19 / Q1. Figure 8-3 (the A3 sheet) puts TP3 at the + output of CR1, at the top of C1 100 µF, and Table 4-3 expects ≤60V dc there. Measure at the point Figure 8-3 shows; on the ac lead a dc meter would read a rectified half-wave and an ac meter the secondary voltage. Figure 8-1's TP4, TP6, TP1, TP2 and TP5 agree with Figure 8-3.",
+   "refs": [
+    "A3TP3",
+    "A3TP4",
+    "A3CR1",
+    "A3T1"
+   ],
+   "source": "Figure 8-1 A3 block (p85) vs Figure 8-3 (p89); Table 4-3 (p42)"
+  },
+  {
+   "title": "A3 TP5 is Q6's base, and TP2 is the node W1 bridges to the charger output",
+   "text": "On both Figure 8-3 and Figure 8-1 TP5 sits on the lead perpendicular to Q6's base bar, i.e. the base node, where CR28 (current-regulator diode from the charger supply), R16 (from the emitter), R17 with RT1 in parallel (down through R18 and R20 to -BATTERY) and C6 join; Q6's emitter (the arrowed lead) goes through CR16 to +BATTERY P3-9/10 and its collector is fed through R4 / CR20 - an emitter follower whose base voltage R20 sets. Some working notes call TP5 the emitter node; the drawings do not. TP2 sits on the CR26 / CR14 / R11 node, which is also the P3-11 THERMISTOR line and W1's lower circle; W1's upper circle is the Q2 collector / R3 line that continues through CR13 to +BATTERY, so with W1 installed TP2 is the charger's output node and with W1 removed (§4-44) it is isolated from Q2.",
+   "refs": [
+    "A3TP5",
+    "A3TP2",
+    "A3Q6",
+    "A3W1",
+    "A3R16",
+    "A3R17",
+    "A3RT1",
+    "A3R20",
+    "A3CR16",
+    "A3CR20",
+    "A3CR13"
+   ],
+   "source": "Figure 8-3 (p89); Figure 8-1 (p85); §3-28 (p22); §4-44 (p38)"
+  },
+  {
+   "title": "Figure 8-1 shows one LO post; the panel has two",
+   "text": "Figure 8-1 buses A5 E36 (divider LO) with E26, E27 and E28 (10 V LO) to a single terminal lettered LO. Figure 8-5 keeps E36 separate from E26-E28, Table 2-1 lists two LO posts (item 11 for 10V, item 12 for 1V / 1.018V), Table 5-1 lists two BLK binding posts E4 / E5 and Figure 5-1 Detail I flags wires 36 and 26 / 27 on different black terminals. The two LO posts are therefore separate terminals (OUTLO and OUTLO2 here); whether they are tied together inside the panel is not printed - Figure 8-1 suggests they are at the same potential, which is what §4-37 step 19 assumes when it calls either one COMMON.",
+   "refs": [
+    "OUTLO",
+    "OUTLO2",
+    "FPE4",
+    "FPE5",
+    "A5E26",
+    "A5E36"
+   ],
+   "source": "Figure 8-1 FRONT PANEL strip (p85) vs Figure 8-5 (p93), Table 2-1 (p16), Table 5-1 (p45), Figure 5-1 (p48)"
+  },
+  {
+   "title": "Heater wire colours: Figure 8-1 and Figure 8-2 disagree",
+   "text": "Figure 8-1 letters the four heater wires at E1 \"BLK (4 WIRES)\" and those at E2 \"WHT (4 WIRES)\"; Figure 8-2 letters the E1 wires WHT and the E2 wires BLK - the opposite. The circuit is the same on both (E1 = J2-11 +HEATER, E2 = J2-1 HEATER return through the dashed jumper). Identify the wires by the terminal they land on, not by colour.",
+   "refs": [
+    "A2E1",
+    "A2E2",
+    "HR1",
+    "HR2",
+    "HR3",
+    "HR4",
+    "A2TP1",
+    "A2TP2"
+   ],
+   "source": "Figure 8-1 OVEN HEATER box (p85) vs Figure 8-2 (cont) (p87)"
+  },
+  {
+   "title": "A4 P2-12: NC on the 1983 sheets, +18.6V in the errata",
+   "text": "Figure 8-1 and Figure 8-4 mark A4 P2-12 NC, drawn on the 18.6V / +RAW line where TP1 sits, and Figure 8-2 marks A2 J2-12 NC. Errata #4 (redrawn Figure 8-4 latch circuit) letters pin 12 = +18.6V, with 16 = +BRIDGE, 18 = IN CAL LED, 20 = COMMON. On a board at Rev C or later expect the 18.6 V line to appear on pin 12.",
+   "refs": [
+    "A4P2",
+    "A2J2",
+    "A4TP1"
+   ],
+   "source": "Figure 8-1 (p85), Figure 8-2 (p87), Figure 8-4 (p91); Errata Issue 3 #4"
+  },
+  {
+   "title": "A4 P2-5: GUARD BOX FRONT PANEL or NC",
+   "text": "Figure 8-4's P2 legend letters pin 5 \"GUARD BOX FRONT PANEL\" strapped to COMMON with pins 2, 3, 4; Figure 8-1 draws the same strap on the P2 side of the connector but letters the J2 side NC, and Figure 8-2 marks J2-5 NC. Nothing on the motherboard sheet runs from J2-5, so the guard box is tied to A3 P3-1/6 (J3-1, \"COMMON (GUARD BOX)\") and the front-panel GUARD post by the BLU wire to the guard chassis lug (§4-21 step 3), not through A4.",
+   "refs": [
+    "A4P2",
+    "A3P3",
+    "A2J3",
+    "FPE6"
+   ],
+   "source": "Figure 8-4 (p91) vs Figures 8-1, 8-2 (p85, p87); §4-21 (p30)"
+  },
+  {
+   "title": "A5 E11 (BRN, W1 wire 11): -2 V or 18.6V",
+   "text": "Figure 8-4 letters A4 P2-27 \"-2 V\"; Figure 8-1 letters the A5 line the same wire lands on (E11, BRN, beside U5) \"18.6V\". Both are transcribed as printed. The wire is unambiguous (A4 P2-27 - A2 J2-27 - W1 wire 11 BRN - A5 E11); which label is right is not settled by the manual. The other 18.6 V feed to A5 is E8 (GRA, P2-10, +TEMP REG) and is lettered 18.6V on both sheets.",
+   "refs": [
+    "A5E11",
+    "A5E8",
+    "A5U5",
+    "A4P2"
+   ],
+   "source": "Figure 8-4 P2 legend (p91) vs Figure 8-1 A5 block (p85)"
+  },
+  {
+   "title": "Table 4-3 prints no tolerances",
+   "text": "Table 4-3 gives 32V, 33.0V and ≈18.5V with no tolerance, and the ≤60V / ≤31V / ≥24V limits as one-sided bounds. The two-sided entries here carry assumed tolerances marked \"inferred\", copied from the board datasets so the system copies and the boards agree: ±5 % (±1.6 V) on the two 32 V rows (A3 TP6, A4 TP1 vs TP3 - §3-11 says 'approximately 32V dc'), ±0.5 V on the 33.0 V set point (A3 TP5; §4-44 step 10 prints it to a tenth of a volt) and ±0.5 V on the ≈18.5 V row (A4 TP1 vs TP2; a band that contains the 18.6 V the sheets print). The output tolerances (±6 ppm on 10V, ±12 ppm on 1V and 1.018V) are Table 1-2's one-year transfer uncertainties, a drift specification, not a printed test limit; the 30-day figures are 0.5 and 1.5 ppm. Edit them in Author Mode if your laboratory uses others.",
+   "refs": [
+    "A3TP6",
+    "A3TP5",
+    "A4TP1",
+    "OUT10V",
+    "OUT1V",
+    "OUT1018"
+   ],
+   "source": "Table 4-3 (p42); Table 1-2 (p10)"
+  },
+  {
+   "title": "The A3 / A4 test points here are copies",
+   "text": "A3TP1-TP6 and A4TP1-TP3 repeat the Table 4-3 rows so the whole internal-measurement sweep can be walked from the system view; each links to the board's own point, which carries the schematic position and any §4-44 detail. Readings logged here are logged against SYS, not against the board. The Table 4-3 procedure quotes the manual's bare designators (TP3, TP4 ...) in its text; those are listed in foreignStepRefs so only the prefixed system items are offered as chips.",
+   "refs": [
+    "A3TP3",
+    "A3TP6",
+    "A3TP2",
+    "A3TP5",
+    "A4TP1"
+   ],
+   "source": "Table 4-3 (p42); data/schema.md"
+  },
+  {
+   "title": "A4 CR2 has no Table 5-5 line",
+   "text": "Figures 8-1 and 8-4 draw the reference zener at the Q1/Q2 error amplifier as CR2, and the A4 board drawing prints CR2; Table 5-5 lists CR4 (1N4571, 6.4 V) and no CR2, while the Figure 8-4 REF DES table says CR4 is not used. Errata Change #2 (Rev C) renames CR1, CR2, CR9 to VR1, VR2, VR9, all 1N5240 (473744), qty 3. The A4 dataset carries CR2 as an item with no parts-table line (aliases CR4, VR2); the item A4CR2 links to it and states this rather than guessing which Table 5-5 line it is.",
+   "refs": [
+    "A4CR2"
+   ],
+   "source": "Figure 8-1 (p85), Figure 8-4 (p91), Table 5-5 (p58); Errata Issue 3 Change #2; docs/review-notes.md"
+  },
+  {
+   "title": "The A5 ADJ pots are identified, not lettered",
+   "text": "Figure 8-1 letters the three potentiometers in the A5 block only by function: 10V ADJ, 1.018V ADJ, 1V ADJ. They are entered as A5R20, A5R58 and A5R59 from Figure 8-5 (R20 100 Ω pot on the reference ladder; R58 200 Ω in the 1.018 V chain at TP13/TP14; R59 200 Ω 10-turn at TP12) and from §3-19 (R20 adjusts the reference ±50 µV) and Errata §4-56 (adjust R59 or R58 for 1.0V or 1.018V respectively). Marked inferred.",
+   "refs": [
+    "A5R20",
+    "A5R58",
+    "A5R59"
+   ],
+   "source": "Figure 8-1 (p85); Figure 8-5 (p93); §3-19 (p22); Errata Issue 3 #13"
+  },
+  {
+   "title": "Oven heaters and thermistors have no parts-table designators",
+   "text": "HR1-HR4 (110 Ω, 110 Ω, 440 Ω, 440 Ω on Figure 8-2) appear in no parts table under those names; Table 5-1 sells the heating elements as MP15 (patch type 4 x 6, qty 2) and MP16 (strip, qty 2) without saying which is which. The oven thermistors are Table 5-1's RT1 (DISC TYPE W/NEG T/C, qty 2), renamed RT3 and RT4 by Errata Change #7 and entered here as A5RT3 / A5RT4 because the A5 sheet draws them under its OVEN bracket. None of these is an A5 part; the thermal fuse F2 (Change #7) is a final-assembly part too. §3-24 names the bridge thermistors \"RT1, series connected RT2, and RT3\"; Figures 8-1 and 8-5 letter them RT1, RT3, RT4 and use RT2 for the OVEN TEMP THERMISTOR on E21/E22 - the sheet's designators are used here.",
+   "refs": [
+    "HR1",
+    "HR2",
+    "HR3",
+    "HR4",
+    "A5RT3",
+    "A5RT4",
+    "F2"
+   ],
+   "source": "Figure 8-2 (cont) (p87); Table 5-1 (p46-47); Errata Issue 3 Change #7"
+  },
+  {
+   "title": "Fuse rating for 220/240 V: 3/16 A or 1/4 A",
+   "text": "The rear-panel legend (Figure 2-2), §4-27 and Figure 8-3 say 3/16A SB for 200-264V; §2-19 says 1/4A Slow-Blow for 220-240V; Table 1-2 says 0.250A/250V SLO-BLO for 220V and 240V (and 0.375A for 100/120 V, which agrees with 3/8A). Table 5-4 lists only F1 FUSE, SLO-BLO, 3/8 AMP (109264). Replace with the value the rear panel of the unit prints.",
+   "refs": [
+    "A3F1",
+    "RP"
+   ],
+   "source": "§2-19 (p13), Table 1-2 (p10), §4-27 (p30), Figure 2-2 (p15), Figure 8-3 (p89)"
+  },
+  {
+   "title": "Rev C battery module differs from the drawings",
+   "text": "Errata Changes #5 and #6 (A6 Rev C, A6 stock no. 732628): spade-lug batteries 739961 wired by W1 (red) and W2 (black) instead of the J1-J4 headers; the two POWER INPUT banana jacks replaced by a 3-pin connector J10 (720854, mating plug 720847; pin 1 +, pin 2 -, pin 3 not used); the switch lettered S1 (BATTERY ON-OFF); battery PCB drawing 732A-1054 with terminals E9-E16 for the cells. Figure 8-2 here shows the 1983 module. EXTPWR is then measured at J10.",
+   "refs": [
+    "A6",
+    "A6J10",
+    "A6W1",
+    "A6W2",
+    "A6S1",
+    "A6MP8",
+    "A6MP9",
+    "J1"
+   ],
+   "source": "Errata Issue 3 (7/85) Changes #5, #6"
+  },
+  {
+   "title": "Which binding post is which E-number is not printed",
+   "text": "Table 5-1 lists E1-E3 RED (the three HI outputs), E4/E5 BLK (the two LO), E6 BLUE (GUARD), E7 GREEN (CHASSIS GROUND), E8/E9 WHITE (OVEN TEMP THERMISTOR) and E10 grounding post. Figure 5-1 Detail I groups them by colour and flags the W3 wire numbers on the terminals (10V HI: 23/24/25 via the term strip and 33; 1.018V HI: 34; 1V HI: 35; LO: 26/27/28 and 36) but does not say which of E1-E3 or E4-E5 is which post; E10 is placed at the rear-panel chassis terminal by elimination. The test points here use functional names (OUT10V, OUTLO ...) for that reason.",
+   "refs": [
+    "FPE1",
+    "FPE2",
+    "FPE3",
+    "FPE4",
+    "FPE5",
+    "FPE10",
+    "W3"
+   ],
+   "source": "Table 5-1 (p45); Figure 5-1 sheet 1, Details I and II (p48)"
+  },
+  {
+   "title": "Table 4-2 is one code per printed row",
+   "text": "Table 4-2 has ten symptoms over seventeen rows (several symptoms list more than one probable cause). Each row is one entry, S1-S17, in the printed order, with the footnotes (1) and (2) written out in the action of the rows that cite them.",
+   "refs": [],
+   "source": "Table 4-2 (p41 / 4-17)"
+  },
+  {
+   "title": "1983 procedure text corrected by the errata",
+   "text": "Where Errata Issue 3 (7/85) corrects a procedure, the corrected text is used and the errata cited beside the manual paragraph: §4-30 step 1c (Errata #7), Figures 4-6 to 4-11 GRD/LO strapping (Errata #11), §4-45 step 12 \"on A2\" to A3 and Figure 4-8 to 4-12 (Errata #8), the Table 4-1 rheostat part number (Errata #6). New errata text (§4-45 step 27, §4-45A, §4-55) belongs to the A3 and A5 datasets.",
+   "refs": [
+    "A3W1"
+   ],
+   "source": "docs/manual/errata-issue3-1985.md"
+  }
+ ],
+ "foreignStepRefs": {
+  "4-3": {
+   "1": [
+    "TP3",
+    "TP4"
+   ],
+   "2": [
+    "TP6",
+    "TP4"
+   ],
+   "3": [
+    "TP2",
+    "TP1"
+   ],
+   "4": [
+    "TP5",
+    "TP1"
+   ],
+   "5": [
+    "TP1",
+    "TP3"
+   ],
+   "6": [
+    "TP1",
+    "TP2"
+   ]
+  }
+ },
+ "tables": [
+  {
+   "title": "Signal map - every inter-board connection (Figures 8-1, 8-2, 8-3, 8-4, 8-5)",
+   "source": "Figure 8-1 (p85), Figure 8-2 cont (p87), Figure 8-3 P3 legend (p89), Figure 8-4 P2 legend (p91), Figure 8-5 E legend (p93)",
+   "rows": [
+    {
+     "signal": "SIGNAL",
+     "a3p3": "A3 P3 pin",
+     "a2j3": "A2 J3 pin",
+     "a2j2": "A2 J2 pin",
+     "a4p2": "A4 P2 pin",
+     "a5": "A5 E-terminal (W1 wire, colour)",
+     "elsewhere": "Elsewhere",
+     "tps": "Test points"
+    },
+    {
+     "signal": "GUARD BOX (shield)",
+     "a3p3": "1 (6 strapped)",
+     "a2j3": "1 \"COMMON (GUARD BOX)\", ground symbol",
+     "a2j2": "-",
+     "a4p2": "5 \"GUARD BOX FRONT PANEL\" on Fig 8-4; NC on Figs 8-1/8-2",
+     "a5": "-",
+     "elsewhere": "GUARD post (BLU) to guard chassis lug; GROUND post GRN/YEL to chassis",
+     "tps": "-"
+    },
+    {
+     "signal": "+RAW (lettered 18.6V on A4)",
+     "a3p3": "2",
+     "a2j3": "2",
+     "a2j2": "13 (14 tied)",
+     "a4p2": "13, 14; 12 NC on the same line (Errata #4: 12 = +18.6V)",
+     "a5": "-",
+     "elsewhere": "-",
+     "tps": "A3 TP6; A4 TP1"
+    },
+    {
+     "signal": "-RAW",
+     "a3p3": "8 (7 strapped, board side)",
+     "a2j3": "8 (7 tied)",
+     "a2j2": "24 (23 tied)",
+     "a4p2": "23, 24",
+     "a5": "-",
+     "elsewhere": "Regulator pass transistor A4 Q4 sits between -RAW and COMMON",
+     "tps": "A3 TP4 (Fig 8-1); A4 TP3"
+    },
+    {
+     "signal": "SWITCH CONTROL",
+     "a3p3": "3 (strapped to 4 on the board: the CR10 anode / CR12 cathode / R9 node of the pre-regulator reference chain, Fig 8-3)",
+     "a2j3": "3",
+     "a2j2": "17",
+     "a4p2": "17 NC",
+     "a5": "-",
+     "elsewhere": "Same net as AC POWER LED + on A3; ends NC at A4 P2-17 - no function on the 1983 sheets",
+     "tps": "-"
+    },
+    {
+     "signal": "AC POWER LED +",
+     "a3p3": "4 (strapped to 3 on the board; fed from the CR10 / CR12 zener node, Fig 8-3)",
+     "a2j3": "4",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "W2 RED 12 to A1 pad 12 (DS1 AC PWR)",
+     "tps": "-"
+    },
+    {
+     "signal": "AC POWER LED - (on -RAW)",
+     "a3p3": "7",
+     "a2j3": "7 (tied to 8)",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "W2 ORN 13 to A1 pad 13 (DS1)",
+     "tps": "-"
+    },
+    {
+     "signal": "+BATTERY",
+     "a3p3": "9, 10",
+     "a2j3": "9, 10",
+     "a2j2": "15",
+     "a4p2": "15 (CR15 to the +RAW line)",
+     "a5": "-",
+     "elsewhere": "A2 J4-1 / A6 P4-1 - E4 - BATTERY ON-OFF - E3 - BT4 +",
+     "tps": "-"
+    },
+    {
+     "signal": "-BATTERY",
+     "a3p3": "17, 18",
+     "a2j3": "17, 18",
+     "a2j2": "21, 22",
+     "a4p2": "21, 22",
+     "a5": "-",
+     "elsewhere": "A2 J4-2 / A6 P4-2 - BT1 - and the CR1 / R1 node",
+     "tps": "A3 TP1"
+    },
+    {
+     "signal": "THERMISTOR (battery RT1)",
+     "a3p3": "11, 12",
+     "a2j3": "11, 12",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "A2 J4-3, 4 / A6 P4-3, 4 - A6 RT1 10K 25°C",
+     "tps": "A3 TP2 on the P3-11 line (Fig 8-3)"
+    },
+    {
+     "signal": "THERMISTOR VOLTAGE COMPENSATION (battery RT2)",
+     "a3p3": "15, 16",
+     "a2j3": "15, 16",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "A2 J4-5, 6 / A6 P4-5, 6 - A6 RT2 10K 25°C",
+     "tps": "-"
+    },
+    {
+     "signal": "BATTERY CHARGE LED +",
+     "a3p3": "13",
+     "a2j3": "13",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "W2 VIO 17 to A1 pad 17 (DS2 BTRY CHG)",
+     "tps": "-"
+    },
+    {
+     "signal": "BATTERY CHARGE LED -",
+     "a3p3": "14",
+     "a2j3": "14",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "W2 GRA 18 to A1 pad 18 (DS2)",
+     "tps": "-"
+    },
+    {
+     "signal": "+HEATER / +TEMP REG (18.6 V to the oven)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "11 - A2 E1",
+     "a4p2": "11 (strapped to 10)",
+     "a5": "-",
+     "elsewhere": "4 heater wires (WHT on Fig 8-2, BLK on Fig 8-1) - HR1-HR4; F2 in this lead from Rev C",
+     "tps": "A2 TP1"
+    },
+    {
+     "signal": "HEATER (return)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "1 - dashed jumper - A2 E2",
+     "a4p2": "1 (Q14 emitter; Q14 collector to COMMON)",
+     "a5": "-",
+     "elsewhere": "4 heater wires (BLK on Fig 8-2, WHT on Fig 8-1) from HR1-HR4",
+     "tps": "A2 TP2"
+    },
+    {
+     "signal": "-TEMP REG (\"BUFFER AMP/DRIVER AMP COMMON\")",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "2",
+     "a4p2": "2 (COMMON strap)",
+     "a5": "E1 (W1-1, BRN)",
+     "elsewhere": "-",
+     "tps": "A4 TP2 (COMMON)"
+    },
+    {
+     "signal": "-BRIDGE",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "3",
+     "a4p2": "3 (COMMON strap)",
+     "a5": "E2 (W1-2, RED) bottom of the U5 bridge",
+     "elsewhere": "-",
+     "tps": "A4 TP2"
+    },
+    {
+     "signal": "-REF (common)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "4 (strapped to 20 on A2)",
+     "a4p2": "4 (COMMON strap)",
+     "a5": "E3 (W1-3, ORN) common rail",
+     "elsewhere": "-",
+     "tps": "A4 TP2"
+    },
+    {
+     "signal": "REF SUPPLY - series pass output",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "6",
+     "a4p2": "6 (R3 24.3Ω)",
+     "a5": "E4 (W1-4, YEL) - R62 / R63 - E23 10V HI",
+     "elsewhere": "Fig 8-1: \"A4 Q12 SERIES PASS ELEMENT J2 6\", harness no. 4",
+     "tps": "-"
+    },
+    {
+     "signal": "REF SUPPLY - Q12 collector (emitter through R1 to the 18.6 V bus)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "7",
+     "a4p2": "7",
+     "a5": "E5 (W1-5, GRN) Q2 base / Q1 upper leg",
+     "elsewhere": "harness no. 5",
+     "tps": "-"
+    },
+    {
+     "signal": "REF SUPPLY - Q12 base (R2 to the 18.6 V bus)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "8",
+     "a4p2": "8",
+     "a5": "E6 (W1-6, BLU) Q1 lower leg",
+     "elsewhere": "harness no. 6",
+     "tps": "-"
+    },
+    {
+     "signal": "REF SUPPLY - CR13 / R21",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "9",
+     "a4p2": "9",
+     "a5": "E7 (W1-7, VIO) Q1 base, Q2 lower leg, CR1",
+     "elsewhere": "harness no. 7",
+     "tps": "-"
+    },
+    {
+     "signal": "+TEMP REG 18.6V (reference supply)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "10",
+     "a4p2": "10 (strapped to 11)",
+     "a5": "E8 (W1-8, GRA) \"18.6V\" - CR5 / CR2 / series pass drive",
+     "elsewhere": "-",
+     "tps": "A4 TP1 (same rail)"
+    },
+    {
+     "signal": "+BRIDGE",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "16",
+     "a4p2": "16",
+     "a5": "E9 (W1-9, WHT) top of the U5 / RT3 / RT4 bridge",
+     "elsewhere": "-",
+     "tps": "A5 TP6"
+    },
+    {
+     "signal": "HEAT DRIVE",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "26",
+     "a4p2": "26 (R26 / Q13)",
+     "a5": "E10 (W1-10, BLK) U5 output",
+     "elsewhere": "-",
+     "tps": "-"
+    },
+    {
+     "signal": "-2 V (Fig 8-4) / 18.6V beside U5 (Fig 8-1) - see caveat",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "27",
+     "a4p2": "27",
+     "a5": "E11 (W1-11, BRN)",
+     "elsewhere": "-",
+     "tps": "-"
+    },
+    {
+     "signal": "IN CAL LED +",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "18",
+     "a4p2": "18 (latch Q6 / Q7)",
+     "a5": "-",
+     "elsewhere": "W2 YEL 14 to A1 pad 14 (DS3 IN CAL)",
+     "tps": "-"
+    },
+    {
+     "signal": "IN CAL LED - / COMMON",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "20 (strapped to 4)",
+     "a4p2": "20 COMMON",
+     "a5": "-",
+     "elsewhere": "W2 BLU 16 to A1 pad 16 (DS3)",
+     "tps": "A4 TP2"
+    },
+    {
+     "signal": "RESET",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "19",
+     "a4p2": "19 (Q7 emitter)",
+     "a5": "-",
+     "elsewhere": "W2 GRN 15 to A1 pad 15, the RESET pad behind the front-panel hole",
+     "tps": "-"
+    },
+    {
+     "signal": "10V HI",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E23, E24, E25 (into the term strip) and E33 (divider top)",
+     "elsewhere": "W3 to the 10V HI post (RED); protection network C1-R1, CR1, RV1, DS1 across E25 / E26 on the term strip",
+     "tps": "OUT10V"
+    },
+    {
+     "signal": "LO (10V common)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E26 (from the term strip), E27, E28",
+     "elsewhere": "W3 to the LO post (BLK), Table 2-1 item 11",
+     "tps": "OUTLO"
+    },
+    {
+     "signal": "1.018V HI",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E34",
+     "elsewhere": "W3 to the 1.018V HI post (RED)",
+     "tps": "OUT1018"
+    },
+    {
+     "signal": "1V HI",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E35",
+     "elsewhere": "W3 to the 1V HI post (RED)",
+     "tps": "OUT1V"
+    },
+    {
+     "signal": "LO (1V / 1.018V common)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E36",
+     "elsewhere": "W3 to the second LO post (BLK), Table 2-1 item 12",
+     "tps": "OUTLO2"
+    },
+    {
+     "signal": "OVEN TEMP THERMISTOR (RT2)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "E21, E22 (GRA, GRA)",
+     "elsewhere": "W4 to the two WHT posts E8 / E9; isolated from everything else",
+     "tps": "probe OVENTHM"
+    },
+    {
+     "signal": "POWER INPUT + (RED) / EXT. PWR.",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "A6 E1 - ballast lamp DS1 - E3 (BT4 +); Rev C: J10 pin 1",
+     "tps": "EXTPWR"
+    },
+    {
+     "signal": "POWER INPUT - (BLK)",
+     "a3p3": "-",
+     "a2j3": "-",
+     "a2j2": "-",
+     "a4p2": "-",
+     "a5": "-",
+     "elsewhere": "A6 E2 - CR1 in parallel with R1 51K - the - battery bus; Rev C: J10 pin 2",
+     "tps": "EXTPWRLO"
+    }
+   ],
+   "note": "Pin numbers are the same on both halves of each card-edge connector (A3 P3 = A2 J3, A4 P2 = A2 J2, A6 P4 = A2 J4). W1 wire numbers equal the A5 E-numbers 1-11; W2 wire numbers equal the A1 pad numbers 12-18. \"strapped\" = tied on the board, \"tied\" = tied on the motherboard. First row is the header.",
+   "headerRow": true
+  },
+  {
+   "title": "AC line voltage selection switches on A3 and the fuse (Figure 4-5, §4-27)",
+   "source": "Figure 4-5 (p31 / 4-7); §4-27 (p30); rear-panel legend, Figure 2-2 (p15)",
+   "rows": [
+    {
+     "line": "LINE VOLTAGE",
+     "s1": "S1 (left switch)",
+     "s2": "S2 (right switch)",
+     "fuse": "FUSE F1 (rear panel)"
+    },
+    {
+     "line": "120V",
+     "s1": "100/120 (dot at top)",
+     "s2": "120/240 (dot at top)",
+     "fuse": "3/8 A slow-blow (MDL 3/8)"
+    },
+    {
+     "line": "100V",
+     "s1": "100/120 (dot at top)",
+     "s2": "100/220 (dot at bottom)",
+     "fuse": "3/8 A slow-blow (MDL 3/8)"
+    },
+    {
+     "line": "240V",
+     "s1": "220/240 (dot at bottom)",
+     "s2": "120/240 (dot at top)",
+     "fuse": "3/16 A slow-blow (MDL 3/16)"
+    },
+    {
+     "line": "220V",
+     "s1": "220/240 (dot at bottom)",
+     "s2": "100/220 (dot at bottom)",
+     "fuse": "3/16 A slow-blow (MDL 3/16)"
+    }
+   ],
+   "note": "Switch legends as silkscreened on A3 (Figure 4-5): S1 220/240 | 100/120, S2 100/220 | 120/240. Figure 4-5's 240V column misprints S1's top label 100/220. Fuse per §4-27 and the rear panel; §2-19 prints 1/4A for 220-240V - see the caveat. Mark the new setting in the SUPPLY SETTING box on the rear panel (§4-29 step 6).",
+   "headerRow": true
+  }
+ ]
+}

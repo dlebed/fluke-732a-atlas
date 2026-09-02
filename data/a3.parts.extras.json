@@ -1,0 +1,184 @@
+{
+  "_comment": [
+    "Items that are lettered on the A3 drawing or schematic but have no row in Table 5-4,",
+    "so a technician can search for them and see where they are. All carry notInParts.",
+    "E1-E16 are the board-edge solder terminals the transformer, line filter and fuse leads",
+    "land on (schematic 732A-1003, left edge). P3 is the board's edge connector to A2 J3.",
+    "CR23 is the diode the schematic draws that the parts list and drawing call CR17 --",
+    "see docs/review-notes.md; it is kept as a schematic-only item so the sheet can be labelled.",
+    "R19 is added by Change/Errata Issue 3 (7/85) Change #10 (Rev F): it is in the amended parts list but not on the 1983 drawing (notInParts false, notOnDrawing true). 'amend' merges errata notes onto rows the 1983 table already has (R1's later stock number, Change #4, Rev E)."
+  ],
+  "components": [
+    {
+      "ref": "P3",
+      "kind": "connector",
+      "desc": "Edge connector, 18 contacts, mates A2 J3 (motherboard)",
+      "src": "Figure 8-3 / 8-1",
+      "notInParts": true
+    },
+    {
+      "ref": "J1",
+      "kind": "connector",
+      "desc": "Line connector, IEC 3-wire receptacle (N, G, L) on the rear panel of the AC Module; drawn off-board on 732A-1003 with FL1, F1 and T1: 100-132V AC / 200-264V AC, 50-60 Hz, 30 VA. Table 2-2 item 8 'Power connector'. No Table 5-4 line",
+      "src": "Figure 8-3 (cont); Table 2-2",
+      "notInParts": true,
+      "notOnDrawing": true
+    },
+    {
+      "ref": "CR23",
+      "kind": "diode",
+      "desc": "Diode drawn on schematic 732A-1003 with its anode on the Q4 base node (C5 +, R15, CR21 cathode) and its cathode on the R13/R14 tap of the sense divider, in parallel with R15; the parts list and board drawing call this position CR17",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true,
+      "aliases": [
+        "CR17"
+      ]
+    },
+    {
+      "ref": "E1",
+      "kind": "terminal",
+      "desc": "Terminal, SHIELD #2 (T1 WHT lead); on the guard bus with E15 and P3-1/6",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E2",
+      "kind": "terminal",
+      "desc": "Terminal, AC SECONDARY (T1 ORN lead)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E3",
+      "kind": "terminal",
+      "desc": "Terminal, SHIELD #3 (T1 GRA lead); C9/C10 midpoint",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E4",
+      "kind": "terminal",
+      "desc": "Terminal, AC SECONDARY (T1 ORN lead)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E5",
+      "kind": "terminal",
+      "desc": "Terminal, 2ND PRIMARY (T1 BLK lead, dot end)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E6",
+      "kind": "terminal",
+      "desc": "Terminal, 2ND PRIMARY (T1 BRN lead)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E7",
+      "kind": "terminal",
+      "desc": "Terminal, LINE #1 (BLK from FL1/F1)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E8",
+      "kind": "terminal",
+      "desc": "Terminal, CHASSIS GROUND (GRN/YEL)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E9",
+      "kind": "terminal",
+      "desc": "Terminal, LINE #2 (WHT from FL1)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E10",
+      "kind": "terminal",
+      "desc": "Terminal, 1ST PRIMARY (T1 BLU lead, dot end)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E11",
+      "kind": "terminal",
+      "desc": "Terminal, 1ST PRIMARY (T1 VIO lead)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E12",
+      "kind": "terminal",
+      "desc": "Terminal, SHIELD #1 (T1 GRN lead); on the chassis-ground bus with E8 and E13",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E13",
+      "kind": "terminal",
+      "desc": "Terminal, jumper select in test (with E14, E15); on the chassis-ground bus with E8 and E12",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E14",
+      "kind": "terminal",
+      "desc": "Terminal, CORE (T1 core; jumper select in test)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E15",
+      "kind": "terminal",
+      "desc": "Terminal, GUARD (jumper select in test)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "E16",
+      "kind": "terminal",
+      "desc": "Terminal, 2ND TAP (T1 YEL lead)",
+      "src": "Figure 8-3 (cont)",
+      "notInParts": true
+    },
+    {
+      "ref": "R19",
+      "kind": "res",
+      "desc": "RES, CF, 15K, +/-5%, 1/4W",
+      "fluke": "348854",
+      "mfrCode": "80031",
+      "mfrPart": "CR251-4-5P15K",
+      "qty": "1",
+      "src": "Errata Issue 3 (7/85), Change #10",
+      "notInParts": false,
+      "notOnDrawing": true,
+      "notes": "Added at Rev F (Change/Errata Issue 3, 7/85, Change #10 - 22317): 'ADD: R19 RES, CF, 15K, +/-5%, 1/4W, 348854, 80031, CR251-4-5P15K, 1'. Errata Figure 12 draws R19 between R18 43.2K and R20 50K in the trickle-charge reference divider (TP5 to -BATTERY); Figure 11 places it beside R18 / R20 at the lower left of the board. Not on the May 1983 drawing or schematic, whose REF DESIG table lists R19 as not used.",
+      "page": null
+    }
+  ],
+  "amend": [
+    {
+      "ref": "R1",
+      "notes": "Later stock no. 717892 (same part, RES, WW, 10M +/-0.5%, 1/2W) from Rev E -- Change/Errata Issue 3 (7/85), Change #4 - 19167. The 1983 table prints 212191 (mfr P/N printed 212919 in the errata's CHANGE line, as transcribed).",
+      "laterFluke": "717892"
+    },
+    {
+      "ref": "R20",
+      "aliases": ["R50"],
+      "notes": "Lettered \"R50\" on Figure 8-1 (A3 block); A3 has no R50 - Table 5-4 ends at R20 and the Figure 8-3 REF DESIG box says last used R20. §4-44 step 10 sets it for 33.0 V at TP5; Errata #12 step 27 for 25.8-27 V trickle charge at J10."
+    },
+    {
+      "ref": "C9",
+      "notes": "Table 5-4 prints the value as \"0.05\" with no unit -- checked on the page image (PDF p54) and against the 600 dpi read; every other ceramic row on the table prints UF, and 0.05 uF is the only reading that makes sense for a 50 V disc. Transcribed as printed, so the app shows no parsed value for it."
+    },
+    {
+      "ref": "C10",
+      "notes": "Table 5-4 prints the value as \"0.05\" with no unit -- checked on the page image (PDF p54) and against the 600 dpi read; every other ceramic row on the table prints UF, and 0.05 uF is the only reading that makes sense for a 50 V disc. Transcribed as printed, so the app shows no parsed value for it."
+    }
+  ]
+}

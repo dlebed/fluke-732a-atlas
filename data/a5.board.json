@@ -1,0 +1,48 @@
+{
+  "_comment": [
+    "Identity and image assets of the A5 Reference PCB Assembly. Hand-written;",
+    "assemble.py copies it into data/a5.js. Page numbers are PDF pages of",
+    "732A-manual.pdf with the printed manual page after them. The reference",
+    "circuit inside the oven is not field-repairable (§4-53); the board is",
+    "documented here so its parts can be found and its test points named."
+  ],
+  "id": "A5",
+  "name": "Reference PCB Assembly",
+  "pca": "644914",
+  "pcb": "732A-1001",
+  "drawingNo": "732A-4001",
+  "rev": "A",
+  "refs": {
+    "locator": "Figure 8-5 (732A-1601), p92 / 8-10; also Figure 5-6, p63 / 5-21",
+    "schematic": "Figure 8-5 cont. (732A-1001, with the A7 Calibration PCB 732A-1007), p93 / 8-11",
+    "parts": "Table 5-6, p60-62 / 5-18-5-20",
+    "theory": "§3-17 Reference Circuit, §3-20 Output Divider, §3-22 Oven Controller, p22 / 3-2",
+    "troubleshooting": "§4-53 Oven Repair, Table 4-2, p40-41 / 4-16-4-17"
+  },
+  "layers": [
+    {
+      "id": "drawing",
+      "label": "Board drawing",
+      "src": "assets/a5/drawing.png",
+      "credit": "Figure 8-5, 732A Instruction Manual (732A-1601), cropped to the PCB outline",
+      "transform": "identity"
+    }
+  ],
+  "schematics": [
+    {
+      "id": "sh1",
+      "title": "Reference PCB schematic (with A7 Calibration PCB)",
+      "src": "assets/a5/sch1.png",
+      "figure": "8-5 (cont), 732A-1001 / -1007"
+    },
+    {
+      "id": "sh2",
+      "title": "Interconnect diagram (simplified)",
+      "src": "assets/sys/drawing.png",
+      "figure": "8-1, 732A-1301",
+      "shared": true,
+      "note": "Figure 8-1 is a simplified system diagram: it draws only the parts that take part in the interconnect and omits the rest of the board."
+    }
+  ],
+  "revSource": "Table 7A-1 (PDF p82): the PCB revision level this manual documents; later revisions are in manual-text/errata-issue3-1985.md"
+}

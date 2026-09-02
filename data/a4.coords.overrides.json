@@ -1,0 +1,384 @@
+{
+ "confirm": [
+  "C1",
+  "C10",
+  "C2",
+  "C3",
+  "C4",
+  "C5",
+  "C6",
+  "C7",
+  "C8",
+  "C9",
+  "CR1",
+  "CR10",
+  "CR12",
+  "CR13",
+  "CR14",
+  "CR15",
+  "CR2",
+  "CR3",
+  "CR5",
+  "CR6",
+  "CR7",
+  "CR8",
+  "CR9",
+  "DS1",
+  "P2",
+  "Q1",
+  "Q12",
+  "Q13",
+  "Q14",
+  "Q2",
+  "Q3",
+  "Q4",
+  "Q5",
+  "Q6",
+  "Q7",
+  "Q8",
+  "R1",
+  "R10",
+  "R11",
+  "R12",
+  "R13",
+  "R14",
+  "R15",
+  "R16",
+  "R17",
+  "R18",
+  "R19",
+  "R2",
+  "R20",
+  "R21",
+  "R22",
+  "R23",
+  "R24",
+  "R25",
+  "R26",
+  "R3",
+  "R4",
+  "R5",
+  "R6",
+  "R7",
+  "R8",
+  "R9",
+  "TP1",
+  "TP2",
+  "TP3"
+ ],
+ "_comment": [
+  "Hand corrections over the readers. 'confirm' / 'confirmSchematic' list read",
+  "positions that a reviewer looked at and found on the right lettering",
+  "(tools/apply_review.py); 'board' / 'schematic' carry hand-placed boxes in pixels",
+  "of .build/<asm>/drawing_full.png and schN_full.png; 'drop' names reads that",
+  "point at another part's label."
+ ],
+ "confirmSchematic": {
+  "sh1": [
+   "C1",
+   "C10",
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C6",
+   "C7",
+   "C8",
+   "C9",
+   "CR1",
+   "CR10",
+   "CR12",
+   "CR13",
+   "CR14",
+   "CR15",
+   "CR2",
+   "CR3",
+   "CR5",
+   "CR6",
+   "CR7",
+   "CR8",
+   "CR9",
+   "DS1",
+   "P2",
+   "Q1",
+   "Q12",
+   "Q13",
+   "Q14",
+   "Q2",
+   "Q3",
+   "Q4",
+   "Q5",
+   "Q6",
+   "Q7",
+   "Q8",
+   "R1",
+   "R10",
+   "R11",
+   "R12",
+   "R13",
+   "R14",
+   "R15",
+   "R16",
+   "R17",
+   "R18",
+   "R19",
+   "R2",
+   "R20",
+   "R21",
+   "R22",
+   "R23",
+   "R24",
+   "R25",
+   "R26",
+   "R3",
+   "R4",
+   "R5",
+   "R6",
+   "R7",
+   "R8",
+   "R9",
+   "TP1",
+   "TP2",
+   "TP3"
+  ]
+ },
+ "drop": [],
+ "notOnDrawing": [
+  "CR4"
+ ],
+ "dropSchematic": {
+  "sh1": []
+ },
+ "_dropComment": [
+  "Reads the reviewers found on another part's lettering: the tesseract pass snapped hardware designators (fuse, filter, transformer, screws, heat sinks) that have no silkscreen onto the nearest similar text, and R17 onto CR17. notOnDrawing lists every part of Table 5-x that carries no designator on the drawing."
+ ],
+ "schematic": {
+  "sh2": {
+   "CR2": {
+    "x": 3707,
+    "y": 2308,
+    "w": 124,
+    "h": 51,
+    "_fromSys": "A4CR2"
+   },
+   "CR13": {
+    "x": 4380,
+    "y": 4687,
+    "w": 157,
+    "h": 54,
+    "_fromSys": "A4CR13"
+   },
+   "CR14": {
+    "x": 3730,
+    "y": 2761,
+    "w": 123,
+    "h": 54,
+    "_fromSys": "A4CR14"
+   },
+   "P2": {
+    "x": 3154,
+    "y": 1661,
+    "w": 204,
+    "h": 74,
+    "_fromSys": "A4P2"
+   },
+   "Q1": {
+    "x": 4114,
+    "y": 2530,
+    "w": 75,
+    "h": 51,
+    "_fromSys": "A4Q1"
+   },
+   "Q2": {
+    "x": 3738,
+    "y": 2582,
+    "w": 95,
+    "h": 55,
+    "_fromSys": "A4Q2"
+   },
+   "Q3": {
+    "x": 3698,
+    "y": 3120,
+    "w": 96,
+    "h": 55,
+    "_fromSys": "A4Q3"
+   },
+   "Q4": {
+    "x": 3661,
+    "y": 3374,
+    "w": 96,
+    "h": 53,
+    "_fromSys": "A4Q4"
+   },
+   "Q6": {
+    "x": 4944,
+    "y": 2712,
+    "w": 186,
+    "h": 57,
+    "_fromSys": "A4Q6"
+   },
+   "Q7": {
+    "x": 4944,
+    "y": 2712,
+    "w": 186,
+    "h": 57,
+    "_fromSys": "A4Q7"
+   },
+   "Q8": {
+    "x": 3388,
+    "y": 2742,
+    "w": 93,
+    "h": 53,
+    "_fromSys": "A4Q8"
+   },
+   "Q12": {
+    "x": 6822,
+    "y": 2800,
+    "w": 169,
+    "h": 201,
+    "_fromSys": "A4Q12"
+   },
+   "Q13": {
+    "x": 4828,
+    "y": 1005,
+    "w": 120,
+    "h": 56,
+    "_fromSys": "A4Q13"
+   },
+   "Q14": {
+    "x": 4548,
+    "y": 810,
+    "w": 117,
+    "h": 57,
+    "_fromSys": "A4Q14"
+   },
+   "R1": {
+    "x": 4119,
+    "y": 4298,
+    "w": 66,
+    "h": 56,
+    "_fromSys": "A4R1"
+   },
+   "R2": {
+    "x": 4126,
+    "y": 4499,
+    "w": 91,
+    "h": 52,
+    "_fromSys": "A4R2"
+   },
+   "R3": {
+    "x": 4875,
+    "y": 4126,
+    "w": 88,
+    "h": 57,
+    "_fromSys": "A4R3"
+   },
+   "R4": {
+    "x": 4576,
+    "y": 2332,
+    "w": 86,
+    "h": 56,
+    "_fromSys": "A4R4"
+   },
+   "R7": {
+    "x": 4104,
+    "y": 2685,
+    "w": 88,
+    "h": 54,
+    "_fromSys": "A4R7"
+   },
+   "R8": {
+    "x": 4115,
+    "y": 2886,
+    "w": 86,
+    "h": 57,
+    "_fromSys": "A4R8"
+   },
+   "R9": {
+    "x": 4114,
+    "y": 3080,
+    "w": 79,
+    "h": 57,
+    "_fromSys": "A4R9"
+   },
+   "R21": {
+    "x": 4113,
+    "y": 4696,
+    "w": 108,
+    "h": 51,
+    "_fromSys": "A4R21"
+   },
+   "R22": {
+    "x": 4578,
+    "y": 2541,
+    "w": 107,
+    "h": 58,
+    "_fromSys": "A4R22"
+   },
+   "R24": {
+    "x": 4961,
+    "y": 683,
+    "w": 140,
+    "h": 52,
+    "_fromSys": "A4R24"
+   },
+   "R25": {
+    "x": 5226,
+    "y": 892,
+    "w": 116,
+    "h": 59,
+    "_fromSys": "A4R25"
+   },
+   "R26": {
+    "x": 5238,
+    "y": 1054,
+    "w": 135,
+    "h": 55,
+    "_fromSys": "A4R26"
+   },
+   "TP1": {
+    "x": 3813,
+    "y": 1877,
+    "w": 110,
+    "h": 56,
+    "_fromSys": "A4TP1"
+   },
+   "TP2": {
+    "x": 4930,
+    "y": 3604,
+    "w": 143,
+    "h": 54,
+    "_fromSys": "A4TP2"
+   },
+   "TP3": {
+    "x": 3477,
+    "y": 3610,
+    "w": 134,
+    "h": 56,
+    "_fromSys": "A4TP3"
+   }
+  },
+  "sh3": {}
+ },
+ "sheetImageSize": {
+  "sh2": {
+   "w": 9517,
+   "h": 5608
+  },
+  "sh3": {
+   "w": 9436,
+   "h": 5556
+  },
+  "sh1": {
+   "w": 9701,
+   "h": 5565
+  }
+ },
+ "_sharedComment": [
+  "schematic.sh2 (and sh3 on A3/A4) are the positions read on the shared Figures",
+  "8-1 / 8-2 for SYS, copied here by tools/share_interconnect.py with the assembly",
+  "prefix stripped ('_fromSys' names the SYS item). Re-running the script",
+  "refreshes them; an entry without _fromSys was placed by hand and is kept."
+ ],
+ "_cr4Comment": "CR4 (1N4571, 6.4 V) is a Table 5-5 row with no lettering on Figure 8-4's drawing or schematic, which print CR2 in the reference-zener position instead; see the A4 caveats and docs/review-notes.md."
+}

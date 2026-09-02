@@ -1,0 +1,76 @@
+{
+  "_comment": [
+    "Procedures on the A5 Reference PCB Assembly.",
+    "",
+    "The May 1983 manual has none: §4-43 (PDF p38) says the Battery Charger",
+    "Adjustment is the only field service procedure for the 732A and that there",
+    "is no field serviceable circuitry within the oven/reference supply assembly;",
+    "§4-53 Oven Repair (PDF p40) says do not attempt to repair the circuitry",
+    "involving U1, U2, Q1, Q2, Q5, the resistors associated with TP11 through",
+    "TP14, or any other component(s) associated with them -- module exchange is",
+    "the repair. Table 4-3 lists no A5 measurement. So the 1983 manual leaves",
+    "this list empty and points the reader at §4-53.",
+    "",
+    "The Change/Errata sheet Issue 3 (7/85), Errata #13, later added §4-55 /",
+    "4-56 'Repairing the 1.0V and 1.018V Divider Strings', which qualifies §4-53",
+    "for the two output dividers only. It is carried here as the board's one",
+    "procedure, with the errata as its source; the text is the errata's, with",
+    "its two misprints ('1.108V', '1.08V tap') kept and flagged. Its Table 4-4",
+    "is in data/a5.reference.json under tables.",
+    "",
+    "One more thing is flagged in the steps: the errata's step 3 pairs R59 with",
+    "the 1.0 V reading and R58 with the 1.018 V reading ('respectively'), but on",
+    "the 1983 sheet the R59 chain (R50/R51, TP11/TP12) reaches E34 1.018V HI and",
+    "the R58 chain (R52/R53, TP13/TP14) reaches E35 1V HI, which the printed",
+    "resistor values, Table 1-2's adjustment ranges, the errata's own Figure 10",
+    "and its Change #9 set names all confirm. The steps keep the errata's words",
+    "and add the sheet's assignment in brackets; see the caveat 'Which divider",
+    "is which' in data/a5.reference.json.",
+    "",
+    "Steps name no measurement points with expectations: the errata gives none",
+    "(the nulls are made against an external standard at the front panel)."
+  ],
+
+  "procedures": [
+    {
+      "id": "4-55",
+      "title": "Repairing the 1.0V and 1.018V Divider Strings (Errata Issue 3, §4-55 / 4-56)",
+      "source": "Change/Errata Information Issue 3 (7/85), Errata #13, added to manual page 4-16 (errata PDF p12-14); Table 4-4 (errata PDF p14)",
+      "prereq": "4-56. The 1.0V and 1.018V divider strings are field repairable. If you find the hermetically sealed resistors, R45/R47 or R44/R46 defective, (i.e., you can not adjust the outputs for a nominal value), to replace them it is necessary to reselect trim resistors after installation of the new resistors. For the 1.0V tap, the trim resistors selection process must be done at the oven temperature; which makes it necessary to extend wires form the oven assembly to a variable resistance. Perform the following procedure to select trim resistors. NOTE: The 1.018V tap trim resistors may be selected without installing the unit back into the oven. -- [Dataset notes, not the errata's words: everything else on A5 remains not field repairable (§4-53). The oven harness is disconnected on the way in (§4-17 step 7), so standardization has to be re-verified: calibrate (§4-32) afterwards. Equipment named in the steps: a 0.5 ohm resolution variable resistance on 2 ft test leads; a stable source to null against or a DMM with 0.1 uV resolution and 1 ppm transfer accuracy (the NOTE in step 3 suggests the 10V tap and a Fluke 720A Kelvin-Varley Divider).] Which chain is which, by the sheet: R44/R46 with R52/R53, TP13/TP14 and R58 form the 1 V tap (E35); R45/R47 with R50/R51, TP11/TP12 and R59 form the 1.018 V tap (E34).",
+      "warnings": [
+        "§4-51 WARNING: TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+        "§4-51 CAUTION: The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+        "§4-51 CAUTION: To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness.",
+        "§4-53: Do not attempt to repair the circuitry involving U1, U2, Q1, Q2, Q5, the resistors associated with TP11 through TP14, or any other component(s) associated with the aforementioned components. -- Errata §4-55 qualifies this for R44/R46, R45/R47 and the trim resistors R50-R53 only.",
+        "§4-20 NOTE: Do not turn the screws on the outside clamshell as this will cause difficult disassembly and reassembly. In most cases, repairs to the PCB assembly can be better accomplished from the component side of the PCB. If access to the bottom of the PCB is necessary, unscrew the outside four teflon standoffs."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "text": "To gain access to the inside of the oven assembly, perform the oven removal and disassembly instructions starting at paragraph 4-17. [Dataset gloss of §4-17 Oven Removal, PDF p27-30: covers off, inner shield cover off, pry out the top foam block and the one below it, grasp both mylar tabs and pull steadily upwards, disconnect the oven cable harness at the motherboard and at the front panel; §4-19 Oven Disassembly, PDF p30: four screws of the inside clamshell -- not the outside -- move the wire bundle aside and lift the heater assembly free.]",
+          "refs": []
+        },
+        {
+          "n": 2,
+          "text": "After replacing the hermetically sealed resistor pack on the A5 PCB, lift one end of one of the trim resistors (R50/R51 or R52/R53) and insert that end into the test circuit. Using 2 ft. long test leads, connect a 0.5 ohm resolution variable resistance between the appropriate test points (TP11/12 or TP13/14). Place the cover on the oven assembly and replace top cover insulating material. Apply power to the unit and continue the adjustment procedure when the oven temperature has stabilized. [Sheet: R50 + R51 lie between TP12 and TP11 with R49 across them, under R59, and run down through R47 / R45 to E34 1.018V HI; R53 + R52 lie between TP13 and TP14 with R48 across them, under R58, and run down through R46 / R44 to E35 1V HI. So a 1 V repair (the one that must be done at oven temperature) uses TP13/TP14 and R52/R53; a 1.018 V repair uses TP11/TP12 and R50/R51 -- the reverse of the order the errata lists them in. See the caveat 'Which divider is which'.]",
+          "refs": ["R44", "R46", "R45", "R47", "R50", "R51", "R52", "R53", "TP11", "TP12", "TP13", "TP14", "R48", "R49"]
+        },
+        {
+          "n": 3,
+          "text": "Adjust R59 or R58 to get a reading of 1.0V or 1.108V (as printed; the errata means 1.018V) (respectively) by adjusting the resistor from one extreme to the other and noting the change in output level to the nearest 0.3 uV. This may be done by nulling against another stable source, or by using a DMM with sufficient resolution and transfer accuracy, (i.e., 0.1 uV resolution and 1 ppm transfer accuracy). NOTE: The absolute accuracy of the 1.0V and 1.018V taps is not critical. What is critical is their ratio to the 10V output. If you use the 10V tap as a reference and use a Fluke 720A Kelvin-Varley Divider to establish the 1.0V and 1.018V levels, the correct results can be obtained without knowing the absolute accuracy of the tap voltage level. [Sheet: R58 heads the chain that reaches E35 1V HI and R59 the chain that reaches E34 1.018V HI, so the errata's 'respectively' is reversed against the drawing; adjust the pot at the top of the chain you are repairing -- it is the one whose wiper node carries TP12 (R59) or sits above TP13 (R58).]",
+          "refs": ["R59", "R58"]
+        },
+        {
+          "n": 4,
+          "text": "Adjust the variable resistors to obtain the correct nominal ratio output (1.0V or 1.018V). Remove power from the 732A and remove the leads from the test points. Accurately measure the lead and attached resistance.",
+          "refs": ["TP11", "TP12", "TP13", "TP14"]
+        },
+        {
+          "n": 5,
+          "text": "Based on the measured variable resistance, select the appropriate trim resistor from Table 4-4 [carried in this dataset's reference tables]. NOTE: When adjusting the 1.0V tap, select two resistors from Table 4-4 and add them to get the required resistance. For the 1.08V tap (as printed; the errata means the 1.018V tap), measure each installed trim resistor and select only one to give the required resistance. [Not in the errata: then reassemble the oven (§4-19 in reverse), reconnect the harness (§4-17 step 7) and perform the calibration procedure (§4-32) -- the oven harness was disconnected, so standardization has to be re-verified.]",
+          "refs": ["R50", "R51", "R52", "R53"]
+        }
+      ]
+    }
+  ]
+}

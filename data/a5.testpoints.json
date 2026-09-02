@@ -1,0 +1,185 @@
+{
+  "_comment": [
+    "Curated A5 Reference PCB test-point data (732A-1001 with the A7 Calibration",
+    "PCB 732A-1007; Figure 8-5 cont., PDF p93).",
+    "",
+    "Not one of the fourteen pads has a published value. Table 4-3 (Internal",
+    "Measurements, PDF p42) lists A3, A4, front-panel and rear-panel points only;",
+    "§4-53 (PDF p40) forbids component repair of the reference; §4-43 (PDF p38)",
+    "says the battery charger adjustment is the only field service procedure. So",
+    "every point here carries noPublishedValue and no expectation. What each",
+    "point IS -- its net, read off the sheet -- is recorded so the technician",
+    "knows what a probe is touching before deciding whether to touch it at all.",
+    "",
+    "Where a note quotes a figure (TP1 about +16.4 V, TP6 about +18.6 V) it is",
+    "DERIVED from printed part values and Figure 8-1's lettering, not measured",
+    "and not published; it is written in the note, never as an expectation.",
+    "",
+    "WHICH DIVIDER IS WHICH. On the sheet the chain under R59 (R57 350, R55 35,",
+    "R50/R51, R49 35, TP12, TP11) ends in R47 8.7 K and R45 1 K and lands on E34,",
+    "lettered 1.018V HI; the chain under R58 (R56 1 K, R54 35, R53/R52, R48 35,",
+    "TP13, TP14) ends in R46 8.9 K and R44 1 K and lands on E35, lettered 1V HI",
+    "(read at 600 dpi: R46's lead crosses the E34 line without a junction dot and",
+    "dots on E35). The printed values agree: 1 K under 8.9 K plus a few tens of",
+    "ohms of trim is 1.000 V from 10 V, 1 K under 8.7 K is 1.018 V, and the",
+    "R59 chain's adjustment span (a 200 ohm pot through 350 ohm, shunted by 35",
+    "ohm) is about +/-55 uV against Table 1-2's +/-50 uV for 1.018 V, while the",
+    "R58 chain's (200 ohm through 1 K, shunted by 35 ohm) is about +/-10 uV",
+    "against +/-5 uV for 1 V. So TP11/TP12 are on the 1.018 V divider and",
+    "TP13/TP14 on the 1 V divider, R59 is the 1.018V ADJ and R58 the 1V ADJ.",
+    "docs/review-notes.md and the errata's §4-55 step 3 ('R59 or R58 ... 1.0V or",
+    "1.108V respectively') say the reverse; the errata's own Figure 10 and its",
+    "Change #9 set names (R44,46 = 1.0V set; R45,47 = 1.018V set) agree with the",
+    "sheet. Recorded as a caveat in data/a5.reference.json.",
+    "",
+    "Rails: REF (the 10 V reference, its bias node and the 1 V / 1.018 V",
+    "dividers), OVEN (the thermistor bridge and the U3/U4/U5 controller on the",
+    "+BRIDGE rail E9), SUPPLY (what arrives from A4 on E8/E9/E11 and the three",
+    "returns E1/E2/E3). No rail carries `com`: A5 has no return test point --",
+    "the returns are the harness terminals E1 (BRN), E2 (RED) and E3 (ORN),",
+    "which Table 5-6 does not list as designators (they are the MP6 Teflon",
+    "feed-through terminals; the dataset carries them as terminals, notInParts).",
+    "",
+    "Nets were read on the 3x2 tiles of the sheet and on 600 dpi crops of the",
+    "tile seams (.build/a5/sch1_full.png). docs/manual/08-schematic-and-",
+    "interconnect-notes.md agrees with the nets written here."
+  ],
+
+  "rails": {
+    "REF": {
+      "label": "10 V reference, bias node and output dividers",
+      "com": null,
+      "color": "#e0b13a",
+      "_note": "TP1-TP4 on the Ref-Amp and its base divider; TP11/TP12 on the 1.018 V chain, TP13/TP14 on the 1 V chain."
+    },
+    "OVEN": {
+      "label": "Oven controller: thermistor bridge on the +BRIDGE rail (E9)",
+      "com": null,
+      "color": "#d97b5a",
+      "_note": "TP5-TP10. E9 (WHT) is A4 P2-16 +BRIDGE, switched on by A4 Q5 when the regulator output is healthy (§3-16)."
+    },
+    "SUPPLY": {
+      "label": "+18.6 V from A4 (E8), -2 V (E11) and the returns E1/E2/E3",
+      "com": null,
+      "color": "#4fa3d1",
+      "_note": "No test point sits on the raw supply itself; the rail exists so the caps audit and the rail circuit have a home. Figure 8-1 letters 18.6V on the E8 (GRA) line; Figure 8-4's P2 legend names pin 10 +TEMP REG (to E8), pin 27 -2 V (to E11), pins 2/3/4 -TEMP REG / -BRIDGE / -REF (to E1 / E2 / E3), all strapped to COMMON on A4."
+    }
+  },
+
+  "testpoints": [
+    {
+      "ref": "TP1", "signal": "REF-AMP BIAS NODE (CR2 / CR5 / R9)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 (PDF p42) lists no A5 point; §4-53 (PDF p40). Net read from Figure 8-5 (PDF p93).",
+      "net": "Right end of R60 (SEL). The node is fed from the +18.6 V rail (E8 GRA) by CR5, a current-regulator diode, and by R9 (ref-amp set) in parallel with it; CR2 (6.4 V temperature-compensated zener, cathode on this node, anode on the R63 / C2 / CR8 node that sits 2.7 ohm -- R63 -- off the 10 V HI bus) holds it, with C2 0.22 uF across CR2. From here R60 (SEL) and R6 (SEL) feed TP2 and the Ref-Amp's collector load R5.",
+      "note": "No published value. By the printed parts the node sits one CR2 zener voltage (6.4 V) above the 10 V output, i.e. about +16.4 V to LO -- a derivation, not a measurement, written here only so a reading is recognisable. §4-53: do not attempt to repair the circuitry involving U1, U2, Q1, Q2, Q5 or any component associated with them; CR2, CR5 and R9 are that circuitry (all starred in Table 5-6). Rev C boards letter CR2 as VR2 (Errata Change #1)."
+    },
+    {
+      "ref": "TP2", "signal": "REF-AMP BIAS AFTER R6 / R60 (top of R5)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5.",
+      "net": "Left end of R6 (SEL) and top of R5 (ref-amp set). R5 is the collector load of the Ref-Amp U2: its lower end is U2's collector, which is also U1's + input (pin 3) and the top of the C3 1 uF / R1 200 series pair to the reference common. R5 crosses the 10 V sense line (E24 / R2 / R4 / R26 node) without a junction. The bias current for U2 flows TP1 -> R60 -> R6 -> TP2 -> R5 -> U2 collector.",
+      "note": "No published value. The U2 collector below R5 is held by the U1 loop at the R2 / R3 tap of the 10 V output (about +7.0 V by the printed 4.22 K / 10 K), so TP2 sits above that by the drop across R5, whose value is part of the REF AMP SET and is not printed. Everything on this node is starred in Table 5-6 and named in §4-53: not field repairable."
+    },
+    {
+      "ref": "TP3", "signal": "REF-AMP BASE DIVIDER TAP (R8 / R11)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5.",
+      "net": "Junction of R8 (11.42 K, ref-amp divider set) and R11 (SEL), with C17 1200 pF to the reference common. This is the chain that sets the Ref-Amp's base voltage: the 10V HI wires E24 and E25 (tied on the board by R26 51) -> R7 6.2 K -> U2 base (also Q5's collector and C16) -> R8 -> TP3 -> R11 (SEL) -> R10 (SEL) -> TP4 -> calibration ladder -> R19 / R18 / R20 -> LO (E26).",
+      "note": "No published value. A tap of the 10 V output, so it lies between LO and +10 V; U2's base above it sits at U2's internal zener plus one base-emitter drop (not printed). Starred parts throughout; §4-53 applies."
+    },
+    {
+      "ref": "TP4", "signal": "REF DIVIDER, TOP OF CALIBRATION LADDER (after R10)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5.",
+      "net": "Right end of R10 (SEL). Six resistors hang from this node in parallel: R12 20 to the ladder common row (post E18, BRN), R13 125 to a spare unlettered post, R14 250 to E14 (40), R15 500 to E15 (20), R16 1 K to E16 (10) and R17 2 K to E17 (5). The common row runs on through R19 35 in parallel with R18 500 + R20 100 (the 10V ADJ pot) to LO (E26). A jumper on the A7 Calibration PCB (732A-1007) from a PPM pin to the strapped BRN row puts that resistor in parallel with R12.",
+      "note": "No published value; a few tens of ohms above LO in the divider, so a small positive voltage. §4-54: shifts that cannot be compensated by adding or removing jumpers on A7 require the oven assembly to be exchanged. The jumper posts and their PPM marks are in the reference tables."
+    },
+    {
+      "ref": "TP5", "signal": "BRIDGE CURRENT SOURCE (Q3 emitter / R21)", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5.",
+      "net": "Bottom of R21 (SEL; Table 5-6 4.553 K 0.1 %) and the emitter of Q3, 2N3906 (PNP). R21 hangs from the +BRIDGE rail E9 (WHT). Q3 and Q4 form a current mirror (read at 600 dpi): Q4 (emitter via R27 10 K to E9) has its base tied to its own collector, and Q3's base sits on that same node; Q3's collector feeds the thermistor bridge at TP7, Q4's collector feeds R28 7.5 K into the U3B input node.",
+      "note": "No published value. One R21 drop below the E9 rail (E9 is about +18.6 V by Figure 8-1's lettering, less A4 Q5's saturation drop). By the printed values Q4's current is set by R27 and Q3 mirrors it scaled by R27 / R21 (10 K / 4.553 K, about 2.2 times), so the R21 drop is about 2.2 times the R27 drop -- a derivation, not a published figure. The oven controller is the part of A5 that §4-20 allows access to (\"only if access is necessary to effect repairs on the Oven Controller circuit\"); Q3 and R21 are not starred in Table 5-6."
+    },
+    {
+      "ref": "TP6", "signal": "+BRIDGE RAIL (E9 WHT)", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5; A4 P2-16 name from Figure 8-4 (PDF p91).",
+      "net": "On the E9 (WHT) rail itself, drawn between the two RT3 legs (the thermistor legs cross the rail without dots -- RT3 is NOT on this net). E9 is A4 P2-16 +BRIDGE by the Figure 8-4 legend, W1 wire 9 (Figure 8-2). The rail supplies R21 (Q3), R27 (Q4), U3 pin 8 (V+) and U4 pin 7 (V+); C6 0.22 uF bypasses it to E2.",
+      "note": "No published value. A4 Q5 saturates to supply this rail when the regulator output is healthy and turns it off when it is not (§3-16), so it reads about the +18.6 V regulator output less a saturation drop when the oven is enabled and near zero when the voltage monitor has disabled the oven -- both derived from §3-16 and Figure 8-1's 18.6V lettering, not published. From Errata Change #7 a 58 C thermal fuse F2 on the reference module also interrupts the heater supply."
+    },
+    {
+      "ref": "TP7", "signal": "BRIDGE NODE (RT3 / Q3 collector / R22 / CR3 anode / C7 / U3A + input)", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5 (600 dpi crop of the CR3 / CR4 / C7 area).",
+      "net": "The right leg of oven thermistor RT3, Q3's collector, the right end of R22 17.4 K, the anode of CR3, the top of C7 4700 pF (to E2) and U3A's + input (pin 3): from the junction dot on the CR3 anode a vertical drops to the pin-3 line and on down through C7 to E2; the CR3 / CR4 junction itself has no other connection (checked at 600 dpi). Q3's current enters the thermistor arm here: RT3 + RT4 in series with R22 across the pair, then RT1 to E2. CR3 -> CR4 run from this node to the other bridge node (CR4 cathode / R28 / R29 / C5, U3B's + input), so the two diodes in series clamp how far this node can rise above that one -- a reading of the sheet; the manual does not describe them.",
+      "note": "No published value. RT3 and RT4 are the oven assembly's thermistors (final assembly, Table 5-1: RT1 in the 1983 table, RT3/RT4 from Errata Change #7), not A5 parts -- they are wired to the board, so a reading here depends on the oven temperature (48 +/- 2 C, §3-23)."
+    },
+    {
+      "ref": "TP8", "signal": "RT4 / RT3 MIDPOINT", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5.",
+      "net": "The short horizontal joining RT4's right leg and RT3's left leg -- the midpoint of the two series oven thermistors. TP9 is the same net (two pads).",
+      "note": "No published value. Half-way along the thermistor pair, so between TP10 and TP7. Handy for checking that RT3 and RT4 are both present and alike: the midpoint should sit near the middle of TP7 - TP10 at oven temperature (an inference from two equal 10 K parts, not a published figure)."
+    },
+    {
+      "ref": "TP9", "signal": "RT4 / RT3 MIDPOINT (same net as TP8)", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5.",
+      "net": "Second pad on the RT4 / RT3 midpoint segment, beside TP8. The segment is separate from the TP7 segment.",
+      "note": "No published value. Same net as TP8; two pads so a lead can be clipped to each thermistor's side of the joint."
+    },
+    {
+      "ref": "TP10", "signal": "BRIDGE NODE (RT4 / R22 / RT1)", "rail": "OVEN", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point. Net read from Figure 8-5.",
+      "net": "The left leg of oven thermistor RT4, the left end of R22 17.4 K and the top of RT1 (10 K at 25 C, on the board). RT1 returns the node to E2 (RED), the bridge return (-BRIDGE, A4 P2-3, COMMON on A4).",
+      "note": "No published value. One RT1 drop above the E2 return. RT1 is an A5 part (Table 5-6, 104596, not starred); RT4 is not."
+    },
+    {
+      "ref": "TP11", "signal": "1.018 V CHAIN, LOWER TRIM NODE (R51 / R49 / R47)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5 (600 dpi: this chain lands on E34, 1.018V HI). Repair use: Errata Issue 3 (7/85) Errata #13, §4-55 step 2.",
+      "net": "Junction of R51 (SEL), the bottom of R49 35 and the top of R47 8.7 K. The chain: 10V HI (E33) -> (R57 350 + R59 200, the 1.018V ADJ, wiper tied to its lower end) in parallel with R55 35 -> TP12 -> R50 + R51 (SEL, in series) shunted by R49 35 -> TP11 -> R47 8.7 K -> E34 1.018V HI -> R45 1 K -> LO (E36).",
+      "note": "No published value. At the top of R47, so about 1.02 V above the E36 LO wire by the printed values (a derivation). §4-53 forbids repair of \"the resistors associated with TP11 through TP14\"; Errata Issue 3 §4-55 later declares the divider strings field repairable and uses TP11 / TP12 as the points across which a 0.5-ohm-resolution variable resistance stands in for a lifted trim resistor (R50 / R51) while the pot at the top of this chain (R59) is adjusted. The errata's step 3 pairs R59 with the 1.0 V reading; the sheet puts this chain on E34 1.018V HI -- see the caveat 'Which divider is which' and identify the chain by the post it reaches. See the §4-55 procedure and Table 4-4."
+    },
+    {
+      "ref": "TP12", "signal": "1.018 V CHAIN, UPPER TRIM NODE (R59 wiper / R55 / R50)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5. Repair use: Errata Issue 3 (7/85) §4-55 step 2.",
+      "net": "The R59 200 (10-turn pot, wiper tied to this end) / R55 35 node and the top of R50 (SEL); R49 35 also hangs from here down to TP11. Top of the trim section of the 1.018 V chain.",
+      "note": "No published value; a few tens of millivolts below the 10 V bus (derived). Partner of TP11 for the §4-55 trim-resistor selection: variable resistance between TP11 and TP12 while a lifted R50 or R51 is out of circuit. The errata says the 1.0 V tap must be trimmed at oven temperature and the 1.018 V tap need not be; by the sheet this is the 1.018 V chain (E34)."
+    },
+    {
+      "ref": "TP13", "signal": "1 V CHAIN, UPPER TRIM NODE (R56 / R54 / R53)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5 (600 dpi: this chain lands on E35, 1V HI). Repair use: Errata Issue 3 (7/85) §4-55 step 2.",
+      "net": "Junction of R56 1 K, the bottom of R54 35 and the top of R53 (SEL); R48 35 hangs from here down to TP14. The chain: 10V HI (E33) -> (R58 200, the 1V ADJ, wiper tied to its lower end, + R56 1 K) in parallel with R54 35 -> TP13 -> R53 + R52 (SEL, in series) shunted by R48 35 -> TP14 -> R46 8.9 K -> E35 1V HI -> R44 1 K -> LO (E36).",
+      "note": "No published value; a few tens of millivolts below the 10 V bus (derived). §4-55 (errata): variable resistance between TP13 and TP14 while a lifted R52 or R53 is out of circuit, adjust the pot at the top of this chain (R58). The errata's step 3 pairs R58 with the 1.018 V reading; the sheet puts this chain on E35 1V HI -- see the caveat 'Which divider is which'."
+    },
+    {
+      "ref": "TP14", "signal": "1 V CHAIN, LOWER TRIM NODE (R52 / R48 / R46)", "rail": "REF", "kind": "testpoint",
+      "unit": "V",
+      "noPublishedValue": true,
+      "source": "Table 4-3 lists no A5 point; §4-53. Net read from Figure 8-5. Repair use: Errata Issue 3 (7/85) §4-55 step 2.",
+      "net": "Junction of R52 (SEL), the bottom of R48 35 and the top of R46 8.9 K. From here R46 runs to E35 (1V HI) and R44 1 K from E35 to LO (E36).",
+      "note": "No published value. At the top of R46, so about 1.00 V above the E36 LO wire by the printed values (a derivation). Partner of TP13 for the §4-55 trim-resistor selection. R46 is half of the R44 / R46 sealed set (Table 5-6 652784; from Rev E, Errata Change #9, MATCHED RESISTOR SET 1.0V 751917 on the A5A8 piggyback PCB -- the errata's name for this set agrees with the sheet: it is the 1 V tap)."
+    }
+  ],
+
+  "probePoints": []
+}

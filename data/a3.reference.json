@@ -1,0 +1,406 @@
+{
+  "_comment": [
+    "Reference material for the A3 Pre-Regulator PCB Assembly (732A-4003; PCB",
+    "732A-1003, schematic Figure 8-3 cont., PDF p89). Transcribed from §2-14..2-19",
+    "(PDF p13), Table 2-2 (p16), §3-4, §3-10..3-13 and §3-25..3-28 (p21-22),",
+    "§4-13/4-14 (p26), §4-26..4-29 and Figure 4-5 (p30-31), §4-43..4-45 (p38),",
+    "§4-51/4-52 (p40), Table 4-2 (p41), Table 4-3 (p42), Table 1-2 (p10), Table",
+    "5-4 (p54-55), Figure 8-1 (p85), Figure 8-2 (p87), Figure 8-3 (p88-89) and the",
+    "Change/Errata sheet Issue 3 (7/85). The manual's own words are kept in the",
+    "warnings, the Table 4-2 rows and the tables.",
+    "",
+    "Part functions come from §3 where §3 states them (Q1, Q2, Q3, Q4, Q5, Q6,",
+    "R10, R20, RT1). Everything else was read off the sheet -- the 3x2 tiles under",
+    ".build/review/a3-sch-*.png and 600 dpi crops of 732A-1003 -- and says so",
+    "('read from the sheet'). The sheet is hand-drawn with long routed buses; the",
+    "pre-regulator, the rectifiers, the charger's power path, the trickle",
+    "reference and (in a second pass at 600 dpi) the control-side routing --",
+    "R11 from TP2, the thermistor pins across R11 and R12, the BATTERY CHARGE",
+    "LED across R6 -- were all traced; see the control-side caveat.",
+    "Voltages quoted in notes as 'about' are derived from printed part values and",
+    "are for recognising a reading, never for passing one; the only published A3",
+    "values are the four Table 4-3 rows and §4-44's figures.",
+    "",
+    "Rail keys match data/a3.testpoints.json: RAW (com TP4) and BATT (com TP1)."
+  ],
+
+  "overview": {
+    "summary": "A3 is the whole of the rear-panel AC Module (Table 2-2 item 1): the line connector J1, line filter FL1, fuse F1 in holder XF1, the two Line Voltage Selector slide switches S1 and S2 (§2-17: inside the instrument, setting marked on the rear panel), power transformer T1, and the board itself with two supplies on it. §3-4: ac line input power is full wave rectified and fed to a two stage voltage regulator; the first stage, or Pre-regulator, converts the raw dc to 32V dc. §3-11: the Pre-regulator (A3Q1) is a simple emitter follower regulator that clamps the full wave rectified power from the bridge rectifier to approximately 32V dc; the 32 V leaves on P3-2 (+RAW) / P3-8 (-RAW) for the A4 Regulator, which makes the 18.6 V for the oven and reference. The second supply is the Battery Charger (§3-26): it determines the state of charge of the internal battery and sets the charging current accordingly -- constant current charging for deep discharge or constant voltage trickle charging for charge maintenance. §3-27: Q2 is a current source that supplies all the charging current; Q3 and Q4 form a schmitt trigger; Q6 supplies a constant voltage output for trickle charging; three thermistors monitor the ambient temperature (RT1) and the battery temperature (A6RT1, A6RT2) and adjust the charging rate accordingly. §3-28: during initial charging Q3 enables Q2 and the high charge rate; when the battery voltage rises to approximately 32V, Q4 turns off, shutting off the constant current charge, and the battery is then constant voltage charged by Q6 (approximately 27V at 23°C); R10 sets the threshold point of this transition, R20 sets the trickle voltage, A3RT1 compensates it for ambient temperature, and A6 RT1 / RT2 with Q5 prevent high current charging below 5°C and/or at high temperatures. The charger output reaches the battery through CR13 / CR16 on P3-9/10 and returns on P3-17/18. The board also drives the front-panel AC PWR LED (P3-4/7) from the raw supply and the BTRY CHG LED (P3-13/14) from the charger. §4-43: the Battery Charger Adjustment (§4-44) is the only field service procedure for the 732A. Table 4-3 publishes four A3 measurements (TP3-TP4 <=60 V, TP6-TP4 32 V, TP2-TP1 <=31 V, TP5-TP1 33.0 V).",
+    "connectors": "P3, an 18-contact card-edge connector mating A2 J3 on the motherboard (pin numbers are the same on both sides): 1 GUARD BOX, 2 +RAW (TP6), 3 SWITCH CONTROL, 4/7 AC POWER LED +/-, 5 NC, 6 GUARD (strapped to 1), 8 -RAW (TP4), 9/10 +BATTERY (CR13 / CR16), 11 and 12 THERMISTOR (A6 RT1 via J4/P4 pins 3/4), 13/14 BATTERY CHARGE LED +/-, 15/16 THERMISTOR VOLTAGE COMPENSATION (A6 RT2 via P4 pins 5/6), 17/18 -BATTERY (TP1). The transformer, filter, fuse and line-connector leads land on sixteen solder terminals E1-E16 along the board edge (E7 LINE #1, E9 LINE #2, E8 CHASSIS GROUND, E10/E11 1ST PRIMARY, E5/E6 2ND PRIMARY, E16 2ND TAP, E2/E4 AC SECONDARY, E1/E3/E12 SHIELD #2/#3/#1, E14 CORE with the JUMPER SELECT IN TEST posts E13 and E15 GUARD). Table 5-4 lists none of the E numbers and no P3; they are carried as items with no parts-table line.",
+    "source": "§2-14..2-19 and Table 2-2 (PDF p13, p16); §3-4, §3-10..3-13, §3-25..3-28 (p21-22); §4-43 (p38); Table 4-3 (p42); Figure 8-3 cont. (p89); Figure 8-1 (p85)"
+  },
+
+  "railCircuits": {
+    "RAW": {
+      "rails": "Raw rectified dc at TP3 (<=60 V, Table 4-3) and the pre-regulated +RAW, approximately 32 V, at TP6 / P3-2; return -RAW at TP4 / P3-8",
+      "acInput": ["J1", "FL1", "F1", "XF1", "S1", "S2", "T1", "E7", "E9", "E8", "E10", "E11", "E5", "E6", "E16", "E12", "E1", "E3", "E14", "E13", "E15"],
+      "rectifier": ["CR1"],
+      "filters": ["C1", "C2", "C9", "C10"],
+      "regulators": ["Q1", "CR19", "R1"],
+      "reference": ["CR25", "CR24", "CR4", "CR6", "CR5", "CR10", "R9", "CR12"],
+      "currentLimit": ["CR7", "CR8", "CR9", "R1"],
+      "tps": ["TP3", "TP4", "TP6"],
+      "note": "Read from the sheet. Line power enters at J1 (100-132V AC / 200-264V AC, 50-60 Hz, 30 VA), through the line filter FL1 and fuse F1 (100-132V 3/8A SB, 200-264V 3/16A SB) to terminals E7 LINE #1 and E9 LINE #2; E8 is the GRN/YEL chassis ground. S1 (220-240V / 100-120V) puts T1's two primaries (E10/E11 and E5/E6) in series or in parallel and S2 (100-220V / 120-240V) selects the 2ND TAP E16, so the four settings of Figure 4-5 are the four combinations. T1 has three shields -- E1 SHIELD #2 (WHT) on the guard bus with E15 GUARD and P3-1 / P3-6, E3 SHIELD #3 (GRA) as the C9 / C10 midpoint, E12 SHIELD #1 (GRN) on the chassis-ground bus with E8 and E13 -- and a CORE lead E14 that the test-time jumper ties to E13 (chassis) or to E15 GUARD. The single secondary E2 / E4 is rectified twice: bridge CR1 charges C1 (100 uF, 80 V) -- its + is TP3, its - is the TP4 / -RAW return, C2 0.1 uF across it -- and CR2 / CR3 from the two ends of the same winding charge the charger's own reservoir C3 (see BATT). C9 and C10 (0.05 uF) hang from E2 and E4 to the shield terminal E3 between them. Q1 (TIP120, an NPN Darlington) is the emitter follower: collector from TP3 through CR19, emitter through R1 0.5 ohm to TP6 and P3-2 (+RAW). Its base is held by a reference chain: current-regulator diodes CR25 and CR24 in series from TP3 (with CR4, a 40 V zener, across CR24) feed a reference node; CR6 carries that node to Q1's base; the node is clamped by CR5 in series with the 30 V zener CR10 down to the AC POWER LED node -- the node R9 (10 K from TP3) pulls up, CR12 (5.2 V zener) clamps to -RAW, and the front-panel AC PWR LED (A1 DS1, P3-4 + / P3-7 -) sits across it, so in the installed instrument that node rests at the LED's forward drop (about 2 V) and the reference is roughly 2 + 0.7 + 30 above -RAW, giving about 30-33 V at TP6 after CR6 and Q1's base-emitter drops -- 'approximately 32V dc' (§3-11), 32V dc in Table 4-3. P3-3 SWITCH CONTROL is the same LED node (it goes to A2 J3-3, J2-17, A4 P2-17, which the A4 sheet marks NC). CR7, CR8 and CR9 in series from Q1's base to the +RAW side of R1 limit the base drive once the drop across R1 plus Q1's base-emitter exceeds three diode drops: the pre-regulator's current limit. Nothing else on the board draws from +RAW; the charger has its own supply. -RAW (TP4, P3-8) is also the AC POWER LED return P3-7 and, at the connector, is drawn tied to P3-18 -BATTERY (see the caveat).",
+      "source": "§3-4, §3-11 (PDF p21); Table 4-3 rows 1-2 (p42); §4-28/4-29 and Figure 4-5 (p30-31); Figure 8-3 cont. (p89), read from the sheet"
+    },
+    "BATT": {
+      "rails": "Battery charger: charger output to +BATTERY (TP2 with W1 installed, <=31 V on charge, Table 4-3) and the trickle-charge reference at TP5 (33.0 V, set by R20); return -BATTERY at TP1 / P3-17/18",
+      "rectifier": ["CR2", "CR3"],
+      "filters": ["C3"],
+      "currentSource": ["Q2", "R3", "R4", "DS1", "R6", "CR18", "CR20"],
+      "schmitt": ["Q3", "Q4", "R6", "R7", "R8", "R10", "CR11", "C4", "CR15", "CR26", "CR14", "R12", "R13", "R14", "C5", "CR23", "R15", "R11", "CR22"],
+      "trickle": ["Q6", "CR28", "RT1", "R16", "R17", "R18", "R19", "R20", "C6", "CR16"],
+      "tempCutoff": ["Q5", "CR21", "CR22", "R11"],
+      "output": ["CR13", "CR16", "W1"],
+      "tps": ["TP1", "TP2", "TP5"],
+      "note": "§3-27 and §3-28 in the manual's words: Q2 is a current source that supplies all the charging current; Q3 and Q4 form a schmitt trigger; Q6 supplies a constant voltage output for trickle charging; during initial charging Q3 enables Q2 and the high charge rate; when the battery voltage rises to approximately 32V, Q4 turns off, shutting off the constant current charge, and the battery is constant voltage charged by Q6 (approximately 27V at 23°C); R10 sets the threshold point of this transition and hence the end of charge current; R20 sets the trickle voltage level; A3RT1 compensates it for ambient temperature; A6 RT1 / RT2 and Q5 prevent high current charging at temperatures below 5°C and/or high temperatures. Read from the sheet: the charger has its own reservoir -- CR2 (from E4) and CR3 (from E2) rectify the two ends of the secondary into C3 (330 uF, 80 V; its - end is on the TP4 return), so C3 charges to about the same peak as C1 (<=60 V). From C3's + line, R3 3.3 ohm feeds Q2's emitter (a PNP, 2N6125, on the heat sink with Q1) and DS1, the on-board LED, is the voltage reference in Q2's base circuit (§4-44 step 17 describes it as 'the voltage reference for the constant current source', calling it 'CR27'); R6 510 ohm runs from the DS1 / Q2-base node to Q3's collector, so while Q3 conducts the LED is lit and Q2 sources its constant current -- about 200 to 400 mA (Errata §4-45d), set by the LED drop less Q2's base-emitter across R3. R4 1.54 K from the supply, the germanium diode CR18 from Q2's base and the current-regulator diode CR20 meet at one node; CR20 goes on to Q6's collector (the trickle supply). Q2's collector is the charger output: through jumper W1 (upper circle) and CR13 to P3-9/10 +BATTERY, with Q6's emitter joining through CR16. The battery-voltage sense is TP2: the CR26 (current-regulator, 3 mA per errata Figure 12) cathode node, on the W1 lower-circle line to P3-11 (one end of A6 RT1); with W1 in, TP2 is the charger output itself, and with W1 out (§4-44 step 12) the rheostat between TP2 and TP1 stands in for the battery. From TP2, CR14 (5.2 V zener) drops to the top of the R12 16.2 K / R13 33.2 K / R14 17.4 K divider to -BATTERY; the R13 / R14 tap reaches Q4's base through CR23 (the diode the parts list and board call CR17) and R15 10 K, with C5 1 uF from the base node to -BATTERY. Q3 (FT317) and Q4 (2N5089) share an emitter return node: Q3's emitter through R7 22.6 ohm and Q4's emitter directly (no resistor) to a common node, then the 500 ohm trimpot R10 and the 5.6 V zener CR15 to -BATTERY -- R10 is the threshold adjustment of §4-44 steps 16-21. Q4's collector is Q3's base node, which CR11 in series with R8 (402 ohm; the sheet letters 4.02K) ties down to that emitter node and C4 4700 pF ties to Q3's collector; the node is fed through the current-regulator diode CR22 from the node that R11 (6.65 K on the sheet, 12.7 K in Table 5-4) hangs from TP2 and that Q5's base sits on. The BATTERY CHARGE LED (A1 DS2) is wired in parallel with R6: P3-13 (+) is the DS1-cathode / Q2-base node and P3-14 (-) is Q3's collector node, so the front-panel indicator and DS1 light together while Q3 conducts. Q5 (2N3906) is the temperature cut-off: its emitter is the CR14 anode node (TP2 less 5.2 V, the top of R12), its base the R11 / CR22 node, and its collector goes through the current-regulator diode CR21 into Q4's base node. The battery-pack thermistors hang across those two resistors: A6 RT1 (P3-11 = the TP2 line, P3-12 = the Q5 base node) is in parallel with R11, and A6 RT2 (P3-15 = the top of R12, P3-16 = the R12 / R13 tap, 'THERMISTOR VOLTAGE COMPENSATION') is in parallel with R12. A cold or hot battery raises RT1, the drop across R11 || RT1 (fed by CR22's 1 mA) then exceeds CR14's 5.2 V, Q5 turns on and forces the Schmitt trigger out of the high-rate state; RT2 shifts the sense-divider ratio and so the switching threshold with battery temperature. Trickle: CR28 (0.47 mA current regulator) from the charger supply into TP5, which is Q6's base; TP5 sits on RT1 10 K in parallel with R17 6.49 K, then R18 43.2 K (and, from Rev F, R19 15 K) and the 50 K trimpot R20 to -BATTERY, C6 0.01 uF from TP5 to -BATTERY; R20 sets TP5 to 33.0 V dc (§4-44 step 10). Q6 (2N2484) is an emitter follower from that reference: emitter through CR16 to +BATTERY, R16 10 K from emitter to base, collector supplied through CR20. The front-panel BTRY CHG LED (A1 DS2, P3-13 + / P3-14 -) is driven from the charger's control side and lights in the constant-current state (§1-6, §2-24: on steadily for normal charging, off when the battery is charged; Errata #7: blinks if the battery is very low). Errata §4-45d: constant current 200-400 mA until about 31 V, then constant voltage (27V) for a few milliamps trickle; Errata #12 (step 27): 25.8 to 27 V at the battery in trickle mode, adjust R20 if not.",
+      "source": "§3-25..3-28 (PDF p22); Table 4-3 rows 3-4 (p42); §4-44 (p38); Errata Issue 3 (7/85) #10, #12 and Change #10 Figure 12; Figure 8-3 cont. (p89), read from the sheet; Figure 8-1 (p85)"
+    }
+  },
+
+  "functions": {
+    "Q1": "The Pre-regulator: a simple emitter follower regulator that clamps the full wave rectified power from the bridge rectifier to approximately 32V dc (§3-11). TIP120 NPN Darlington on the heat sink MP2/MP3 with Q2; collector from TP3 through CR19, emitter through R1 0.5 ohm to TP6 / P3-2 (+RAW), base from the CR25 / CR24 reference node through CR6 (read from the sheet). Table 4-3: TP6-TP4 32V dc, corrective action Pre-Regulator.",
+    "Q2": "A current source that supplies all the charging current (§3-27); Q3 enables Q2 and the high charge rate (§3-28). PNP 2N6125 on the heat sink: emitter from the charger supply (C3 +) through R3 3.3 ohm, DS1 (the LED voltage reference) and R6 in the base circuit, collector to the charger output line through W1 and CR13 to +BATTERY (read from the sheet). About 200-400 mA in constant-current mode (Errata §4-45d).",
+    "Q3": "With Q4 forms the schmitt trigger (§3-27); during initial charging Q3 enables Q2 (§3-28). FT317 power transistor: collector to the DS1 / Q2-base node through R6 510 ohm, emitter through R7 22.6 ohm to the shared R10 / CR15 return, base driven from Q4's collector, C4 4700 pF collector-to-base (read from the sheet). While Q3 conducts DS1 lights and Q2 charges at the high rate.",
+    "Q4": "With Q3 forms the schmitt trigger; when the battery voltage rises to approximately 32V, Q4 turns off, shutting off the constant current charge (§3-28). 2N5089: base from the R13 / R14 tap of the divider under CR14 through R15 (CR23 in parallel) with C5 to -BATTERY, emitter directly on the shared emitter node above R10 / CR15 (R7 is Q3's emitter resistor; R8 with CR11 is Q3's base pull-down, not Q4's emitter resistor), collector on Q3's base node (read from the sheet at 600 dpi). CR21 from Q5 also lands on the base node. The threshold is set by R10 (§4-44 steps 16-21).",
+    "Q5": "With the battery-pack thermistors A6 RT1 and RT2, prevents high current charging at temperatures below 5°C and/or high temperatures (§3-28). 2N3906 PNP: emitter on the CR14 anode node (TP2 less 5.2 V, the top of R12, P3-15), base on the R11 / CR22 node (P3-12), collector through current-regulator diode CR21 into Q4's base node -- when it conducts it forces the Schmitt trigger out of the high-rate state. A6 RT1 (P3-11 = TP2 line, P3-12) is in parallel with R11 and A6 RT2 (P3-15/16, 'THERMISTOR VOLTAGE COMPENSATION') in parallel with R12, so the battery temperature sets the drop across R11 that turns Q5 on (read from the sheet at 600 dpi).",
+    "Q6": "Supplies a constant voltage output for trickle charging and thus maintains the battery at full charge; approximately 27V at 23°C; R20 sets this voltage level (§3-28). 2N2484 emitter follower: base is TP5 (the CR28 / RT1 / R17 reference node), emitter through CR16 to +BATTERY with R16 10 K emitter-to-base, collector fed through CR20 (read from the sheet). TP5-TP1 33.0V dc (Table 4-3; §4-44 step 10).",
+    "CR1": "Bridge rectifier (FB200) for the pre-regulator: ac from the T1 secondary E2 / E4, + to TP3 / C1, - to TP4 / -RAW (read from the sheet). Table 4-3 corrective action 'Rectifier' for TP3-TP4; Table 4-2 'Bridge rectifier -- Use ohmmeter' under Repeated fuse blowing.",
+    "CR2": "Rectifier (1N4817) from the secondary end E4 into the charger reservoir C3 +; with CR3 it is the 'battery charger rectifier' of Table 4-2 (read from the sheet).",
+    "CR3": "Rectifier (1N4817) from the secondary end E2 into the charger reservoir C3 +; with CR2 it is the 'battery charger rectifier' of Table 4-2 (read from the sheet).",
+    "CR4": "40 V 1 W zener across the current-regulator diode CR24 in the pre-regulator's reference chain, limiting the voltage CR24 has to stand (read from the sheet).",
+    "CR5": "Switching diode (1N4448) in series with the 30 V zener CR10 from the pre-regulator reference node down to the AC POWER LED node; the two set the reference above that node (read from the sheet).",
+    "CR6": "Switching diode (1N4448, Table 5-4) from the CR25 / CR24 reference node to Q1's base; drawn on the sheet with the same I-bar symbol as the current-regulator diodes (read from the sheet).",
+    "CR7": "First of three series diodes (1N4448) from Q1's base to the +RAW side of R1 -- the pre-regulator's current limit clamp (read from the sheet).",
+    "CR8": "Second of the CR7 / CR8 / CR9 current-limit clamp on Q1 (read from the sheet).",
+    "CR9": "Third of the CR7 / CR8 / CR9 current-limit clamp on Q1; its cathode is on the TP6 / +RAW node (read from the sheet).",
+    "CR10": "30.0 V zener (1N972A) between CR5 and the AC POWER LED node: with CR5 it sets how far the pre-regulator reference sits above that node, so it fixes +RAW (read from the sheet).",
+    "CR11": "Switching diode (1N4448) from Q3's base node to R8 and the shared emitter return -- Q3's base bias and Q4's collector load path (read from the sheet).",
+    "CR12": "5.2 V zener across the AC POWER LED pins P3-4 / P3-7: clamps the node R9 pulls up and protects the front-panel AC PWR LED (A1 DS1); if the LED is disconnected this zener takes over and the pre-regulator reference rises with it (read from the sheet).",
+    "CR13": "Rectifier (1N4817) from the charger output line (Q2 collector, W1 upper circle) to P3-9/10 +BATTERY: the high-rate charging path (read from the sheet). Drawn on Figure 8-1.",
+    "CR14": "5.2 V zener (cathode at TP2) from TP2 (battery-voltage sense) to the top of the R12 / R13 / R14 divider that feeds Q4's base; the divider therefore sees TP2 less 5.2 V. The same node is Q5's emitter and P3-15 (one end of A6 RT2) (read from the sheet).",
+    "CR15": "5.6 V 3 mA zener from the bottom of R10 to -BATTERY: the reference the Schmitt trigger's shared emitter return stands on (read from the sheet).",
+    "CR16": "Switching diode (1N4448) from Q6's emitter to P3-10 +BATTERY: the trickle-charge path (read from the sheet). Drawn on Figure 8-1.",
+    "CR17": "The parts list's and board drawing's name for the diode the schematic letters CR23: between Q4's base node and the R13 / R14 tap of the sense divider (docs/review-notes.md). 1N4448.",
+    "CR23": "The schematic's name for the diode the parts list and board drawing call CR17 (the REF DESIG table says CR17 not used); between Q4's base node (C5, R15, CR21) and the R13 / R14 tap of the sense divider (read from the sheet; docs/review-notes.md). Errata Figure 12 letters it CR23 too.",
+    "CR18": "Germanium diode (1N270) from Q2's base to the R4 / CR20 node (read from the sheet; the manual does not state its role).",
+    "CR19": "Rectifier (1N4817) from TP3 into Q1's collector (read from the sheet). Drawn on Figure 8-1.",
+    "CR20": "Current-regulator diode (334839; 1 mA per errata Figure 12) from the R4 / CR18 node to Q6's collector -- the trickle supply path (read from the sheet). Drawn on Figure 8-1.",
+    "CR21": "Current-regulator diode (334839; 1 mA) from Q5's collector into Q4's base node: the thermistor cut-off's way of forcing the Schmitt trigger over (read from the sheet).",
+    "CR22": "Current-regulator diode (334839; 1 mA) from the R11 / Q5-base node into Q3's base / Q4's collector node (read from the sheet).",
+    "CR24": "Current-regulator diode (429373) in series with CR25 from TP3 into the pre-regulator's reference node, CR4 across it (read from the sheet).",
+    "CR25": "Current-regulator diode (334714; 3 mA per the errata's figure for its twin CR26) from TP3 into CR24 and the reference node (read from the sheet). Drawn on Figure 8-1.",
+    "CR26": "Current-regulator diode (334714; 3 mA per errata Figure 12) from the charger supply into the TP2 sense node -- with W1 removed it is what feeds TP2 and the rheostat (read from the sheet; §4-44 steps 12-21).",
+    "CR28": "Current-regulator diode (393454; .47 mA per errata Figure 12) from the charger supply into TP5, the trickle reference node; its current through RT1 || R17, R18 (R19) and R20 makes the 33.0 V (read from the sheet).",
+    "DS1": "On-board LED (369777): the voltage reference for the constant current source in the battery charger circuit (§4-44 step 17, which calls it 'CR27'). Anode on the charger supply, cathode on Q2's base node, in series with R6 to Q3's collector, so it is lit while the high-rate charge is on and goes out with the BTRY CHG indicator -- which is wired across R6 from the same node (P3-13) to Q3's collector (P3-14) (read from the sheet; §4-44 steps 17-21).",
+    "R1": "Wirewound 1/2 W in Q1's emitter, between Q1 and TP6 / P3-2 +RAW: the pre-regulator's current-sense resistor for the CR7 / CR8 / CR9 clamp (read from the sheet). The sheet letters it '.5' (0.5 ohm); Table 5-4 prints 'RES, WW, 10M +/-0.5%, 1/2W' (see the caveat). Later stock no. 717892, Rev E (Errata Change #4). Drawn on Figure 8-1.",
+    "R3": "3.3 ohm 1/2 W in Q2's emitter from the charger supply: sets the constant charging current with the DS1 reference (read from the sheet). Drawn on Figure 8-1.",
+    "R4": "1.54 K from the charger supply to the CR18 / CR20 node (read from the sheet). Drawn on Figure 8-1.",
+    "R6": "510 ohm from the DS1 / Q2-base node to Q3's collector: Q3 switches the LED reference and so Q2. The front-panel BTRY CHG LED (A1 DS2) is wired in parallel with R6 -- P3-13 (+) is the DS1-cathode / Q2-base node and P3-14 (-) is Q3's collector node (read from the sheet).",
+    "R7": "22.6 ohm 1/8 W in Q3's emitter to the shared R10 / CR15 return (read from the sheet).",
+    "R8": "402 ohm 1/8 W 1% (Table 5-4) from CR11 to the shared emitter return; the sheet letters it 4.02K and Errata Change #10 corrects the schematic's value to 402 (read from the sheet; see the caveat).",
+    "R9": "10 K 1/2 W from TP3 to the AC POWER LED node: supplies the front-panel AC PWR LED (and CR12) from the raw dc (read from the sheet). Drawn on Figure 8-1.",
+    "R10": "500 ohm trimpot: sets the threshold point of the constant-current to trickle transition and hence the end of charge current (§3-28). Bottom of the Schmitt trigger's shared emitter return, above CR15 (read from the sheet). §4-44 steps 16-21: set fully CW, then turned ccw until BTRY CHG and DS1 go out with 32 V at TP2. Boxed on Figure 4-12.",
+    "R11": "From the TP2 sense line to the Q5-base / CR22 node; the battery thermistor A6 RT1 (10 K at 25°C) is in parallel with it through P3-11 (the TP2 line) and P3-12 (read from the sheet). CR22's 1 mA through R11 || RT1 sets Q5's base below TP2; Q5's emitter is 5.2 V below TP2 (CR14), so when the thermistor rises the drop exceeds 5.2 V and Q5 turns on. Value in dispute: Table 5-4 12.7 K 1/8 W 1%, the sheet 6.65 K (see the caveat). Drawn on Figure 8-1.",
+    "R12": "16.2 K 1/8 W 1%, top of the sense divider under CR14 (TP2 less 5.2 V) with R13 and R14; the battery thermistor A6 RT2 is in parallel with R12 through P3-15 (top of R12) and P3-16 (R12 / R13 tap), 'THERMISTOR VOLTAGE COMPENSATION' (read from the sheet). Drawn on Figure 8-1.",
+    "R13": "33.2 K 1/8 W 0.5%, middle of the R12 / R13 / R14 sense divider; the R13 / R14 tap goes to Q4's base through CR23 and R15 (read from the sheet). Drawn on Figure 8-1.",
+    "R14": "17.4 K 1/8 W 1%, bottom of the sense divider to -BATTERY (TP1) (read from the sheet).",
+    "R15": "10 K between Q4's base node and the R13 / R14 tap, in parallel with CR23 (read from the sheet).",
+    "R16": "10 K from Q6's emitter to its base (TP5) (read from the sheet). Drawn on Figure 8-1.",
+    "R17": "6.49 K 1/8 W 1% in parallel with RT1 from TP5 to the R18 / R20 chain: the temperature-compensated top of the trickle reference divider (read from the sheet). Drawn on Figure 8-1.",
+    "R18": "43.2 K 1/8 W 1% from the RT1 / R17 node down to R20 (R19 between them from Rev F) (read from the sheet).",
+    "R19": "15 K carbon film added at Rev F between R18 and R20 in the trickle reference divider (Errata Change #10, Figure 12). Not on the 1983 drawing or sheet.",
+    "R20": "50 K trimpot: sets the constant voltage trickle charge level (§3-28). Bottom of the TP5 reference divider to -BATTERY (read from the sheet). §4-44 step 10: adjust for 33.0V dc at TP5 vs TP1; Errata #12 step 27: adjust for 25.8-27 V at the battery connector in trickle mode. Figure 8-1 letters it 'R50'. Boxed on Figure 4-12.",
+    "RT1": "Thermistor (10 K) that monitors the ambient temperature and compensates the constant voltage charging for variations in it (§3-27, §3-28). In parallel with R17 at TP5 (read from the sheet). The battery-temperature thermistors A6 RT1 / RT2 are on the battery PCB, not here.",
+    "C1": "100 uF 80 V electrolytic: the pre-regulator's raw filter across TP3-TP4 (<=60 V, Table 4-3) (read from the sheet). See the capacitor audit.",
+    "C2": "0.1 uF 100 V ceramic across C1, TP3 to TP4 (read from the sheet).",
+    "C3": "330 uF 80 V electrolytic: the battery charger's own reservoir, charged by CR2 / CR3 from the secondary, - on the TP4 return (read from the sheet). See the capacitor audit.",
+    "C4": "4700 pF across Q3 collector-to-base in the Schmitt trigger (read from the sheet). Table 5-4 prints no voltage rating; the mfr P/N 8121-A100-W5R-472M denotes a 100 V part.",
+    "C5": "1 uF 35 V tantalum from Q4's base node to -BATTERY: filters the battery-voltage sense (read from the sheet).",
+    "C6": "0.01 uF 100 V ceramic from TP5 to -BATTERY across the trickle reference (read from the sheet).",
+    "C9": "0.05 uF 50 V ceramic from the secondary end E2 to the shield terminal E3, the pair C9 / C10 straddling the secondary (read from the sheet).",
+    "C10": "0.05 uF 50 V ceramic from the shield terminal E3 to the secondary end E4 (read from the sheet).",
+    "S1": "Line Voltage Selector slide switch, positions lettered 220-240V and 100-120V on the sheet (the 220-240V position runs T1's 1ST and 2ND PRIMARY in series, read from the sheet). Figure 4-5 gives the setting for each line voltage (§4-28). Set per the marked rear-panel SUPPLY SETTING; refer to qualified personnel (§2-17).",
+    "S2": "Line Voltage Selector slide switch, positions lettered 100-220V and 120-240V on the sheet, switching between the 2ND PRIMARY end and its 2ND TAP E16 (read from the sheet). Figure 4-5 gives the setting for each line voltage (§4-28).",
+    "T1": "Power transformer (645036). Its leads land on the terminals the sheet names 1ST PRIMARY (E11 VIO, E10 BLU dot end), 2ND PRIMARY (E6 BRN, E5 BLK dot end) with 2ND TAP (E16 YEL), AC SECONDARY (E2 / E4, both ORN), SHIELD #1 / #2 / #3 (E12 GRN / E1 WHT / E3 GRA) and CORE (E14); 30 VA (J1 lettering). Lead colours read from the sheet at 600 dpi. Table 4-3 corrective action 'Power Transformer' for TP3-TP4; Table 4-2: a transformer fault is returned to Fluke (note 2).",
+    "F1": "AC line fuse in the rear-panel holder XF1: 100-132V 3/8A SB, 200-264V 3/16A SB (sheet and rear panel; §4-27 MDL 3/8 and MDL 3/16). Table 5-4 lists only the 3/8 A part (109264); §2-19 and Table 1-2 print 1/4 A / 0.250 A for 220-240 V (see the caveat). Table 4-2: 'Fuse blown -- Check fuse.'",
+    "FL1": "Line filter (649988, 250 VAC 50-400 Hz 1 A) between J1 and F1 / E7 / E9, with its case to chassis (read from the sheet).",
+    "J1": "IEC 3-wire line connector (N, G, L): 100-132V AC / 200-264V AC, 50-60 Hz, 30 VA (sheet lettering; Table 2-2 item 8).",
+    "XF1": "Rear-panel fuseholder body and cap for F1 (Table 2-2 item 7).",
+    "W1": "#22 jumper wire between the charger output line (Q2 collector, to CR13 and +BATTERY) and the TP2 sense line (to CR26 / CR14 / R11 and P3-11). Removed in §4-44 step 12 (the manual prints 'on A2'; Errata #8: A3) so the rheostat at TP2 stands in for the battery; reinstalled in step 24. Boxed on Figure 4-12.",
+    "P3": "18-contact card-edge connector to A2 J3; pin legend in the P3 table. Pins 1 and 6 GUARD are strapped; 9/10 and 17/18 are drawn tied on both sides.",
+    "TP1": "-BATTERY return (P3-17/18); low lead for TP2 and TP5 (Table 4-3) and one end of the §4-44 rheostat.",
+    "TP2": "Battery-voltage sense / charger output (W1 lower line, P3-11, CR26 / CR14 node); <=31V dc vs TP1 on charge (Table 4-3), walked through 45-50, ~26, 32, 24.5-26.5 and >31 V in §4-44 steps 16-21.",
+    "TP3": "Raw rectified dc, bridge CR1 + / C1 +; <=60V dc vs TP4 (Table 4-3).",
+    "TP4": "-RAW return (P3-8, bridge CR1 -, C1 / C2 / C3 -); low lead for TP3 and TP6 (Table 4-3).",
+    "TP5": "Trickle-charge reference, Q6 base (CR28 / RT1 / R17 node); 33.0V dc vs TP1, set by R20 (Table 4-3; §4-44 step 10).",
+    "TP6": "+RAW, Q1 emitter after R1, P3-2; 32V dc vs TP4 (Table 4-3), 'approximately 32V dc' (§3-11).",
+    "E7": "LINE #1: the BLK lead from F1 (read from the sheet). Mains -- see the §4-51 WARNING.",
+    "E9": "LINE #2: the WHT lead from FL1 (read from the sheet). Mains.",
+    "E8": "CHASSIS GROUND: GRN/YEL from J1 / FL1 (read from the sheet).",
+    "E2": "AC SECONDARY (T1 ORN lead, one end of the separately drawn secondary winding): to CR3, C9 and the bridge (read from the sheet at 600 dpi; the transcription's VIO is the 1ST PRIMARY lead to E11).",
+    "E4": "AC SECONDARY (T1 ORN lead, the other end of the secondary): to CR2, C10 and the bridge (read from the sheet at 600 dpi; BLU is the 1ST PRIMARY lead to E10).",
+    "E3": "SHIELD #3 (T1 GRA lead): the C9 / C10 midpoint, connected to nothing else on the board (read from the sheet).",
+    "E1": "SHIELD #2 (T1 WHT lead): on the GUARD bus with E15 GUARD and P3-1 GUARD BOX / P3-6 GUARD (read from the sheet).",
+    "E12": "SHIELD #1 (T1 GRN lead, the shield drawn beside the core): on the chassis-ground bus with E8 CHASSIS GROUND and E13 (read from the sheet).",
+    "E13": "Jumper post on the chassis-ground bus (E8, E12); the test-time jumper ties E14 CORE either here (core to chassis) or to E15 (core to guard) (read from the sheet).",
+    "E15": "GUARD: the guard bus -- E1 SHIELD #2, P3-1 GUARD BOX and P3-6 GUARD -- and the other alternative for the E14 CORE jumper (read from the sheet).",
+    "E14": "CORE: T1 core lead, jumpered in test to E13 or to E15 GUARD (sheet lettering 'JUMPER SELECT IN TEST')."
+  },
+
+  "faultCodes": [
+    {
+      "code": "T4-2 fuse",
+      "title": "732A inoperative.",
+      "measure": "Fuse blown.",
+      "verdict": "Check fuse. F1 is in the rear-panel holder XF1: 3/8 A slow-blow for 100 V or 120 V, 3/16 A slow-blow for 230 V or 240 V (§4-27 -- it says '230V or 240V', not 220 V; the rear-panel legend and the sheet say 200-264V 3/16A SB; §2-19 says 1/4 A for 220-240 V -- see the caveat). Replace only with a 250 V fuse of the indicated value (rear-panel CAUTION). If the new fuse blows, go to 'Repeated fuse blowing'. With ac gone the AC PWR indicator is out; the battery keeps the reference alive only if BATTERY OPR is ON (§2-21).",
+      "refs": ["F1", "XF1", "J1"],
+      "source": "Table 4-2 (PDF p41); §4-27 (p30); §2-19 (p13); Figure 2-2 (p15)"
+    },
+    {
+      "code": "T4-2 incal",
+      "title": "IN CAL indicator off.",
+      "measure": "Lost ac power, battery dead.",
+      "verdict": "Charge battery, verify instrument calibration. The Voltage Monitor latches the IN CAL indicator off when the output of the Regulator is insufficient for proper operation (§3-5), which happens when ac was lost and the battery ran down. On A3 confirm the ac side first -- AC PWR lit, TP3 vs TP4 <=60 V, TP6 vs TP4 32 V (Table 4-3) -- then that the charger is charging: BTRY CHG on (steady; blinking means the battery is very low, Errata #7), TP2 vs TP1 <=31 V and TP5 vs TP1 33.0 V with the battery installed and BATTERY OPR ON. A discharged battery takes 24 hours to recharge from ac (§2-24). Reset IN CAL only after standardization has been re-verified (§2-26, §4-32).",
+      "refs": ["TP3", "TP4", "TP6", "TP2", "TP1", "TP5", "F1", "CR1", "Q1", "Q2", "Q6"],
+      "source": "Table 4-2 (PDF p41); §2-21, §2-24, §2-26 (p17); §3-5 (p21); Table 4-3 (p42)"
+    },
+    {
+      "code": "T4-2 fuse-primary",
+      "title": "Repeated fuse blowing.",
+      "measure": "AC line primary circuit.",
+      "verdict": "Visual inspection. The primary circuit is J1, FL1, F1 / XF1, the terminals E7 (LINE #1), E9 (LINE #2), E8 (CHASSIS GROUND), the Line Voltage Selector switches S1 / S2 and T1's primaries on E10 / E11, E5 / E6 and the tap E16. Check that S1 and S2 stand where Figure 4-5 puts them for the marked SUPPLY SETTING and that the setting matches the mains (§2-17, §4-29): a 100 / 120 V setting on a 220 / 240 V line is the classic cause. Disconnect ac before touching anything here (§4-51 WARNING).",
+      "refs": ["J1", "FL1", "F1", "XF1", "S1", "S2", "T1", "E7", "E9", "E8", "E10", "E11", "E5", "E6", "E16"],
+      "source": "Table 4-2 (PDF p41); §2-17 (p13); §4-28/4-29 and Figure 4-5 (p30-31)"
+    },
+    {
+      "code": "T4-2 fuse-xfmr",
+      "title": "Repeated fuse blowing.",
+      "measure": "Power transformer.",
+      "verdict": "(2) Return instrument to Fluke Technical Service Center for service. T1 (645036) is a Table 5-4 part but the manual gives no test for it; with the fuse out and ac disconnected, an ohmmeter can at least separate an open winding from a shorted rectifier (next two rows) before the unit is sent.",
+      "refs": ["T1", "E2", "E4", "E10", "E11", "E5", "E6", "E16"],
+      "source": "Table 4-2 and note (2) (PDF p41)"
+    },
+    {
+      "code": "T4-2 fuse-bridge",
+      "title": "Repeated fuse blowing.",
+      "measure": "Bridge rectifier.",
+      "verdict": "Use ohmmeter. Bridge CR1 (FB200) across the secondary E2 / E4 with its + at TP3 and - at TP4; a shorted leg loads the secondary every half cycle. Check C1 (100 uF) across TP3-TP4 and CR19 at the same time -- a shorted C1 blows the fuse the same way.",
+      "refs": ["CR1", "C1", "C2", "CR19", "TP3", "TP4"],
+      "source": "Table 4-2 (PDF p41); Figure 8-3 cont. (p89)"
+    },
+    {
+      "code": "T4-2 fuse-chg-rect",
+      "title": "Repeated fuse blowing.",
+      "measure": "Battery charger rectifier.",
+      "verdict": "Use ohmmeter. The charger's rectifier is CR2 (from E4) and CR3 (from E2), charging C3 (330 uF) whose - is on the TP4 return; a shorted CR2, CR3 or C3 loads the same secondary as the bridge. Ac disconnected.",
+      "refs": ["CR2", "CR3", "C3", "E2", "E4"],
+      "source": "Table 4-2 (PDF p41); Figure 8-3 cont. (p89)"
+    },
+    {
+      "code": "T4-2 nocharge",
+      "title": "Battery won't charge.",
+      "measure": "Battery charger defective.",
+      "verdict": "Troubleshoot and repair. Table 4-2 lists 'Defective battery -- Replace' first; the battery voltage is read at the rear-panel POWER INPUT connector (§2-21) and a discharged battery below 19 V may be damaged (§2-22 CAUTION). On A3, with the battery installed and BATTERY OPR ON: TP2 vs TP1 <=31 V and TP5 vs TP1 33.0 V (Table 4-3). No BTRY CHG and no DS1 with a low battery points at the constant-current side -- Q2, R3, DS1, R6, Q3, Q4, R10, CR15 and the sense chain CR26 / CR14 / R12-R14 / CR23 / C5 -- or at Q5 holding the charger off (battery thermistors A6 RT1 / RT2 on P3-11/12/15/16). BTRY CHG on but the battery not gaining points at the output path CR13, W1, CR16, or at the charger supply CR2 / CR3 / C3. A wrong TP5 points at CR28, RT1, R17, R18, R20 (R19 on Rev F) and Q6. After any repair perform the Battery Charger Adjustment Procedure (§4-44) -- it will cause loss of standardization.",
+      "refs": ["TP2", "TP1", "TP5", "Q2", "R3", "DS1", "R6", "Q3", "Q4", "R10", "CR15", "CR26", "CR14", "R12", "R13", "R14", "CR17", "C5", "Q5", "CR13", "W1", "CR16", "CR2", "CR3", "C3", "CR28", "RT1", "R17", "R18", "R20", "Q6"],
+      "source": "Table 4-2 (PDF p41); Table 4-3 (p42); §2-21, §2-22 (p17); §3-27, §3-28 (p22); §4-44 (p38)"
+    }
+  ],
+
+  "warnings": [
+    "WARNING (§4-51, PDF p40): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+    "CAUTION (§4-51): The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+    "CAUTION (§4-51): To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness.",
+    "CAUTION (§4-44, PDF p38): This procedure will cause loss of standardization. Calibration must be performed before reuse of the instrument.",
+    "Line voltage (732A-1003 J1 lettering; Table 1-2): 100-132V AC / 200-264V AC, 50-60 Hz, 30 VA -- 100V, 120V, 220V or 240V ac +/-10% selected by S1 / S2 inside the AC Module (§2-15, §2-17). J1, FL1, F1, S1, S2, T1's primaries and terminals E5-E11 and E16 are at mains potential. Rear-panel CAUTION: FOR FIRE PROTECTION REPLACE ONLY WITH A 250V FUSE OF THE INDICATED VALUE. 90-132V 3/8A SB, 200-264V 3/16A SB.",
+    "NOTE (§4-14, PDF p26): Either module, but NOT both, may be removed without loss of standardization. If the AC Module is removed, ensure that the rear panel, BATTERY OPR switch is set to ON and that the battery is charged before removing the AC Module. This will insure continued standardization.",
+    "CAUTION (§2-22, PDF p17): PERMANENT BATTERY DAMAGE WILL RESULT IF THE BATTERY IS ALLOWED TO DISCHARGE BELOW 19 VOLTS. THE DEGREE OF DAMAGE IS A FUNCTION OF THE DEPTH OF OVER-DISCHARGE AND THE BATTERY TEMPERATURE. -- Errata Issue 3 #2 adds: Unit must be in upright position during charging to avoid possible venting of electrolyte.",
+    "CAUTION (Figure 8-2, PDF p87; rear panel): TO PREVENT INSTRUMENT DAMAGE DO NOT CONNECT POWER INPUT TERMINALS TO FRONT PANEL TERMINALS OF SAME UNIT. USE FLOATING SOURCE ONLY.",
+    "WARNING (Section 4, PDF p25): THESE SERVICING INSTRUCTIONS ARE FOR USE BY QUALIFIED PERSONNEL ONLY. TO AVOID ELECTRICAL SHOCK, DO NOT PERFORM ANY SERVICING OTHER THAN THAT CONTAINED IN THE OPERATING INSTRUCTIONS UNLESS YOU ARE QUALIFIED TO DO SO. §2-17: refer the line voltage change and all servicing to qualified personnel."
+  ],
+
+  "caveats": [
+    {
+      "title": "CR17 on the board and parts list is CR23 on the schematic",
+      "text": "Table 5-4 lists CR17 (1N4448, REF) and no CR23; Figure 8-3's board drawing prints CR17 beside R13 / R15 and no CR23. The schematic's REF DESIG table says CR17 is not used and the sheet draws CR23 -- the diode between Q4's base node (C5, R15, CR21) and the R13 / R14 tap of the sense divider. Errata Figure 12 (Rev F) also letters it CR23. Both names are carried: CR17 is the parts-table item and CR23 the schematic-only item with CR17 as its alias; they are one diode.",
+      "refs": ["CR17", "CR23"],
+      "source": "Table 5-4 (PDF p54); Figure 8-3 (p88-89); Errata Change #10 Figure 12; docs/review-notes.md"
+    },
+    {
+      "title": "Figure 8-1's \"R50\" is R20",
+      "text": "The A3 block of the interconnect diagram letters the trickle-charge potentiometer R50. A3 has no R50 (Table 5-4 ends at R20; the sheet's REF DESIG box says last used R20). The pot in that position is R20 (50 K), the one §4-44 step 10 sets for 33.0 V at TP5.",
+      "refs": ["R20"],
+      "source": "Figure 8-1 (PDF p85); Table 5-4; docs/review-notes.md"
+    },
+    {
+      "title": "§4-44 names 'CR27' and 'A2'",
+      "text": "Steps 17, 19, 20 and 21 tell you to watch 'CR27 (CR27 is the voltage reference for the constant current source in the battery charger circuit, located on A2)'. A3 has no CR27 (REF DESIG table: CR27 not used) and the 1985 errata does not correct it. The part described is the on-board LED DS1 in Q2's base circuit; the front-panel indicator is BTRY CHG (A1 DS2). Step 12's 'Remove jumper W1 on A2' is corrected to A3 by Errata #8, and §4-45's 'Figure 4-8' to Figure 4-12. The procedure carries the corrected step 12 and the printed 'CR27' with DS1 in its refs.",
+      "refs": ["DS1", "W1"],
+      "source": "§4-44 (PDF p38); Figure 8-3 cont. REF DESIG table (p89); Errata Issue 3 (7/85) #8"
+    },
+    {
+      "title": "Table 4-3 prints no tolerances",
+      "text": "TP3-TP4 (<=60V dc) and TP2-TP1 (<=31V dc) are one-sided limits and are entered as such. TP6-TP4 (32V dc) and TP5-TP1 (33.0V dc) are bare nominals: the dataset assumes +/-5 % (1.6 V) on the 32 V because §3-11 says 'approximately 32V dc', and +/-0.5 V on the 33.0 V because the manual prints it to a tenth of a volt. Both are marked inferred and can be edited in Author Mode. §4-44's 'approximately 26V dc' (step 17) is given +/-1.5 V to match the 24.5-26.5 V band of step 20; its 32 V setting (step 18) +/-0.5 V as a setting resolution.",
+      "refs": ["TP3", "TP6", "TP2", "TP5"],
+      "source": "Table 4-3 (PDF p42); §3-11 (p21); §4-44 (p38)"
+    },
+    {
+      "title": "Sheets sh2 (Figure 8-1) and sh3 (Figure 8-2) are simplified",
+      "text": "Figure 8-1 draws only the A3 parts that take part in the interconnect (TP1-TP6, Q1-Q4, Q6, CR6, CR7, CR12, CR13, CR16, CR19, CR20, CR25, R1, R3, R4, R9-R13, R16, R17, W1, 'R50') and the transformer, bridge and LEDs without designators; Figure 8-2 shows the motherboard, battery module and LED PCB, not A3. Use them to see where a P3 pin goes, not to find a part or trace the charger.",
+      "refs": ["P3", "W1", "R20"],
+      "source": "Figure 8-1 (PDF p85); Figure 8-2 (p86-87); docs/review-notes.md"
+    },
+    {
+      "title": "R11: 12.7 K in the parts list, 6.65 K on the sheet",
+      "text": "Table 5-4: R11 RES, MTL. FILM, 12.7K +/-1%, 1/8W (294918, CMF551272F). Schematic 732A-1003 letters R11 6.65K (1/8 W or 1/2 W, the fraction is not legible), and Errata Figure 12 (Rev F) also prints 6.65K. The dataset shows the parts-list value on the part; measure before replacing.",
+      "refs": ["R11"],
+      "source": "Table 5-4 (PDF p55); Figure 8-3 cont. (p89); Errata Change #10 Figure 12; docs/review-notes.md"
+    },
+    {
+      "title": "R1: '.5' on the sheet, '10M' in Table 5-4",
+      "text": "Schematic 732A-1003 letters R1 '.5' (ohms per note 1) in Q1's emitter between the CR7-CR9 clamp and TP6. Table 5-4 (PDF p55) prints 'R1 RES, WW, 10M +/-0.5%, 1/2W, 212191' and Errata Change #4 repeats the same description for the Rev E stock number 717892. A 10 megohm wirewound resistor does not exist and would not work as an emitter resistor; '10M' is taken to be a parts-list misprint and the dataset shows the sheet's 0.5 ohm in R1's function while the part keeps the Table 5-4 description. Measure before replacing; order by stock number.",
+      "refs": ["R1"],
+      "source": "Figure 8-3 cont. (PDF p89); Table 5-4 (p55); Errata Issue 3 (7/85) Change #4"
+    },
+    {
+      "title": "R8: 402 ohm, though the sheet letters 4.02K",
+      "text": "Table 5-4: R8 RES, MTL. FILM, 402 +/-1%, 1/8W (289611, CMF554020F). The 1983 sheet letters 4.02K; Errata Change #10 (Rev F) says 'change the value for R8 from 402K to 402' and its Figure 12 prints 402. The parts list is right.",
+      "refs": ["R8"],
+      "source": "Table 5-4 (PDF p55); Figure 8-3 cont. (p89); Errata Change #10"
+    },
+    {
+      "title": "Fuse rating for 220 / 240 V: 3/16 A or 1/4 A",
+      "text": "The sheet (F1: 200-264V 3/16A SB), the rear-panel legend (200-264V 3/16A SB) and §4-27 (MDL 3/16, worded '230V or 240V ac operation' -- the manual's only mention of 230 V) say 3/16 A slow-blow; §2-19 says 'use a 1/4A Slow-Blow fuse' and Table 1-2 prints 0.250A/250V SLO-BLO for the 220 V and 240 V settings. Table 5-4 lists only the 3/8 A fuse (109264, 5 recommended spares). The 100 / 120 V rating is 3/8 A everywhere. Follow the rear-panel legend of the unit in hand.",
+      "refs": ["F1", "XF1"],
+      "source": "Figure 8-3 cont. (PDF p89); Figure 2-2 (p15); §4-27 (p30); §2-19 (p13); Table 1-2 (p10); Table 5-4 (p54)"
+    },
+    {
+      "title": "Figure 4-5's 240 V column has a misprinted switch label",
+      "text": "In the switch-setting table under Figure 4-5 the 240V column labels the left switch's top cell '100/220' instead of '100/120'. S1 has only the positions 100/120 and 220/240 (board drawing and sheet). The settings themselves are unambiguous: 120V = S1 100/120, S2 120/240; 100V = S1 100/120, S2 100/220; 240V = S1 220/240, S2 120/240; 220V = S1 220/240, S2 100/220.",
+      "refs": ["S1", "S2"],
+      "source": "Figure 4-5 (PDF p31); docs/manual/04-maintenance.md"
+    },
+    {
+      "title": "TP1 and TP4 are separate points but one node at the connector",
+      "text": "TP4 is the -RAW return (bridge CR1 -, C1 / C2 / C3 -, P3-8) and TP1 the -BATTERY return (P3-17). On the sheet the TP4 line also runs to P3-18, which is drawn tied to P3-17, and on the motherboard J3-17/18 go to J4-2 (battery -) and J2-21/22 while J3-8 goes to J2-23/24 -- A4 shows P2-21..24 on one -BATTERY / -RAW bus (A4 TP3). So the two returns are the same potential but the copper between them carries the charging current; Table 4-3 names TP4 for TP3 / TP6 and TP1 for TP2 / TP5, and the dataset keeps them apart.",
+      "refs": ["TP1", "TP4", "P3"],
+      "source": "Figure 8-3 cont. (PDF p89); Figure 8-2 cont. (p87); Figure 8-4 (p91)"
+    },
+    {
+      "title": "The drawings are Rev B; Rev E and Rev F changed the board",
+      "text": "Table 7A-1 documents A3 (642264) at Rev B. Errata Change #4 (Rev E) gives R1 the stock number 717892 (same part); Change #10 (Rev F) adds R19 (15 K) between R18 and R20 in the trickle reference divider and redraws the layout (errata Figure 11) and the charger schematic (Figure 12). R19 is in the parts list here as notOnDrawing and has no marker on the 1983 drawing; on a Rev F board it sits beside R18 / R20 at the lower left. Figure 12 also letters the current-regulator diodes' currents: CR20, CR21, CR22 1 mA, CR26 3 mA, CR28 .47 mA.",
+      "refs": ["R1", "R19", "R18", "R20"],
+      "source": "Table 7A-1 (PDF p82); Errata Issue 3 (7/85) Changes #4 and #10"
+    },
+    {
+      "title": "The pre-regulator's reference stands on the AC PWR LED",
+      "text": "Read from the sheet: the CR5 / CR10 (30 V) clamp that sets Q1's base is returned not to -RAW but to the AC POWER LED node (P3-4), which R9 pulls up from TP3 and CR12 (5.2 V) clamps, and across which the front-panel AC PWR LED (A1 DS1) sits through P3-4 / P3-7. Installed, that node rests at the LED's forward drop and TP6 reads about 32 V; with the LED harness open (or the AC Module powered outside the chassis with P3 disconnected) CR12 takes over and +RAW rises by roughly the difference, 3 V or so. Table 4-3's 32 V is for the installed instrument. This is the dataset's reading of the sheet, not a statement in the manual.",
+      "refs": ["CR5", "CR10", "CR12", "R9", "Q1", "TP6"],
+      "source": "Figure 8-3 cont. (PDF p89), read from the sheet; Figure 8-2 cont. W2 legend (p87)"
+    },
+    {
+      "title": "Control-side routing: how the thermistors and the BTRY CHG LED are wired (read from the sheet)",
+      "text": "732A-1003 is hand-drawn with a dozen parallel buses between the Schmitt trigger, Q5 and P3; they were followed one by one at 600 dpi and the result is the dataset's reading, not a statement in the manual. R11 hangs from the TP2 line (the CR26 / CR14 node) down to Q5's base, and CR22 (1 mA) carries that node's current into Q3's base / Q4's collector. P3-11 is the TP2 line and P3-12 the Q5 base node, so A6 RT1 (THERMISTOR) is in parallel with R11; P3-15 is the top of R12 (the CR14 anode, also Q5's emitter) and P3-16 the R12 / R13 tap, so A6 RT2 (THERMISTOR VOLTAGE COMPENSATION) is in parallel with R12. P3-13 (+ BATTERY CHARGE LED) is the DS1-cathode / Q2-base node and P3-14 (-) is Q3's collector node, so the front-panel BTRY CHG LED (A1 DS2) sits in parallel with R6 and lights whenever DS1 does. Q4's emitter goes straight to the shared emitter node above R10 / CR15; R8 is in series with CR11 from Q3's base to that node, not in Q4's emitter. Nothing in Table 4-3 or §4-44 depends on these details, but they explain why a cold battery (A6 RT1 high) or an open thermistor lead stops the high-rate charge, and why a BTRY CHG indicator that never lights with DS1 lit points at the W2 harness or A1 DS2 rather than at A3.",
+      "refs": ["R11", "CR22", "Q3", "Q4", "Q5", "R6", "R12", "CR14", "P3"],
+      "source": "Figure 8-3 cont. (PDF p89), read from the sheet at 600 dpi; Figure 8-2 cont. J3 / W2 legend (p87)"
+    },
+    {
+      "title": "Derived figures are derived",
+      "text": "Voltages in notes given as 'about' -- 30-33 V at TP6 from the CR10 / CR12 / LED chain, 200-400 mA from the DS1 drop across R3, TP2 less 5.2 V at the top of R12, 5.6 V plus the R10 drop at the Schmitt emitters -- come from printed part values and the errata's current figures. Only Table 4-3's four rows and §4-44's numbers are published; the derived ones are for recognising a reading, not passing one.",
+      "refs": ["TP6", "TP2", "TP5", "R3", "R10"],
+      "source": "Table 4-3 (PDF p42); §4-44 (p38); Figure 8-3 cont. (p89)"
+    },
+    {
+      "title": "CR6 is drawn like a current-regulator diode",
+      "text": "On the sheet CR6 carries the I-bar symbol the drafter uses for the current-regulator diodes CR20-CR22, CR24-CR26 and CR28 (the transcription says CR11 does too; at 600 dpi CR11's bar reads as plain), but Table 5-4 lists CR6 in the CR5-CR9 row as 1N4448 switching diodes. The parts list is followed.",
+      "refs": ["CR6", "CR11"],
+      "source": "Figure 8-3 cont. (PDF p89); Table 5-4 (p54); docs/manual/08-schematic-and-interconnect-notes.md"
+    }
+  ],
+
+  "foreignStepRefs": {},
+
+  "tables": [
+    {
+      "title": "Table 4-3. Internal Measurements* -- A3 rows",
+      "source": "Table 4-3 (PDF p42, manual p4-18)",
+      "rows": [
+        { "PCB": "A3", "TEST POINTS": "TP3, TP4", "CORRECT VOLTAGE READING": "≤60V dc", "CORRECTIVE ACTION": "AC line voltage, Rectifier, Power Transformer" },
+        { "PCB": "A3", "TEST POINTS": "TP6, TP4", "CORRECT VOLTAGE READING": "32V dc", "CORRECTIVE ACTION": "Pre-Regulator" },
+        { "PCB": "A3", "TEST POINTS": "TP2, TP1", "CORRECT VOLTAGE READING": "≤31V dc", "CORRECTIVE ACTION": "Battery Charger**" },
+        { "PCB": "A3", "TEST POINTS": "TP5, TP1", "CORRECT VOLTAGE READING": "33.0V dc", "CORRECTIVE ACTION": "Battery Charger**" }
+      ],
+      "note": "*Voltage measurements taken with Multimeter A, except for those marked with *** in corrective action column. **Conditions: battery installed, BATTERY OPR switch ON. The first-named test point is positive with respect to the second (§4-44 steps 7 and 14 say so for TP5 / TP2 vs TP1). Multimeter A (Table 4-1): 4-1/2 digit display, 20 kΩ resistance range, 200 mV to 200 V ac or dc; Fluke 8050A, 8060A."
+    },
+    {
+      "title": "Line voltage settings, limits and fuse (Table 1-2, Figure 4-5, F1 legend)",
+      "source": "Table 1-2 LINE POWER REQUIREMENTS (PDF p10); Figure 4-5 switch table (p31); §4-27 (p30); §2-19 (p13); F1 lettering on 732A-1003 (p89) and the rear panel (p15)",
+      "rows": [
+        { "nominal setting": "100V", "voltage limits": "90-110V", "S1": "100/120", "S2": "100/220", "fuse (Table 1-2)": "0.375A/250V SLO-BLO", "fuse (§4-27, sheet, rear panel)": "MDL 3/8 -- 3/8A SB" },
+        { "nominal setting": "120V", "voltage limits": "108-132V", "S1": "100/120", "S2": "120/240", "fuse (Table 1-2)": "0.375A/250V SLO-BLO", "fuse (§4-27, sheet, rear panel)": "MDL 3/8 -- 3/8A SB" },
+        { "nominal setting": "220V", "voltage limits": "198-242V", "S1": "220/240", "S2": "100/220", "fuse (Table 1-2)": "0.250A/250V SLO-BLO", "fuse (§4-27, sheet, rear panel)": "MDL 3/16 -- 3/16A SB (§4-27 words it '230V or 240V'; §2-19: 1/4A)" },
+        { "nominal setting": "240V", "voltage limits": "216-264V", "S1": "220/240", "S2": "120/240", "fuse (Table 1-2)": "0.250A/250V SLO-BLO", "fuse (§4-27, sheet, rear panel)": "MDL 3/16 -- 3/16A SB (§2-19: 1/4A)" }
+      ],
+      "note": "§4-29 step 1 before changing the setting: ensure that the battery is charged or an appropriate external ac or dc source is connected to the POWER INPUT jacks, so standardization is kept while ac is removed. S1 and S2 are the two slide switches at the upper right of the board (Figure 4-5, 'AC LINE VOLTAGE SELECTION SWITCHES'); the rear-panel SUPPLY SETTING label must agree with the switches (§2-17). Table 5-4 lists only the 3/8 A fuse."
+    },
+    {
+      "title": "P3 pin legend (A3 P3 mates A2 J3)",
+      "source": "Figure 8-3 cont. P3 lettering (PDF p89); Figure 8-1 (p85); Figure 8-2 cont. J3 table (p87); Figure 8-4 P2 legend (p91)",
+      "rows": [
+        { "pin": "1", "lettering": "GUARD BOX", "on A3": "strapped to pin 6", "beyond J3": "J3-1 COMMON (GUARD BOX), ground symbol" },
+        { "pin": "2", "lettering": "+ RAW", "on A3": "TP6, right of R1 .5", "beyond J3": "J2-13/14 to A4 P2-13/14 +RAW" },
+        { "pin": "3", "lettering": "SWITCH CONTROL", "on A3": "the AC POWER LED node (CR10 / CR12 / R9)", "beyond J3": "J2-17 to A4 P2-17, NC on the A4 sheet" },
+        { "pin": "4", "lettering": "+ AC POWER LED", "on A3": "CR12 cathode node", "beyond J3": "W2 RED 12 to A1 pad 12 (DS1 AC PWR)" },
+        { "pin": "5", "lettering": "NC", "on A3": "-", "beyond J3": "J3-5 NC" },
+        { "pin": "6", "lettering": "GUARD", "on A3": "strapped to pin 1", "beyond J3": "J3-6 NC" },
+        { "pin": "7", "lettering": "- AC POWER LED", "on A3": "strapped to pin 8 (-RAW)", "beyond J3": "W2 ORN 13 to A1 pad 13; J3-7 tied to J3-8" },
+        { "pin": "8", "lettering": "- RAW", "on A3": "TP4 return; bridge CR1 -, C1 / C2 / C3 -", "beyond J3": "J2-23/24 to A4 P2-23/24 -RAW (A4 TP3)" },
+        { "pin": "9", "lettering": "+ BATTERY", "on A3": "CR13 cathode (charger output)", "beyond J3": "J3-9/10 tied; J4-1 (A6 P4-1, battery + through BATTERY ON-OFF) and J2-15 to A4 P2-15 (+BATTERY, CR15 to +RAW)" },
+        { "pin": "10", "lettering": "+ BATTERY", "on A3": "CR16 cathode (trickle), tied to 9", "beyond J3": "tied to 9" },
+        { "pin": "11", "lettering": "THERMISTOR", "on A3": "the TP2 / W1 lower-circle line (CR26 / CR14 / R11 top)", "beyond J3": "J4-3, A6 RT1 one end" },
+        { "pin": "12", "lettering": "THERMISTOR", "on A3": "Q5 base / R11 bottom / CR22 anode node -- A6 RT1 is thus in parallel with R11", "beyond J3": "J4-4, A6 RT1 other end (RT1 10K 25°C)" },
+        { "pin": "13", "lettering": "+ BATTERY CHARGE LED", "on A3": "DS1 cathode / Q2 base / R6 top / CR18 anode node", "beyond J3": "W2 VIO 17 to A1 pad 17 (DS2 BTRY CHG)" },
+        { "pin": "14", "lettering": "- BATTERY CHARGE LED", "on A3": "Q3 collector / R6 bottom / C4 node -- DS2 is thus in parallel with R6", "beyond J3": "W2 GRA 18 to A1 pad 18" },
+        { "pin": "15", "lettering": "THERMISTOR VOLTAGE COMPENSATION", "on A3": "top of R12 (CR14 anode, Q5 emitter)", "beyond J3": "J4-5, A6 RT2 one end" },
+        { "pin": "16", "lettering": "THERMISTOR VOLTAGE COMPENSATION", "on A3": "R12 / R13 tap -- A6 RT2 is thus in parallel with R12", "beyond J3": "J4-6, A6 RT2 other end (RT2 10K 25°C)" },
+        { "pin": "17", "lettering": "- BATTERY", "on A3": "TP1; bottom of R14 / R20 / C5 / C6 / CR15", "beyond J3": "J3-17/18 tied; J4-2 (A6 P4-2, battery -) and J2-21/22 to A4 P2-21/22" },
+        { "pin": "18", "lettering": "- BATTERY", "on A3": "tied to 17; the TP4 return line also arrives here", "beyond J3": "tied to 17" }
+      ],
+      "note": "Pin numbers are the same on both sides of the card-edge connector. The 'on A3' column for pins 11-16 was read off the hand-drawn buses at 600 dpi (see the control-side caveat); the destinations beyond J3 are from Figures 8-1 and 8-2."
+    },
+    {
+      "title": "Board-edge terminals E1-E16 (transformer, filter, fuse and line leads)",
+      "source": "Figure 8-3 cont. E-terminal lettering and T1 lead colours (PDF p89)",
+      "rows": [
+        { "E": "E7", "lettering": "LINE #1", "lead": "BLK from F1 / FL1", "goes to": "S1 / S2 primary network (mains)" },
+        { "E": "E9", "lettering": "LINE #2", "lead": "WHT from FL1", "goes to": "S1 / S2 primary network (mains)" },
+        { "E": "E8", "lettering": "CHASSIS GROUND", "lead": "GRN/YEL", "goes to": "chassis" },
+        { "E": "E11", "lettering": "1ST PRIMARY", "lead": "T1 VIO", "goes to": "S1 left-pole common" },
+        { "E": "E10", "lettering": "1ST PRIMARY (dot)", "lead": "T1 BLU", "goes to": "E7 LINE #1 directly, and the S1 right-pole 100-120V contact" },
+        { "E": "E6", "lettering": "2ND PRIMARY", "lead": "T1 BRN", "goes to": "S1 left-pole 100-120V contact and S2 120-240V contact" },
+        { "E": "E5", "lettering": "2ND PRIMARY (dot)", "lead": "T1 BLK", "goes to": "S1 right-pole common" },
+        { "E": "E16", "lettering": "2ND TAP", "lead": "T1 YEL", "goes to": "S2 100-220V contact (S2 common is E9 LINE #2)" },
+        { "E": "E2", "lettering": "AC SECONDARY", "lead": "T1 ORN", "goes to": "bridge CR1, CR3, C9" },
+        { "E": "E4", "lettering": "AC SECONDARY", "lead": "T1 ORN", "goes to": "bridge CR1, CR2, C10" },
+        { "E": "E1", "lettering": "SHIELD #2", "lead": "T1 WHT", "goes to": "GUARD bus: E15, P3-1 GUARD BOX, P3-6 GUARD" },
+        { "E": "E3", "lettering": "SHIELD #3", "lead": "T1 GRA", "goes to": "C9 / C10 midpoint only" },
+        { "E": "E12", "lettering": "SHIELD #1", "lead": "T1 GRN (shield beside the core)", "goes to": "chassis-ground bus: E8, E13" },
+        { "E": "E14", "lettering": "CORE", "lead": "T1 core", "goes to": "dashed test jumper to E13 or E15 ('JUMPER SELECT IN TEST')" },
+        { "E": "E13", "lettering": "(jumper post)", "lead": "-", "goes to": "chassis-ground bus (E8, E12); E14 jumper alternative (core to chassis)" },
+        { "E": "E15", "lettering": "GUARD", "lead": "-", "goes to": "GUARD bus (E1, P3-1, P3-6); E14 jumper alternative (core to guard)" }
+      ],
+      "note": "Read from the sheet at 600 dpi; the lead colours are T1's as lettered on the transformer symbol and followed to the terminals (the secondary is the separately drawn winding with the two ORN leads; VIO / BLU are the 1ST PRIMARY and BRN / YEL / BLK the tapped 2ND PRIMARY). S1's 220-240V position straps the two pole commons (E11 to E5) and puts the primaries in series; the 100-120V position ties E11 to E6 and E5 to E7 / E10, putting them in parallel. None of the E terminals is a Table 5-4 line. Everything above the secondary is at mains potential when the line cord is connected -- §4-51 WARNING."
+    },
+    {
+      "title": "Table 4-1 equipment for the A3 procedures (D = Battery charger adjustment, E = Troubleshooting)",
+      "source": "Table 4-1 (PDF p26, manual p4-2); Errata Issue 3 (7/85) #6",
+      "rows": [
+        { "type": "Multimeter A", "required specifications": "4½-digit display; 20 kΩ resistance range; 200 mV to 200V ac or dc", "recommended model": "Fluke 8050A, 8060A", "procedure": "A, D, E" },
+        { "type": "Rheostat", "required specifications": "50 kΩ, ½W", "recommended model": "Fluke P/N 484089 (501601 per Errata #6)", "procedure": "D" },
+        { "type": "Variac", "required specifications": "120V, 1A, metered", "recommended model": "GenRad W5MT3A", "procedure": "D" },
+        { "type": "Load Resistor", "required specifications": "1 kΩ, ½W Carbon Composition", "recommended model": "Fluke P/N 108597", "procedure": "B, D" }
+      ],
+      "note": "Table 4-3's footnote: voltage measurements taken with Multimeter A. The Variac's ammeter is what §4-44 steps 17, 19 and 20 read the ac line current on (approximately 110 mA at 115V ac, 55 mA at 220V ac when the high-rate charge comes on)."
+    }
+  ]
+}

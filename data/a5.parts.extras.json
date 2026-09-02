@@ -1,0 +1,316 @@
+{
+ "_comment": [
+  "Harness terminals lettered on schematic 732A-1001 (E12, 13, 19, 20, 29-32 are not used per its REF DESIGNATIONS box). No parts-table row; kept so the interconnect wiring can be searched and located."
+ ],
+ "components": [
+  {
+   "ref": "E1",
+   "kind": "terminal",
+   "desc": "Terminal, BRN, to motherboard (U3 supply return)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E2",
+   "kind": "terminal",
+   "desc": "Terminal, RED, to motherboard (thermistor bridge return)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E3",
+   "kind": "terminal",
+   "desc": "Terminal, ORN, to motherboard (common rail)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E4",
+   "kind": "terminal",
+   "desc": "Terminal, YEL, to motherboard (CR6/Q2 rail)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E5",
+   "kind": "terminal",
+   "desc": "Terminal, GRN, to motherboard (Q2 base line)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E6",
+   "kind": "terminal",
+   "desc": "Terminal, BLU, to motherboard (Q1 lower leg)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E7",
+   "kind": "terminal",
+   "desc": "Terminal, VIO, to motherboard (Q1 base line)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E8",
+   "kind": "terminal",
+   "desc": "Terminal, GRA, to motherboard (18.6 V supply)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E9",
+   "kind": "terminal",
+   "desc": "Terminal, WHT, to motherboard (top rail, TP6, RT3/RT4)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E10",
+   "kind": "terminal",
+   "desc": "Terminal, BLK, to motherboard",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E11",
+   "kind": "terminal",
+   "desc": "Terminal, BRN, to motherboard",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E14",
+   "kind": "terminal",
+   "desc": "Terminal, Calibration tap, 40 ppm (RED to A7)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E15",
+   "kind": "terminal",
+   "desc": "Terminal, Calibration tap, 20 ppm (ORN to A7)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E16",
+   "kind": "terminal",
+   "desc": "Terminal, Calibration tap, 10 ppm (YEL to A7)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E17",
+   "kind": "terminal",
+   "desc": "Terminal, Calibration tap, 5 ppm (GRN to A7)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E18",
+   "kind": "terminal",
+   "desc": "Terminal, Calibration tap common (BRN to A7)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E21",
+   "kind": "terminal",
+   "desc": "Terminal, THERMISTOR (RT2, to front panel OVEN TEMP THMS)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E22",
+   "kind": "terminal",
+   "desc": "Terminal, THERMISTOR (RT2 / R43 / C1 node, to front panel)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E23",
+   "kind": "terminal",
+   "desc": "Terminal, 10V HI (to front panel)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E24",
+   "kind": "terminal",
+   "desc": "Terminal, 10V HI (to front panel)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E25",
+   "kind": "terminal",
+   "desc": "Terminal, 10V HI (into the front-panel terminal strip)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E26",
+   "kind": "terminal",
+   "desc": "Terminal, LO (into the front-panel terminal strip)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E27",
+   "kind": "terminal",
+   "desc": "Terminal, LO (to front panel)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E28",
+   "kind": "terminal",
+   "desc": "Terminal, LO (to front panel)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E33",
+   "kind": "terminal",
+   "desc": "Terminal, 10V HI (front panel binding post)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E34",
+   "kind": "terminal",
+   "desc": "Terminal, 1.018V HI (front panel binding post)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E35",
+   "kind": "terminal",
+   "desc": "Terminal, 1V HI (front panel binding post)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "E36",
+   "kind": "terminal",
+   "desc": "Terminal, LO (front panel binding post)",
+   "src": "Figure 8-5 (cont)",
+   "notInParts": true
+  },
+  {
+   "ref": "A5A8",
+   "kind": "part",
+   "desc": "PIGGYBACK PCB (1 V / 1.018 V divider taps), Rev E",
+   "fluke": "751560",
+   "mfrCode": "89536",
+   "mfrPart": "751560",
+   "qty": "1",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true,
+   "notes": "Added at Rev E; carries R44/R46 and R45/R47 matched sets and J1-J5. Not on the 1983 drawing (errata Figure 9 shows it)."
+  },
+  {
+   "ref": "J1",
+   "kind": "connector",
+   "desc": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ (A5A8 piggyback PCB pin), Rev E",
+   "fluke": "601914",
+   "mfrCode": "00779",
+   "mfrPart": "9-87022-9",
+   "qty": "5",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true
+  },
+  {
+   "ref": "J2",
+   "kind": "connector",
+   "desc": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ (A5A8 piggyback PCB pin), Rev E",
+   "fluke": "601914",
+   "mfrCode": "00779",
+   "mfrPart": "9-87022-9",
+   "qty": "5",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true
+  },
+  {
+   "ref": "J3",
+   "kind": "connector",
+   "desc": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ (A5A8 piggyback PCB pin), Rev E",
+   "fluke": "601914",
+   "mfrCode": "00779",
+   "mfrPart": "9-87022-9",
+   "qty": "5",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true
+  },
+  {
+   "ref": "J4",
+   "kind": "connector",
+   "desc": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ (A5A8 piggyback PCB pin), Rev E",
+   "fluke": "601914",
+   "mfrCode": "00779",
+   "mfrPart": "9-87022-9",
+   "qty": "5",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true
+  },
+  {
+   "ref": "J5",
+   "kind": "connector",
+   "desc": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ (A5A8 piggyback PCB pin), Rev E",
+   "fluke": "601914",
+   "mfrCode": "00779",
+   "mfrPart": "9-87022-9",
+   "qty": "5",
+   "src": "Errata Issue 3 (7/85), Change #9 (Rev E)",
+   "notInParts": true,
+   "notOnDrawing": true
+  }
+ ],
+ "amend": [
+  {
+   "ref": "CR1",
+   "aliases": [
+    "VR1"
+   ],
+   "notes": "VR1 from Rev C (Errata Change #1)"
+  },
+  {
+   "ref": "CR2",
+   "aliases": [
+    "VR2"
+   ],
+   "notes": "VR2 from Rev C (Errata Change #1)"
+  },
+  {
+   "ref": "CR6",
+   "aliases": [
+    "VR6"
+   ],
+   "notes": "VR6 from Rev C (Errata Change #1)"
+  },
+  {
+   "ref": "CR8",
+   "aliases": [
+    "VR8"
+   ],
+   "notes": "VR8 from Rev C (Errata Change #1)"
+  },
+  {
+   "ref": "R13",
+   "laterFluke": "711184",
+   "notes": "Later stock no. 711184 (same part, RES, WW, 125 +/-0.5%, 1/2W) from Rev D -- Errata Issue 3 (7/85), Change #3 - 19150. The 1983 table prints 213934."
+  },
+  {
+   "ref": "R8",
+   "laterFluke": "715706",
+   "notes": "Later stock no. 715706 (same part, RES, REF. AMP DIVIDER SET) -- Errata Issue 3 (7/85), Change #8. The 1983 table prints 346304."
+  }
+ ]
+}

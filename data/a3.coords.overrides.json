@@ -1,0 +1,500 @@
+{
+ "confirm": [
+  "C1",
+  "C10",
+  "C2",
+  "C3",
+  "C4",
+  "C5",
+  "C6",
+  "C9",
+  "CR1",
+  "CR10",
+  "CR11",
+  "CR12",
+  "CR13",
+  "CR14",
+  "CR15",
+  "CR16",
+  "CR17",
+  "CR18",
+  "CR19",
+  "CR2",
+  "CR20",
+  "CR21",
+  "CR22",
+  "CR24",
+  "CR25",
+  "CR26",
+  "CR28",
+  "CR3",
+  "CR4",
+  "CR5",
+  "CR6",
+  "CR7",
+  "CR8",
+  "CR9",
+  "DS1",
+  "P3",
+  "Q1",
+  "Q2",
+  "Q3",
+  "Q5",
+  "Q6",
+  "R1",
+  "R10",
+  "R11",
+  "R12",
+  "R14",
+  "R15",
+  "R16",
+  "R18",
+  "R20",
+  "R3",
+  "R4",
+  "R6",
+  "R7",
+  "R8",
+  "R9",
+  "RT1",
+  "S1",
+  "S2",
+  "TP1",
+  "TP2",
+  "TP3",
+  "TP4",
+  "TP5",
+  "TP6",
+  "W1"
+ ],
+ "_comment": [
+  "Hand corrections over the readers. 'confirm' / 'confirmSchematic' list read",
+  "positions that a reviewer looked at and found on the right lettering",
+  "(tools/apply_review.py); 'board' / 'schematic' carry hand-placed boxes in pixels",
+  "of .build/<asm>/drawing_full.png and schN_full.png; 'drop' names reads that",
+  "point at another part's label."
+ ],
+ "confirmSchematic": {
+  "sh1": [
+   "C1",
+   "C10",
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C6",
+   "C9",
+   "CR1",
+   "CR10",
+   "CR11",
+   "CR12",
+   "CR13",
+   "CR14",
+   "CR15",
+   "CR16",
+   "CR18",
+   "CR19",
+   "CR2",
+   "CR20",
+   "CR21",
+   "CR22",
+   "CR23",
+   "CR24",
+   "CR25",
+   "CR26",
+   "CR28",
+   "CR3",
+   "CR4",
+   "CR5",
+   "CR6",
+   "CR7",
+   "CR8",
+   "CR9",
+   "DS1",
+   "E1",
+   "E10",
+   "E11",
+   "E12",
+   "E13",
+   "E14",
+   "E15",
+   "E16",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8",
+   "E9",
+   "F1",
+   "FL1",
+   "P3",
+   "Q1",
+   "Q2",
+   "Q3",
+   "Q4",
+   "Q5",
+   "Q6",
+   "R1",
+   "R10",
+   "R11",
+   "R12",
+   "R13",
+   "R14",
+   "R15",
+   "R16",
+   "R17",
+   "R18",
+   "R20",
+   "R3",
+   "R4",
+   "R6",
+   "R7",
+   "R8",
+   "R9",
+   "RT1",
+   "S1",
+   "S2",
+   "T1",
+   "TP1",
+   "TP2",
+   "TP3",
+   "TP4",
+   "TP5",
+   "TP6",
+   "W1"
+  ]
+ },
+ "drop": [
+  "F1",
+  "FL1",
+  "H1",
+  "T1"
+ ],
+ "notOnDrawing": [
+  "CR23",
+  "E1",
+  "E10",
+  "E11",
+  "E12",
+  "E13",
+  "E14",
+  "E15",
+  "E16",
+  "E2",
+  "E3",
+  "E4",
+  "E5",
+  "E6",
+  "E7",
+  "E8",
+  "E9",
+  "F1",
+  "FL1",
+  "H1",
+  "H11",
+  "H12",
+  "H13",
+  "H14",
+  "H15",
+  "H16",
+  "H17",
+  "H18",
+  "H2",
+  "H3",
+  "MP1",
+  "MP11",
+  "MP12",
+  "MP13",
+  "MP14",
+  "MP2",
+  "MP3",
+  "T1",
+  "XF1"
+ ],
+ "dropSchematic": {
+  "sh1": [
+   "CR17",
+   "H2"
+  ]
+ },
+ "_dropComment": [
+  "Reads the reviewers found on another part's lettering: the tesseract pass snapped hardware designators (fuse, filter, transformer, screws, heat sinks) that have no silkscreen onto the nearest similar text, and R17 onto CR17. notOnDrawing lists every part of Table 5-x that carries no designator on the drawing."
+ ],
+ "schematic": {
+  "sh2": {
+   "CR6": {
+    "x": 1632,
+    "y": 1108,
+    "w": 88,
+    "h": 49,
+    "_fromSys": "A3CR6"
+   },
+   "CR7": {
+    "x": 2120,
+    "y": 924,
+    "w": 126,
+    "h": 52,
+    "_fromSys": "A3CR7"
+   },
+   "CR12": {
+    "x": 2140,
+    "y": 1160,
+    "w": 149,
+    "h": 50,
+    "_fromSys": "A3CR12"
+   },
+   "CR13": {
+    "x": 1693,
+    "y": 1601,
+    "w": 148,
+    "h": 52,
+    "_fromSys": "A3CR13"
+   },
+   "CR16": {
+    "x": 2204,
+    "y": 1672,
+    "w": 145,
+    "h": 52,
+    "_fromSys": "A3CR16"
+   },
+   "CR19": {
+    "x": 1536,
+    "y": 756,
+    "w": 127,
+    "h": 51,
+    "_fromSys": "A3CR19"
+   },
+   "CR20": {
+    "x": 1820,
+    "y": 1650,
+    "w": 153,
+    "h": 53,
+    "_fromSys": "A3CR20"
+   },
+   "CR25": {
+    "x": 1556,
+    "y": 931,
+    "w": 147,
+    "h": 50,
+    "_fromSys": "A3CR25"
+   },
+   "P3": {
+    "x": 2422,
+    "y": 338,
+    "w": 205,
+    "h": 71,
+    "_fromSys": "A3P3"
+   },
+   "Q1": {
+    "x": 1693,
+    "y": 756,
+    "w": 72,
+    "h": 53,
+    "_fromSys": "A3Q1"
+   },
+   "Q2": {
+    "x": 1272,
+    "y": 1484,
+    "w": 100,
+    "h": 51,
+    "_fromSys": "A3Q2"
+   },
+   "Q3": {
+    "x": 1176,
+    "y": 2399,
+    "w": 93,
+    "h": 54,
+    "_fromSys": "A3Q3"
+   },
+   "Q4": {
+    "x": 901,
+    "y": 2518,
+    "w": 100,
+    "h": 53,
+    "_fromSys": "A3Q4"
+   },
+   "Q6": {
+    "x": 1986,
+    "y": 1662,
+    "w": 99,
+    "h": 51,
+    "_fromSys": "A3Q6"
+   },
+   "R1": {
+    "x": 1879,
+    "y": 773,
+    "w": 64,
+    "h": 52,
+    "_fromSys": "A3R1"
+   },
+   "R3": {
+    "x": 944,
+    "y": 1503,
+    "w": 89,
+    "h": 52,
+    "_fromSys": "A3R3"
+   },
+   "R4": {
+    "x": 1626,
+    "y": 1677,
+    "w": 90,
+    "h": 54,
+    "_fromSys": "A3R4"
+   },
+   "R9": {
+    "x": 1279,
+    "y": 958,
+    "w": 76,
+    "h": 53,
+    "_fromSys": "A3R9"
+   },
+   "R10": {
+    "x": 1444,
+    "y": 2926,
+    "w": 122,
+    "h": 51,
+    "_fromSys": "A3R10"
+   },
+   "R11": {
+    "x": 906,
+    "y": 2114,
+    "w": 84,
+    "h": 53,
+    "_fromSys": "A3R11"
+   },
+   "R12": {
+    "x": 651,
+    "y": 2262,
+    "w": 56,
+    "h": 55,
+    "_fromSys": "A3R12"
+   },
+   "R13": {
+    "x": 568,
+    "y": 2472,
+    "w": 57,
+    "h": 104,
+    "_fromSys": "A3R13"
+   },
+   "R16": {
+    "x": 2186,
+    "y": 1881,
+    "w": 103,
+    "h": 52,
+    "_fromSys": "A3R16"
+   },
+   "R17": {
+    "x": 2192,
+    "y": 2168,
+    "w": 104,
+    "h": 54,
+    "_fromSys": "A3R17"
+   },
+   "R20": {
+    "x": 2200,
+    "y": 2483,
+    "w": 123,
+    "h": 52,
+    "_fromSys": "A3R20"
+   },
+   "TP1": {
+    "x": 1698,
+    "y": 3088,
+    "w": 117,
+    "h": 57,
+    "_fromSys": "A3TP1"
+   },
+   "TP2": {
+    "x": 866,
+    "y": 1807,
+    "w": 135,
+    "h": 52,
+    "_fromSys": "A3TP2"
+   },
+   "TP3": {
+    "x": 947,
+    "y": 566,
+    "w": 148,
+    "h": 62,
+    "_fromSys": "A3TP3"
+   },
+   "TP4": {
+    "x": 1098,
+    "y": 1438,
+    "w": 149,
+    "h": 55,
+    "_fromSys": "A3TP4"
+   },
+   "TP5": {
+    "x": 1797,
+    "y": 1968,
+    "w": 122,
+    "h": 53,
+    "_fromSys": "A3TP5"
+   },
+   "TP6": {
+    "x": 2085,
+    "y": 672,
+    "w": 128,
+    "h": 53,
+    "_fromSys": "A3TP6"
+   },
+   "W1": {
+    "x": 1104,
+    "y": 1902,
+    "w": 79,
+    "h": 46,
+    "_fromSys": "A3W1"
+   }
+  },
+  "sh3": {}
+ },
+ "sheetImageSize": {
+  "sh2": {
+   "w": 9517,
+   "h": 5608
+  },
+  "sh3": {
+   "w": 9436,
+   "h": 5556
+  },
+  "sh1": {
+   "w": 9440,
+   "h": 5567
+  }
+ },
+ "_sharedComment": [
+  "schematic.sh2 (and sh3 on A3/A4) are the positions read on the shared Figures",
+  "8-1 / 8-2 for SYS, copied here by tools/share_interconnect.py with the assembly",
+  "prefix stripped ('_fromSys' names the SYS item). Re-running the script",
+  "refreshes them; an entry without _fromSys was placed by hand and is kept."
+ ],
+ "board": {
+  "R17": {
+   "x": 607,
+   "y": 3795,
+   "w": 130,
+   "h": 64,
+   "shape": "rect",
+   "note": "hand-placed from a targeted vision read after the review found the reader's box on another label (sure)"
+  },
+  "R13": {
+   "x": 467,
+   "y": 3732,
+   "w": 130,
+   "h": 64,
+   "shape": "rect",
+   "note": "hand-placed from a targeted vision read after the review found the reader's box on another label (sure)"
+  },
+  "Q4": {
+   "x": 862,
+   "y": 3525,
+   "w": 130,
+   "h": 64,
+   "shape": "rect",
+   "note": "hand-placed from a targeted vision read after the review found the reader's box on another label (sure)"
+  }
+ }
+}

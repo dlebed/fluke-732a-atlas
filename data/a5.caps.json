@@ -1,0 +1,165 @@
+{
+  "_comment": [
+    "Which net each capacitor on the A5 Reference PCB sits on, and what that net",
+    "carries. The rated voltage is NOT here -- it is read from the parts list",
+    "(Table 5-6) at run time.",
+    "",
+    "A5 HAS NO ALUMINIUM ELECTROLYTIC AND NO TANTALUM CAPACITOR. Table 5-6 lists",
+    "seventeen capacitors: ceramic (C1, C2, C4, C5, C6, C7, C14, C15, C16, C17),",
+    "polyester/polycarbonate film ('POLY': C3, C8, C9, C10) and silvered mica",
+    "(C11, C12, C13). None is polarised on the sheet and none is a recap",
+    "candidate; the audit exists so a margin can still be shown and so the net a",
+    "part is on is known before it is touched. (The 82 uF polarised C1 drawn on",
+    "the sheet in the 'TERM STRIP INSIDE FRT PAN.' box is a final-assembly part,",
+    "Table 5-1, not this board's C1.)",
+    "",
+    "Every net was traced on Figure 8-5 cont. (PDF p93) -- the 3x2 tiles and",
+    "600 dpi crops of the tile seams (.build/a5/sch1_full.png). No A5 voltage is",
+    "published (Table 4-3 lists no A5 point), so `source` is used strictly:",
+    "  'schematic'  the net is one whose voltage the manual does state: the",
+    "               10 V output (Table 4-3 front panel 10V, COM: 10.00000 V).",
+    "  'inferred'   the voltage is derived from printed part values and",
+    "               Figure 8-1's 18.6V lettering, or is a rail-bound ceiling.",
+    "Where an entry gives a ceiling rather than a level it says `ceiling: true`:",
+    "the node cannot exceed the supply that feeds the amplifier it hangs on, but",
+    "its actual level depends on SEL parts or on the oven's operating point and",
+    "is not derivable from the sheet. appliedV is null only where even a bound",
+    "would mislead (none here). Applied voltages are magnitudes; every node here",
+    "is positive with respect to the board's common except where the note says",
+    "otherwise.",
+    "",
+    "Rails as in data/a5.testpoints.json: REF, OVEN, SUPPLY."
+  ],
+  "assembly": "A5",
+  "caps": {
+    "C1": {
+      "rail": "OVEN",
+      "net": "E22 OVEN TEMP THERMISTOR terminal to a ground symbol",
+      "appliedV": 0,
+      "source": "inferred",
+      "note": "0.22 uF ceramic in parallel with R43 100 K from the E22 THERMISTOR terminal to a ground symbol; RT2 (the front-panel OVEN TEMP THERMISTOR) hangs between E22 and E21 and connects to nothing else. No dc source is on this net -- only what an external ohmmeter applies at the OVEN TEMP THERMISTOR posts (§4-31 step 3 uses Multimeter A). Not the 82 uF C1 of the front-panel term strip."
+    },
+    "C2": {
+      "rail": "REF",
+      "net": "Across CR2, between the R63 / CR8 node (2.7 ohm off the 10 V HI bus) and the Ref-Amp bias node TP1",
+      "appliedV": 6.4,
+      "source": "inferred",
+      "note": "0.22 uF ceramic across the 6.4 V temperature-compensated zener CR2 (1N4571, Table 5-6), which holds TP1 one zener voltage above the R63 / CR8 node -- itself R63 2.7 ohm away from the 10 V HI bus (E23). The 6.4 V is CR2's rated voltage, not a measurement. Starred part: not field repairable (§4-53)."
+    },
+    "C3": {
+      "rail": "REF",
+      "net": "U1 + input (U2 collector) to the reference common, through R1 200",
+      "appliedV": 7.0,
+      "source": "inferred",
+      "note": "1 uF poly in series with R1 200 ohm from the U1 pin 3 / U2 collector node to the reference common (the R3 / U2-zener-anode / C17 line, E27). The U1 loop holds that node at the R2 / R3 tap of the sensed 10 V: 10 x 10 K / (4.22 K + 10 K) = 7.03 V by the printed values. Starred."
+    },
+    "C4": {
+      "rail": "REF",
+      "net": "U1 output to the supply common, through R25 30 K",
+      "appliedV": 10,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "330 pF ceramic in series with R25 30 K from U1's output (pin 6) to the supply common (E3 line). U1 runs from the E4 10 V node (pin 7) to that common, so the output can never exceed about +10 V; its actual level is Q1's base voltage (E7) less CR1's 5.2 V, a few volts positive and not printed. The 10 V is a ceiling. Starred."
+    },
+    "C5": {
+      "rail": "OVEN",
+      "net": "U3B + input node (CR4 cathode / R28 / R29) to the E2 bridge return",
+      "appliedV": 18.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "0.22 uF ceramic from the CR4 / R28 / R29 node to E2 (RED). The node is fed by Q4 through R28 from the +BRIDGE rail E9 (about +18.6 V by Figure 8-1), and CR3 + CR4 in series tie it to the TP7 thermistor node (they conduct only when TP7 rises two diode drops above it), so it cannot exceed the rail; its level is a few volts, set by R21 (SEL) and the oven operating point, and is not derivable from the sheet. 18.6 V is a ceiling."
+    },
+    "C6": {
+      "rail": "OVEN",
+      "net": "+BRIDGE rail E9 (WHT) to the E2 (RED) bridge return",
+      "appliedV": 18.6,
+      "source": "inferred",
+      "note": "0.22 uF ceramic bypass across the oven controller's supply: E9 is A4 P2-16 +BRIDGE, the 18.6 V regulator output switched through A4 Q5 by the voltage monitor (§3-16); E2 is A4 P2-3 -BRIDGE, COMMON on A4. Figure 8-1 letters the regulator output 18.6V; Q5's saturation drop makes E9 a little lower. When the voltage monitor has disabled the oven the rail is near zero. The only capacitor on A5 that sees a supply."
+    },
+    "C7": {
+      "rail": "OVEN",
+      "net": "TP7 bridge node (RT3 leg / Q3 collector / R22 / CR3 anode = U3A + input, pin 3) to the E2 bridge return",
+      "appliedV": 18.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "4700 pF (Table 5-6: 0.005 uF) ceramic from the TP7 node to E2 (RED). Checked at 600 dpi: the junction dot sits on the CR3 anode (the Q3 collector / R22 / RT3 node), and from it one vertical drops to U3A's pin-3 line and on through C7 to E2; the CR3 / CR4 junction has no connection of its own. So C7 filters the thermistor-arm node that U3A buffers. Fed by Q3 from the +BRIDGE rail E9 (about +18.6 V by Figure 8-1), so it cannot exceed the rail; its level depends on R21 (SEL) and the oven's operating point and is not derivable from the sheet. Ceiling only, for the same reason as C5."
+    },
+    "C8": {
+      "rail": "OVEN",
+      "net": "U5 output to the R31 / R32 feedback node (integrator)",
+      "appliedV": 20.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "5 uF poly integrating capacitor of U5 (§3-24 'differential amplifier/integrator'), from U5 pin 6 to the node R31 1 K / R32 6.2 M that returns to U5's - input. The voltage across it is the difference between U5's output (which swings between its -2 V and +18.6 V supplies, E11 and E8) and the feedback node (held near U5's - input, a few volts); it cannot exceed the 20.6 V supply span. Ceiling; the operating value is a few volts."
+    },
+    "C9": {
+      "rail": "OVEN",
+      "net": "U5 output to the C10 / R36 node of the U4 input network",
+      "appliedV": 20.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "0.47 uF poly (100 V) between U5's output line and the node where C10 4 uF and R36 27 M meet; R36 + R35 (27 M each) are across C9. C10 then couples that node to U4's + input (pin 3). Both ends live within U5's -2 V to +18.6 V span; the difference across the capacitor is small in operation. Ceiling."
+    },
+    "C10": {
+      "rail": "OVEN",
+      "net": "U4 + input (pin 3, R38 node) to the C9 / R36 node",
+      "appliedV": 18.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "4 uF poly from U4's + input -- which R38 51 K returns to the U3B output line -- to the node that C9 and R35 + R36 bring from U5's output (§3-24: U4 shapes the overall loop frequency response). Checked at 600 dpi: the R39 / R40 lead into U4's - input crosses C10's line without a junction. U4 runs from the E9 +BRIDGE rail to the E1 return (R23 51 to a ground symbol), so no node on it exceeds about 18.6 V. Ceiling; the voltage across C10 is a small difference in operation."
+    },
+    "C11": {
+      "rail": "OVEN",
+      "net": "U4 output (pin 6) to the R40 node, across R41 6.8 M",
+      "appliedV": 18.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "270 pF silvered mica (500 V) feedback capacitor across R41 6.8 M; R40 10 K carries the node on to U4's - input (pin 2), which R39 51 K also returns to the U3B output line. Between an op amp's output and its feedback node the working difference is a few volts at most; the 18.6 V is U4's supply, a ceiling."
+    },
+    "C12": {
+      "rail": "OVEN",
+      "net": "U4 pin 8 (compensation) to U4's V- node (pin 4, the E1 return; R23 51 from that node to a ground symbol)",
+      "appliedV": 18.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "100 pF silvered mica (500 V) from U4's compensation pin 8 down to the node shared by U4's pin 4 (V-), which runs to the E1 (BRN) return, and R23 51 ohm to a ground symbol -- so the board ties the E1 return to its common through 51 ohm. Confirmed on a 600 dpi crop. A compensation capacitor to the negative supply, the same arrangement as C13 on U5. Low-level across it; ceiling is U4's E9 supply."
+    },
+    "C13": {
+      "rail": "OVEN",
+      "net": "U5 pin 8 (compensation) to E11 (-2 V, U5's V-)",
+      "appliedV": 20.6,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "100 pF silvered mica (500 V) from U5's compensation pin 8 down to the E11 (BRN, -2 V) line that U5's pin 4 also sits on; the R31 / R32 / C8 feedback line crosses C13's lead without a junction (checked on a 600 dpi crop of the seam). Low-level across it; the U5 supply span is the ceiling."
+    },
+    "C14": {
+      "rail": "REF",
+      "net": "Across U1's inputs (pin 3 to pin 2)",
+      "appliedV": 0,
+      "source": "inferred",
+      "note": "180 pF ceramic (1000 V) between U1's + input (U2 collector) and - input (R2 / R3 tap). In regulation both sit at about +7.0 V; the difference across C14 is the loop error, microvolts. Starred."
+    },
+    "C15": {
+      "rail": "REF",
+      "net": "E24 10 V HI sense line through R24 10 ohm to a ground symbol (taken as the supply common; the sheet draws a ground symbol, not a wire to the E3 line)",
+      "appliedV": 10,
+      "source": "schematic",
+      "note": "0.22 uF ceramic from the 10 V sense line (E24: the R2 / R3 divider top, R4, R26) to the R24 10 ohm / supply-common node. The net is the 10 V output itself: Table 4-3 front panel 10V to COM, 10.00000 V dc. Starred."
+    },
+    "C16": {
+      "rail": "REF",
+      "net": "Across Q5: the Ref-Amp base line to the Ref-Amp emitter / zener node",
+      "appliedV": 0.7,
+      "source": "inferred",
+      "note": "0.047 uF ceramic in parallel with Q5, which is drawn base-to-emitter tied on the U2 emitter/zener node with its collector on the U2 base line. The voltage across it is U2's base-emitter drop, about 0.6-0.7 V, derived from the topology; not printed."
+    },
+    "C17": {
+      "rail": "REF",
+      "net": "TP3 (R8 / R11 junction) to the reference common",
+      "appliedV": 10,
+      "ceiling": true,
+      "source": "inferred",
+      "note": "1200 pF ceramic from the Ref-Amp base divider tap TP3 to the reference common (E27 line). A tap of the 10 V output below the U2 base (which sits at U2's zener plus one base-emitter drop, not printed), so between LO and +10 V. Ceiling. Starred."
+    }
+  }
+}

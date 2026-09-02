@@ -1,0 +1,159 @@
+{
+  "_comment": [
+    "Curated A3 procedures. Step text is the manual's own wording, transcribed",
+    "from docs/manual/04-service-troubleshooting.md (PDF p38-42) and checked",
+    "against the page. Two corrections from Change/Errata Issue 3 (7/85) are",
+    "written into the text with the errata cited on the step: §4-45 'Refer to",
+    "Figure 4-8' -> Figure 4-12 and step 12 'Remove jumper W1 on A2' -> A3",
+    "(Errata #8). The manual's 'CR27' in steps 17, 19, 20 and 21 is left as",
+    "printed: A3 has no CR27 (the schematic's REF DESIG table lists it as not",
+    "used) and the errata does not correct it; the on-board LED is DS1 and the",
+    "front-panel indicator is BTRY CHG -- said on each of those steps and in a",
+    "caveat, with DS1 in the refs instead of CR27.",
+    "Step 27 and the Battery Charging Notes did not exist in the 1983 manual;",
+    "they come from Errata #12 and #10 and cite the errata as their source.",
+    "Every measurement a step asks for is in measure[] so the log can score it;",
+    "tolerances the manual does not print are marked inferred with a note."
+  ],
+
+  "procedures": [
+    {
+      "id": "4-44",
+      "title": "Battery Charger Adjustment Procedure",
+      "source": "§4-44 / §4-45, PDF p38 (manual p4-14); Figure 4-12, PDF p39; step 27 from Change/Errata Issue 3 (7/85) Errata #12",
+      "prereq": "§4-45: Refer to Figure 4-12 (Errata #8; the manual prints 'Figure 4-8'). Perform this procedure to calibrate the battery charger after repair of the battery charger circuit. Equipment (Table 4-1, PDF p26, procedure D): Multimeter A -- 4-1/2 digit display, 20 kOhm resistance range, 200 mV to 200 V ac or dc (Fluke 8050A, 8060A); Rheostat -- 50 kOhm, 1/2 W (Fluke P/N 484089; 501601 per Errata #6); Variac -- 120 V, 1 A, metered (GenRad W5MT3A); Load Resistor -- 1 kOhm, 1/2 W carbon composition (Fluke P/N 108597; listed for procedure D though no step below calls for it). Access: cover removal §4-11 and rear module removal §4-13 (PDF p26). §4-43: this is the only field service procedure for the 732A.",
+      "warnings": [
+        "CAUTION (§4-44): This procedure will cause loss of standardization. Calibration must be performed before reuse of the instrument.",
+        "WARNING (§4-51): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+        "NOTE (§4-14): Either module, but NOT both, may be removed without loss of standardization. If the AC Module is removed, ensure that the rear panel, BATTERY OPR switch is set to ON and that the battery is charged before removing the AC Module. This will insure continued standardization."
+      ],
+      "steps": [
+        { "n": 1, "text": "Remove ac power from the instrument.", "refs": [] },
+        { "n": 2, "text": "Set the BATTERY OPR switch to OFF.", "refs": [] },
+        { "n": 3, "text": "Remove the top cover from the instrument.", "refs": [] },
+        { "n": 4, "text": "Remove the AC Module from the instrument.", "refs": [] },
+        { "n": 5, "text": "Locate test points TP1, TP2, and TP5 on the A3, Pre-Regulator PCB Assembly(part of the AC Module). Locate trimpots R20 and R10 and jumper wire W1, also on the AC Module.",
+          "refs": ["TP1", "TP2", "TP5", "R20", "R10", "W1"] },
+        { "n": 6, "text": "Connect a 50 kΩ rheostat between TP1 and TP2. Adjust the Rheostat for maximum resistance.",
+          "refs": ["TP1", "TP2"] },
+        { "n": 7, "text": "Connect Multimeter A between TP5 and TP1. TP5 is positive with respect to TP1.",
+          "refs": ["TP5", "TP1"] },
+        { "n": 8, "text": "Reinstall the AC Module in the instrument.", "refs": [] },
+        { "n": 9, "text": "Apply ac power to the UUT using the Variac. Adjust the Variac for the line voltage indicated on the rear of the instrument.", "refs": [] },
+        { "n": 10, "text": "Adjust R20 for a 33.0V dc reading on Multimeter A.",
+          "refs": ["R20", "TP5", "TP1"],
+          "measure": [
+            { "point": "TP5", "ref": "TP1", "nominal": 33.0, "tolerance": 0.5, "unit": "V", "inferred": true,
+              "source": "§4-44 step 10, PDF p38; Table 4-3, PDF p42. No tolerance is published; +/-0.5 V assumed (the value is printed to a tenth of a volt)." } ] },
+        { "n": 11, "text": "Turn the ac power off by reducing the Variac to zero volts or by unplugging the UUT.", "refs": [] },
+        { "n": 12, "text": "Remove jumper W1 on A3.",
+          "refs": ["W1"],
+          "note": "Corrected per Change/Errata Issue 3 (7/85) Errata #8: the manual prints 'Remove jumper W1 on A2.' W1 is on A3 (Table 5-4, Figure 4-12). On the schematic W1 joins the Q2 current-source output line (which continues through CR13 to +BATTERY) to the charger's battery-voltage sense node TP2; removing it lets the rheostat at TP2 stand in for the battery." },
+        { "n": 13, "text": "Restore ac power.", "refs": [] },
+        { "n": 14, "text": "Connect Multimeter A between TP2 and TP1. TP2 is positive with respect to TP1.",
+          "refs": ["TP2", "TP1"] },
+        { "n": 15, "text": "Set the BATTERY OPR switch to ON.", "refs": [] },
+        { "n": 16, "text": "Set R10 fully clockwise (CW). Multimeter A should read approximately 45 to 50V dc.",
+          "refs": ["R10", "TP2", "TP1"],
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "min": 45, "max": 50, "unit": "V",
+              "source": "§4-44 step 16, PDF p38 ('approximately 45 to 50V dc')" } ] },
+        { "n": 17, "text": "While observing Multimeter A, adjust the rheostat toward minimum resistance. At approximately 26V dc, the BTRY CHG indicator and CR27 (CR27 is the voltage reference for the constant current source in the battery charger circuit, located on A2) should come on. The ac line current should jump to approximately 110 mA at 115V ac (55 mA at 220V ac).",
+          "refs": ["TP2", "TP1", "DS1"],
+          "note": "'CR27' does not exist on A3 (REF DESIG table of 732A-1003: CR27 not used) and the errata does not correct it. The part the sentence describes -- the LED that is the voltage reference for the Q2 constant-current source -- is DS1 on A3 (Table 5-4 'DIODE, LIGHT EMITTING'; Figure 4-12), wired from the charger's rectified supply to the Q2 base node. Watch DS1 and the front-panel BTRY CHG indicator (A1 DS2). 'located on A2' has the same slip as step 12.",
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "nominal": 26, "tolerance": 1.5, "unit": "V", "inferred": true,
+              "source": "§4-44 step 17, PDF p38 ('approximately 26V dc'); +/-1.5 V assumed, consistent with the 24.5 to 26.5 V band of step 20." } ] },
+        { "n": 18, "text": "Adjust the Rheostat for a Multimeter A reading of 32V dc.",
+          "refs": ["TP2", "TP1"],
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "nominal": 32, "tolerance": 0.5, "unit": "V", "inferred": true,
+              "source": "§4-44 step 18, PDF p38. A setting, not a check; +/-0.5 V assumed as the setting resolution." } ] },
+        { "n": 19, "text": "Turn R10 counter-clockwise (ccw) until the BTRY CHG indicator and CR27 go out. Note that the ac line current has dropped.",
+          "refs": ["R10", "DS1"],
+          "note": "'CR27' = on-board LED DS1; see step 17." },
+        { "n": 20, "text": "Adjust the Rheostat toward minimum resistance, while observing the BTRY CHG indicator. When the BTRY CHG indicator lights, CR27 lights, and the ac line current increases suddenly. Multimeter A should read between 24.5 and 26.5V dc.",
+          "refs": ["TP2", "TP1", "DS1"],
+          "note": "'CR27' = on-board LED DS1; see step 17.",
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "min": 24.5, "max": 26.5, "unit": "V",
+              "source": "§4-44 step 20, PDF p38" } ] },
+        { "n": 21, "text": "Adjust the Rheostat until the BTRY CHG and CR27 indicators turn off. Multimeter A should indicate a dc voltage greater than +31V.",
+          "refs": ["TP2", "TP1", "DS1"],
+          "note": "'CR27' = on-board LED DS1; see step 17.",
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "min": 31, "unit": "V",
+              "source": "§4-44 step 21, PDF p38" } ] },
+        { "n": 22, "text": "Disconnect all test equipment and the rheostat.", "refs": [] },
+        { "n": 23, "text": "Remove the AC Module from the 732A.", "refs": [] },
+        { "n": 24, "text": "Reinstall jumper W1.", "refs": ["W1"] },
+        { "n": 25, "text": "Reinstall the AC Module.", "refs": [] },
+        { "n": 26, "text": "Battery Charger adjustment is now complete. Perform the Calibration adjustment procedure described earlier in this section.", "refs": [] },
+        { "n": 27, "text": "For a final adjustment of the battery-charging voltage, perform the following steps: a. Install a known-good battery pack into the 732A and set the 732A in trickle charge mode (the 732A CHARGE light is not lit). b. Connect a multimeter to the 732A rear panel J10 connector. c. Measure the battery-charging voltage. The voltage should measure between 25.8 and 27 volts. If the voltage is not within the specified limits, adjust R20 on the 732A A3 PCB until the voltage is within the limits. NOTE: After making an adjustment wait a few minutes to ensure the battery voltage has settled to the new value.",
+          "refs": ["R20"],
+          "source": "Change/Errata Issue 3 (7/85), Errata #12 (errata PDF p11): 'On page 4-14, paragraph 4-45, add the following step: 27.'",
+          "note": "Added by the 1985 errata; not in the May 1983 manual. The 25.8 to 27 V is measured at the rear-panel external power connector (J10 on Rev C battery modules, Errata Change #5/#6; the POWER INPUT banana jacks on earlier units), not at an A3 test point, so it is not scored against a board point here. §3-28 describes the same trickle voltage as 'approximately 27V at 23°C'. It is the check that matters for the battery; step 10's 33.0 V at TP5 is the preliminary setting of the same pot." }
+      ]
+    },
+
+    {
+      "id": "4-52-A3",
+      "title": "Internal voltage measurements (Table 4-3, A3 rows)",
+      "source": "§4-51 / §4-52 and Table 4-3 'Internal Measurements*', PDF p40 and p42 (manual p4-16, p4-18)",
+      "prereq": "§4-52: Use the tests shown in Table 4-3 to isolate problems to the major functional circuit groups of the 732A. It is assumed that the external symptoms given in Table 4-2 have been examined and that the primary circuit of the power transformer is operable. This procedure is conducted with the instrument energized, observe the previously stated WARNINGS and CAUTIONS. Table 4-3 footnotes: * Voltage measurements taken with Multimeter A (Table 4-1: 4-1/2 digit, 200 mV to 200 V, Fluke 8050A / 8060A). ** Conditions: battery installed, BATTERY OPR switch ON. Polarity is not stated in Table 4-3 itself; the first-named test point is taken as positive with respect to the second because §4-44 steps 7 and 14 say so for TP5 and TP2 vs TP1 (PDF p38) and Table 4-3 reads them the same way round.",
+      "warnings": [
+        "WARNING (§4-51): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+        "CAUTION (§4-51): The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+        "CAUTION (§4-51): To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness."
+      ],
+      "steps": [
+        { "n": 1, "text": "A3 | TP3, TP4 | ≤60V dc | Corrective action: AC line voltage, Rectifier, Power Transformer.",
+          "refs": ["TP3", "TP4", "CR1", "T1", "F1", "S1", "S2"],
+          "note": "Raw rectified dc at the bridge CR1 output before the pre-regulator. 'AC line voltage' means the rear-panel setting against the supply (S1/S2 positions, Figure 4-5, and fuse F1); a transformer fault is returned to Fluke (Table 4-2 note 2).",
+          "measure": [
+            { "point": "TP3", "ref": "TP4", "max": 60, "unit": "V", "source": "Table 4-3, PDF p42" } ] },
+        { "n": 2, "text": "A3 | TP6, TP4 | 32V dc | Corrective action: Pre-Regulator.",
+          "refs": ["TP6", "TP4", "Q1", "CR19", "R1", "CR25", "CR24", "CR4", "CR6", "CR5", "CR10", "CR12", "CR7", "CR8", "CR9"],
+          "note": "The +RAW output at P3-2 (Q1 emitter through R1). The same rail appears on A4 as TP1 vs TP3, 32 V dc.",
+          "measure": [
+            { "point": "TP6", "ref": "TP4", "nominal": 32, "tolerance": 1.6, "unit": "V", "inferred": true,
+              "source": "Table 4-3, PDF p42; §3-11 'approximately 32V dc'. No tolerance published; +/-5 % assumed." } ] },
+        { "n": 3, "text": "A3 | TP2, TP1 | ≤31V dc | Corrective action: Battery Charger**.",
+          "refs": ["TP2", "TP1", "Q2", "R3", "DS1", "Q3", "Q4", "R10", "Q6", "R20", "CR13", "CR16", "W1", "CR26", "CR14"],
+          "note": "** battery installed, BATTERY OPR switch ON. TP2 is the charger output line (W1 installed) that feeds +BATTERY through CR13. A reading above 31 V with the battery connected means the charger is not switching to trickle (§3-28: the high-rate charge should stop at approximately 32 V); repair, then perform the Battery Charger Adjustment Procedure (§4-44).",
+          "measure": [
+            { "point": "TP2", "ref": "TP1", "max": 31, "unit": "V", "source": "Table 4-3, PDF p42" } ] },
+        { "n": 4, "text": "A3 | TP5, TP1 | 33.0V dc | Corrective action: Battery Charger**.",
+          "refs": ["TP5", "TP1", "Q6", "R20", "R18", "R19", "R17", "RT1", "R16", "CR28", "C6"],
+          "note": "** battery installed, BATTERY OPR switch ON. The trickle-charge reference at the Q6 base, set by R20 in §4-44 step 10. Rev F boards add R19 in this divider (Errata Change #10).",
+          "measure": [
+            { "point": "TP5", "ref": "TP1", "nominal": 33.0, "tolerance": 0.5, "unit": "V", "inferred": true,
+              "source": "Table 4-3, PDF p42; §4-44 step 10, PDF p38. No tolerance published; +/-0.5 V assumed." } ] }
+      ]
+    },
+
+    {
+      "id": "4-45A",
+      "title": "Battery Charging Notes (Errata #10, 1985)",
+      "source": "Change/Errata Issue 3 (7/85), Errata #10 (errata PDF p10-11): 'On page 4-14, following paragraph 4-45, step 26, add: 4-45A. BATTERY CHARGING NOTES'",
+      "prereq": "Added by the 1985 errata; not in the May 1983 manual. Figures for checking the charger's two modes with a milliammeter in the battery lead. §2-22 CAUTION (PDF p17): PERMANENT BATTERY DAMAGE WILL RESULT IF THE BATTERY IS ALLOWED TO DISCHARGE BELOW 19 VOLTS. Errata #2 CAUTION: Unit must be in upright position during charging to avoid possible venting of electrolyte.",
+      "warnings": [
+        "CAUTION (§2-22, PDF p17; the manual heads it CAUTION, not WARNING): PERMANENT BATTERY DAMAGE WILL RESULT IF THE BATTERY IS ALLOWED TO DISCHARGE BELOW 19 VOLTS. THE DEGREE OF DAMAGE IS A FUNCTION OF THE DEPTH OF OVER-DISCHARGE AND THE BATTERY TEMPERATURE.",
+        "CAUTION (Errata #2, added after §2-22): Unit must be in upright position during charging to avoid possible venting of electrolyte. The battery unit should be kept in upright position at all times except during transit."
+      ],
+      "steps": [
+        { "n": 1, "text": "4-45b. Battery Charge. 4-45c. To check the charging and discharging current on the Battery Pack, connect a milliammeter to the two black wires on the Battery ON/OFF switch. Then set the ON/OFF switch to OFF.",
+          "refs": [],
+          "note": "The milliammeter is in the A6 battery lead at the rear-panel switch, not at an A3 point." },
+        { "n": 2, "text": "4-45d. The charger has two modes: constant current mode and constant voltage mode. In the constant current mode, charging current should be about 200 to 400 mA if battery is not fully charged. This mode lasts until battery voltage reaches about 31V at which time it switches to the constant voltage mode (27V) for a few milliamps trickle charge.",
+          "refs": ["Q2", "R3", "DS1", "Q3", "Q4", "R10", "Q6", "R20"],
+          "note": "Constant current: Q2 current source, its current set by the DS1 reference and R3 (§3-27). Switch-over: Q3/Q4 Schmitt trigger, threshold set by R10 (§3-28). Constant voltage: Q6, level set by R20 (§3-28). The BTRY CHG indicator is on in constant-current mode and off in trickle mode (§1-6, §2-24)." },
+        { "n": 3, "text": "4-45e. Battery Discharge. 4-45f. At 23°C, the oven at normal temperature, and with the line cord unplugged, the nominal current drain from the battery is approximately 260 mA.",
+          "refs": [] },
+        { "n": 4, "text": "4-45g. Individual Battery Checkout. 4-45h. Individual batteries will accept a charge of 300 to 400 mA at 7.75V max (31V divided by 4) if their terminal voltage is below 6V.",
+          "refs": [],
+          "note": "Applies to the four 6 V gel cells BT1-BT4 on A6." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" role="img" aria-label="Atlas — Fluke 732A service tool">
+  <rect width="32" height="32" fill="#16181a"></rect>
+  <rect x="2" y="2" width="28" height="28" fill="none" stroke="#e9e3d2" stroke-width="2"></rect>
+  <path d="M16 4.5 L16 11.5 M16 23 L16 27.5" fill="none" stroke="#f2b035" stroke-width="2.2"></path>
+  <path d="M8 23.5 L24 23.5 L16 11.6 Z" fill="#f2b035"></path>
+  <path d="M6.5 14.5 L10 11 L22 11 L25.5 7.5" fill="none" stroke="#f2b035" stroke-width="2.6" stroke-linecap="square"></path>
+</svg>

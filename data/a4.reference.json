@@ -1,0 +1,276 @@
+{
+  "_comment": [
+    "Reference material for the A4 Regulator PCB Assembly (732A-4002, etch 732A-1002).",
+    "Overview and part roles from §3-10..3-16 and §3-22..3-24 (PDF p21-22, manual",
+    "p3-1..3-2), the schematic 732A-1002 (Figure 8-4 cont, PDF p91), Figure 8-1",
+    "(PDF p85), Figure 8-2 cont (PDF p87), Table 4-2 and Table 4-3 (PDF p41-42),",
+    "§4-51 (PDF p40) and the 7/85 errata (docs/manual/errata-issue3-1985.md).",
+    "",
+    "Where §3 names a part's job the words are the manual's. Where it does not, the",
+    "role was traced on 3x2 tiles and full-resolution crops of the sheet",
+    "(docs/review-notes.md) and the function text says 'traced' so nobody mistakes",
+    "it for the manual. Two things the tracing settled that matter at the bench:",
+    "  1. The regulator is in the negative leg. +RAW (TP1) IS the +18.6 V rail;",
+    "     Q4 sits between -RAW (TP3) and COMMON (TP2) and drops the difference.",
+    "     That is why Table 4-3 measures TP1 against both TP3 (32 V) and TP2 (18.5 V),",
+    "     and why the errata's Figure 8 letters P2-12 (on the +RAW bus) '+18.6V'.",
+    "  2. Q5 does not switch the whole 18.6 V supply. P2-10 (+TEMP REG) and P2-11",
+    "     (+HEATER) sit directly on +18.6 V; Q5 switches P2-16 (+BRIDGE, the A5",
+    "     thermistor-bridge supply) and feeds the Q7 latch through R15.",
+    "",
+    "Designators: the drawing and sheet print CR2 for the reference zener; Table 5-5",
+    "lists that part as CR4 (1N4571, 6.4 V). data/a4.parts.json carries both: CR4 as",
+    "the Table 5-5 row and CR2 (from data/a4.parts.extras.json, aliases CR4 and VR2)",
+    "so the marker lands on the printed designator -- one physical part; the caveat",
+    "below records the disagreement. Errata Change #2 (Rev C) renames CR1, CR2, CR9",
+    "to VR1, VR2, VR9; the 1983 designators stay as refs because that is what the",
+    "drawings print."
+  ],
+
+  "overview": {
+    "summary": "The Regulator PCB carries the second of the 732A's two cascaded regulators and everything that hangs on its output. The Regulator (Q1, Q2, Q3, Q4) is a conventional series-pass transistor error-amplifier design that regulates the 32 V from the A3 pre-regulator (or the battery, through CR15) to 18.6 V dc, which powers the Oven Controller and the Reference — all of the 732A except the battery charger (§3-12, §3-13). The pass transistor Q4 is in the negative leg: the +RAW bus at TP1 is the +18.6 V rail, and Q4 holds COMMON (TP2) 18.6 V below it, dropping the rest to -RAW (TP3). CR2 is the reference zener (with C2 across it and CR12 as its constant-current bias); Q1 compares it with the R22 wiper on the CR5–R4–R22/R10–CR6–CR9 sense divider and Q2 drives the Q3/Q4 pair through CR14. R12 (0.39 Ω) senses Q4's current and DS1 clamps the drive, limiting it. The Voltage Monitor (Q5, Q6, Q7, Q8) checks the regulator output and disables the instrument when the supply voltage falls below a critical value: Q8 is turned on by the voltage drop across Q4 and saturates Q5, which supplies the A5 thermistor bridge (+BRIDGE, P2-16) and the latch. When the output falls, Q8 and Q5 turn off, shutting down the Oven Controller and removing drive from the PUT Q7, which removes drive from Q6 and puts out the front-panel IN CAL indicator; Q7 stays latched off after power returns until RESET (P2-19) is touched momentarily to COMMON (§3-15, §3-16). Also on the board: the reference series-pass element Q12 with R1, R2, R3, R21 and CR13, which A5 drives to make its 10 V (§3-18, §3-19); the oven heater driver and output transistors Q13 and Q14, driven from A5 U5 through HEAT DRIVE (P2-26), switching the heater return (P2-1) to COMMON (§3-23, §3-24); and the -2 V line (P2-27, the R13 drop below COMMON) that gives A5 U5 a negative supply.",
+    "connectors": "P2, 27-pin edge connector, mates J2 on the A2 Mother Board (732A-1005). Left column: REF SUPPLY 6–9, +RAW 13/14 (12 NC on the 1983 sheet), +BATTERY 15, -BATTERY 21/22, -RAW 23/24, HEAT DRIVE 26, -2 V 27 (17, 25 NC). Right column: +TEMP REG 10, +HEATER 11, +BRIDGE 16, IN CAL LED 18, RESET 19, COMMON 20, HEATER 1, -TEMP REG 2, -BRIDGE 3, -REF 4, GUARD BOX FRONT PANEL 5. The A5 harness W1 (E1–E11) and the front-panel harness W2 leave J2 on the motherboard (Figure 8-2 cont). See the P2 table below.",
+    "source": "§3-10–3-16, §3-18–3-19, §3-22–3-24 (PDF p21–22); schematic 732A-1002 (PDF p91); Figures 8-1 and 8-2 cont (PDF p85, p87)"
+  },
+
+  "railCircuits": {
+    "RAWIN": {
+      "rails": "+RAW / -RAW, 32 V dc (TP1 vs TP3)",
+      "input": ["CR15"],
+      "filters": ["C1"],
+      "tps": ["TP1", "TP3"],
+      "note": "Made on A3: the pre-regulator A3Q1 clamps the rectified line to approximately 32 V dc (§3-11) and it arrives through the motherboard at P2-13/14 (+RAW) and P2-23/24 (-RAW). During battery operation the battery drives the regulator input (§3-12) through CR15 from P2-15 (+BATTERY; -BATTERY is P2-21/22, strapped to -RAW on the board). C1 (330 µF, 80 V) is the reservoir across the bus. Table 4-3: TP1 vs TP3 = 32 V dc, corrective action Pre-Regulator, Motherboard.",
+      "source": "§3-11, §3-12; Table 4-3 (PDF p42); schematic 732A-1002"
+    },
+    "REG": {
+      "rails": "+18.6 V regulated (TP1 with respect to COMMON, TP2); Table 4-3 prints ≈18.5 V",
+      "regulators": ["Q1", "Q2", "Q3", "Q4"],
+      "reference": ["CR2", "C2", "CR12"],
+      "sense": ["CR5", "R4", "R22", "R10", "CR6", "CR7", "CR8", "CR9", "R6", "C4"],
+      "drive": ["CR14", "R11", "R12", "R13", "DS1", "C8"],
+      "load": ["R7", "R8", "R9", "CR3", "C3"],
+      "filters": ["C9"],
+      "monitor": ["Q8", "R18", "R20", "C5", "R19", "R5", "Q5"],
+      "outputs": ["Q12", "R1", "R2", "R3", "R21", "CR13", "Q13", "Q14"],
+      "tps": ["TP1", "TP2"],
+      "note": "Series-pass regulator in the negative leg. Q4 (power NPN) from -RAW through R12 to COMMON through R13; Q3 drives it (R11 to -RAW); Q2's collector drives Q3 through current-regulator diode CR14; Q1 and Q2 have their emitters on the CR2 reference node (CR2 from +18.6 V, C2 across it, CR12 biasing it to COMMON). Q1's base senses the output through R6 from the R22 wiper on the CR5–R4–R22/R10–CR6–CR7–CR8–CR9 divider between +18.6 V and COMMON; R22 sets the output. Q1's collector load is R7–R8–R9 to COMMON with CR3 clamping the R8/R9 junction to the CR1 node and C3 from +18.6 V to the R7/R8 junction. DS1 clamps the Q3 base one LED drop above -RAW and so limits the Q4 current. C9 (22 µF) filters the output to COMMON. The rail leaves the board at P2-10/11 (+TEMP REG, +HEATER), P2-12 (NC on the 1983 sheet, '+18.6V' in the errata), through Q5 at P2-16 (+BRIDGE), through R17 to the IN CAL LED driver, and through Q12/R1 as the REF SUPPLY to A5. Table 4-3: TP1 vs TP2 ≈ 18.5 V dc, corrective action Regulator.",
+      "source": "§3-13, §3-16; Table 4-3 (PDF p42); schematic 732A-1002 traced (docs/review-notes.md)"
+    }
+  },
+
+  "functions": {
+    "Q1": "Error-amplifier input transistor (PNP) of the Regulator (Q1, Q2, Q3, Q4 — §3-13). Emitter on the CR2 reference node; base senses the +18.6 V output through R6 from the R22 wiper on the CR5–R4–R22/R10–CR6–CR9 divider; collector drives the Q2 base with R7–R8–R9 as its load (traced).",
+    "Q2": "Second error-amplifier stage (PNP) of the Regulator: emitter on the CR2 reference node, base from the Q1 collector, collector through current-regulator diode CR14 into the Q3 base (§3-13; traced).",
+    "Q3": "Driver for the series-pass transistor (NPN): base from CR14 (clamped by DS1), emitter drives the Q4 base with R11 (10 kΩ) to -RAW, collector to COMMON (§3-13; traced).",
+    "Q4": "Series-pass power transistor of the Regulator, in the negative leg: emitter to -RAW through R12 (0.39 Ω), collector to COMMON through R13 (2.7 Ω). Drops the difference between the raw input (TP1–TP3, 32 V) and the 18.6 V output (TP1–TP2), about 13.5 V; its voltage drop is what Q8 monitors (§3-13, §3-16; traced).",
+    "Q5": "Switching transistor of the Voltage Monitor (PNP): emitter on +18.6 V, base pulled up by R5 (3 kΩ) and pulled down by Q8 through R19 (18 kΩ). Saturated by Q8, it supplies power to the Oven Controller circuit — +BRIDGE at P2-16, the A5 thermistor-bridge supply — and, through R15, to the IN CAL indicator latch. When Q8 turns off, Q5 turns off, shutting down the Oven Controller and removing drive from Q7 (§3-16).",
+    "Q6": "IN CAL indicator driver (NPN): base from the Q7 cathode, collector through R17 (2.7 kΩ) to +18.6 V, emitter to P2-18 (front-panel IN CAL LED, DS3 on the A1 LED PCB, YEL 14; the LED returns on BLU 16 to P2-20). Loses drive when Q7 turns off, shutting off the IN CAL indicator (§3-16).",
+    "Q7": "Programmable Unijunction Transistor — the IN CAL latch. Anode fed from the Q5 (+BRIDGE) node through R15 (51 kΩ) and then R14 (150 kΩ); gate tied to the R15/R14 junction (the latch node) through R16 (1 MΩ) with C6 across it, and to RESET (P2-19) through R23 (270 kΩ); cathode drives the Q6 base, bypassed to P2-20 by C7. Touching RESET to COMMON pulls the gate below the anode and fires it; it then conducts as long as Q5 supplies the node. When the supply fails it turns off and, when power is restored, remains latched off until its gate is pulled down again via RESET (§3-16: 'until its emitter is connected momentarily to the COMMON output terminal via the RESET connection'; §2-26; Procedure A step 19, §4-37, PDF p34).",
+    "Q8": "Sense transistor of the Voltage Monitor (NPN). Its base sits on the R18/R20 divider across Q4 (collector to emitter) and its emitter on the Q4 emitter node, so it 'is turned on by the voltage drop across the Regulator circuit series-pass transistor' (§3-16). On, it saturates and holds Q5 on through R19; when the raw input falls so far that Q4's drop is only a couple of volts, Q8 and Q5 turn off. C5 (collector to base) slows the switch (traced).",
+    "Q12": "Series-pass element of the Reference Circuit (§3-18, §3-19: 'U1 drives the series pass element (Q1, A4Q12)'). PNP: emitter from +18.6 V through R1 (348 Ω), base pulled up by R2 (1.21 kΩ) and driven from A5 Q1 through P2-8, collector to P2-7 and through R3 (24.3 Ω) to P2-6 — the REF SUPPLY lines to A5 E4–E7 from which A5 makes the 10 V output (traced; Figure 8-1 'A4 Q12 SERIES PASS ELEMENT').",
+    "Q13": "Oven driver transistor (PNP) — the oven driver and output transistors A4Q13, A4Q14 are driven by A5 U5 (§3-23, §3-24). Base from HEAT DRIVE (P2-26, the U5 output) through R26 (10 Ω), with R25 (51 kΩ) from base to emitter; emitter drives the Q14 base; collector to the -2 V line (the Q4 collector / R13 node that feeds P2-27), not to COMMON — Figure 8-1 draws the same return (traced).",
+    "Q14": "Oven heater output transistor (PNP power): emitter on the heater return (P2-1 HEATER — the low end of oven heaters HR1–HR4, whose high end is +18.6 V at P2-11 +HEATER), collector to COMMON, base from Q13 with R24 (1 kΩ) base to emitter; C10 across emitter–collector (§3-23, §3-24; traced).",
+    "CR1": "Zener (1N5240; VR1 from Rev C, Errata Change #2) from +18.6 V, biased by current-regulator diode CR10 to -RAW; CR3 clamps the R8/R9 divider junction to its anode node (traced).",
+    "CR2": "The Regulator's voltage reference — the circled zener beside C2 at the Q1/Q2 emitters, from +18.6 V, with C2 across it and current-regulator diode CR12 as its constant-current bias to COMMON (§3-13; traced). Its value is in doubt: Table 5-5 has no CR2 and lists CR4, a 6.4 V 1N4571 temperature-compensated zener that the drawings do not print; the 7/85 errata (Rev C) renames CR2 to VR2 as a 1N5240. The parts list carries the Table 5-5 row as CR4 and the drawing's CR2 (aliases CR4, VR2) beside it — one physical part; see the caveat.",
+    "CR4": "Table 5-5's row for the reference zener (DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571). Not printed on the board drawing or schematic, which letter this part CR2 — the same physical part as CR2 in this dataset; see CR2 and the CR2/CR4 caveat.",
+    "CR3": "1N4448 diode from the R8/R9 junction of the Q2 base divider to the CR1 anode node — a clamp on the divider (traced).",
+    "CR5": "1N4448 diode at the top of the output-sense divider (CR5–R4–R22/R10–CR6–CR7–CR8–CR9 from +18.6 V to COMMON). Drawn and listed although the sheet's REF DES table calls CR5 not used (see caveat).",
+    "CR6": "1N4448 diode in the output-sense divider between the R22/R10 adjustment and CR7, CR8, CR9: with them it fixes the voltage at the bottom of the adjustment (traced).",
+    "CR7": "Germanium 1N270 diode in the output-sense divider below the R22/R10 adjustment, in series with CR6, CR8 and zener CR9 (traced).",
+    "CR8": "Germanium 1N270 diode in the output-sense divider below the R22/R10 adjustment, in series with CR6, CR7 and zener CR9 (traced).",
+    "CR9": "Zener (1N5240; VR9 from Rev C, Errata Change #2) at the bottom of the output-sense divider, to COMMON (traced).",
+    "CR10": "Current-regulator diode (TCR5290) from the CR1 anode node to -RAW: the constant bias current for CR1 (traced).",
+    "CR12": "Current-regulator diode (TCR5297) from the CR2 reference node to COMMON: the constant bias current for the reference zener CR2 (traced).",
+    "CR13": "Current-regulator diode (Fluke 348482) in series with R21 (1 kΩ) from +18.6 V to P2-9: a constant-current bias for the A5 series-pass drive transistors (A5 E7, VIO) (traced; Figure 8-1).",
+    "CR14": "Current-regulator diode (TCR5297) between the Q2 collector and the Q3 base: limits the drive current into the Q3/Q4 pass pair (traced).",
+    "CR15": "Rectifier (1N4817) from +BATTERY (P2-15) to the +RAW bus: during battery operation the battery drives the Regulator input through it, and it keeps the pre-regulator's 32 V out of the battery line (§3-6, §3-12; Figure 3-1; traced).",
+    "DS1": "Red LED between -RAW (cathode) and the Q3 base. It clamps the pass-transistor drive at one LED forward drop above -RAW, so the current through Q4 and R12 (0.39 Ω) cannot rise beyond roughly (V_LED − 2·V_BE)/R12; it lights only while that clamp conducts, i.e. when the regulator is overloaded. Role read from the drawing — the manual does not describe DS1.",
+    "R1": "348 Ω in the Q12 emitter from +18.6 V: takes most of the dissipation of the reference series-pass element (traced).",
+    "R2": "1.21 kΩ from +18.6 V to the Q12 base (P2-8): the base pull-up that A5 Q1 works against (traced).",
+    "R3": "24.3 Ω between P2-7 and P2-6 in the REF SUPPLY output: the current-sense resistor for A5 Q2's current limit (§3-19: 'Q2 provides current limiting to protect the series pass element'; traced).",
+    "R4": "Top of the output-sense divider below CR5 (traced). Value in dispute: the schematic prints 9.53K 1/8W 1%, Table 5-5 lists 8.66K ±1% 1/8W (CMF558661F) — see caveat.",
+    "R5": "3 kΩ pull-up from +18.6 V to the Q5 base (traced).",
+    "R6": "4.3 kΩ from the R22 wiper to the Q1 base — the sense input of the error amplifier (traced).",
+    "R7": "18 kΩ, top of the Q1 collector load / Q2 base divider R7–R8–R9 to COMMON; C3 joins at the R7/R8 junction (traced).",
+    "R8": "91 kΩ, middle of the Q1 collector load R7–R8–R9; CR3 clamps the R8/R9 junction (traced).",
+    "R9": "91 kΩ, bottom of the Q1 collector load R7–R8–R9, to COMMON (traced).",
+    "R10": "5 kΩ in parallel with the R22 adjustment on the output-sense divider (traced).",
+    "R11": "10 kΩ from the Q4 base (Q3 emitter) to -RAW: the pass pair's base pull-down (traced).",
+    "R12": "0.39 Ω 2 W in the Q4 emitter to -RAW: the pass transistor's current-sense resistor (with DS1 the current limit) and the return of the R18/R20 monitor divider (traced).",
+    "R13": "2.7 Ω (1 W in Table 5-5, 1/2 W on the sheet) between the Q4 collector and COMMON; the node at its Q4 end, below COMMON by the drop across it, is the -2 V line to P2-27 (A5 E11, the U5 negative supply) and the return of the Q13 collector (traced).",
+    "R14": "150 kΩ from the latch node (the low end of R15, where R16 and C6 also join) to the Q7 anode: sets the latch's holding current (traced).",
+    "R15": "51 kΩ from the Q5 collector (+BRIDGE) to the R14/R16 node of the latch (traced).",
+    "R16": "1 MΩ from the latch node to the Q7 gate, with C6 across it: keeps the gate up with the anode so Q7 does not fire on its own when power returns (traced).",
+    "R17": "2.7 kΩ from +18.6 V to the Q6 collector: sets the IN CAL LED current (traced).",
+    "R18": "16 kΩ 1/2 W from the Q4 collector node to the Q8 base — the top of the monitor divider across the pass transistor (traced).",
+    "R19": "18 kΩ from the Q5 base to the Q8 collector: Q8 pulls the Q5 base down through it (traced).",
+    "R20": "From the Q8 base to the Q4 emitter node — the bottom of the monitor divider across the pass transistor (traced). Value in dispute: the schematic prints 6.81K 1/8W 1%, Table 5-5 lists 8.2K ±5% 1/4W (CB8225) — see caveat.",
+    "R21": "1 kΩ in series with CR13 from +18.6 V to P2-9 (traced).",
+    "R22": "5 kΩ adjustment on the output-sense divider (in parallel with R10): its wiper feeds the Q1 base through R6 and sets the regulator output (18.6 V). The manual gives no adjustment procedure for it (traced).",
+    "R23": "270 kΩ from the Q7 gate to RESET (P2-19): touching RESET to COMMON pulls the gate down and fires the latch (traced).",
+    "R24": "1 kΩ base to emitter of Q14 (traced).",
+    "R25": "51 kΩ base to emitter of Q13 (traced).",
+    "R26": "10 Ω from HEAT DRIVE (P2-26, A5 U5 output) to the Q13 base (traced).",
+    "C1": "330 µF 80 V reservoir across +RAW / -RAW (TP1 to TP3), the regulator's input (traced).",
+    "C2": "82 µF across the reference zener CR2 (traced).",
+    "C3": "10 µF from +18.6 V to the R7/R8 junction of the Q2 base divider (traced).",
+    "C4": "10 µF from the Q1 base (sense) node to COMMON (traced).",
+    "C5": "0.22 µF collector to base of Q8: slows the voltage monitor (traced).",
+    "C6": "0.047 µF across R16 between the latch node and the Q7 gate (traced).",
+    "C7": "0.01 µF from the Q7 cathode / Q6 base node to P2-20 (COMMON via the motherboard strap) (traced).",
+    "C8": "0.22 µF from the Q4 collector node (-2 V line) to COMMON, across R13 (traced).",
+    "C9": "22 µF from +18.6 V (P2-10/11 column) to COMMON: the regulated-output filter (traced).",
+    "C10": "0.22 µF across Q14, heater return (P2-1) to COMMON (traced).",
+    "TP1": "+RAW / +18.6 V bus. 32 V dc above TP3 and ≈18.5 V dc above TP2 (Table 4-3).",
+    "TP2": "COMMON — return for the 18.5 V regulator-output reading; P2 pins 2–5 (Table 4-3; schematic).",
+    "TP3": "-RAW / -BATTERY — return for the 32 V raw-input reading; P2 pins 21–24 (Table 4-3; schematic)."
+  },
+
+  "faultCodes": [
+    {
+      "code": "S1",
+      "title": "IN CAL indicator off.",
+      "measure": "Lost ac power, battery dead.",
+      "verdict": "Charge battery, verify instrument calibration (Table 4-2). Then restore the indicator: connect a short wire to one of the front panel COMMON terminals and momentarily touch the other end to the circuit board behind the RESET hole; the IN CAL indicator should illuminate (Procedure A step 19, §4-37, PDF p34; Procedure B step 34, PDF p37–38). If it does not, the A4 path is Q8 → Q5 → R15/R14 → Q7 latch → Q6 → P2-18: check TP1–TP2 (≈18.5 V) first, then that Q5's collector (P2-16, +BRIDGE) is up, then the latch. On units with the thermal fuse F2 (Errata Change #7) an open F2 also puts the indicator out and keeps it out.",
+      "refs": ["TP1", "TP2", "Q8", "Q5", "Q7", "Q6", "R17", "R23"],
+      "source": "Table 4-2 (PDF p41); §3-16; §4-37 step 19 (PDF p34); Errata Change #7"
+    },
+    {
+      "code": "S2",
+      "title": "Temperature sensitive.",
+      "measure": "Oven.",
+      "verdict": "Check oven controller circuit (Table 4-2). The oven driver and output transistors are on A4: Q13, driven from HEAT DRIVE (P2-26) through R26, and Q14, which switches the heater return (P2-1) to COMMON; the heater's high end is +18.6 V at P2-11. The rest of the Oven Controller (Q3, Q4, U3, U4, U5 and the thermistor bridge) is on A5 inside the oven and is not field repairable (§3-23, §4-53).",
+      "refs": ["Q13", "Q14", "R24", "R25", "R26", "C10"],
+      "source": "Table 4-2 (PDF p41); §3-23, §3-24 (PDF p22); §4-53"
+    },
+    {
+      "code": "S3",
+      "title": "732A inoperative.",
+      "measure": "Fuse blown. Battery dead. Battery opr switch set to OFF. 732A not plugged in.",
+      "verdict": "Check fuse. Measure battery voltage at rear panel jacks; recharge battery. Visual check of the BATTERY OPR switch. Restore power (Table 4-2). If none of these is the cause, take the A4 rows of Table 4-3: TP1 vs TP3 = 32 V dc (raw input from the A3 pre-regulator through the motherboard, or from the battery through CR15), then TP1 vs TP2 ≈ 18.5 V dc (the Regulator).",
+      "refs": ["TP1", "TP2", "TP3", "CR15", "C1"],
+      "source": "Table 4-2 and Table 4-3 (PDF p41–42)"
+    }
+  ],
+
+  "warnings": [
+    "WARNING (§4-51): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+    "CAUTION (§4-51): The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+    "CAUTION (§4-51): To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness."
+  ],
+
+  "caveats": [
+    {
+      "title": "CR2 / CR4: the reference zener's designator and value disagree between sources",
+      "text": "Table 5-5 (PDF p58) lists CR4 — DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571 (Fluke 330829) — and no CR2. The schematic 732A-1002 draws CR2 as the circled reference zener beside C2 at the Q1/Q2 emitters and its REF DES table says CR4 (with CR5 and CR11) is not used; the board drawing (Figure 8-4) prints CR2 and no CR4. So the part Table 5-5 calls CR4 is CR2 on the board and schematic; this dataset carries both designators for the one part — CR4 as the Table 5-5 row (with its stock number) and CR2 (aliases CR4, VR2) as the printed designator the markers use. The 7/85 errata, Change #2 (Rev C, A4 732A-4002), then renames CR1, CR2, CR9 to VR1, VR2, VR9 — all 1N5240 (uncompensated; the 10 V is the 1N5240 data-sheet value, the manual prints none), quantity 3 — without touching the 1N4571 line, so on a Rev C board the reference may be a 1N5240 and the 6.4 V part is unexplained by the drawing. Do not order by designator alone: read the marking on the fitted part. The circuit works with either a 6.4 V CR2 and 10 V CR9 or the reverse, so the arithmetic does not settle it.",
+      "refs": ["CR2", "CR4", "CR1", "CR9", "C2"],
+      "source": "Table 5-5 (PDF p58); schematic 732A-1002 REF DES table (PDF p91); Figure 8-4 (PDF p90); Errata Change #2; docs/review-notes.md"
+    },
+    {
+      "title": "CR5 is drawn and listed but the sheet's REF DES table says 'not used'",
+      "text": "The REF DES table on 732A-1002 lists CR4, 5, 11 as NOT USED, yet the sheet draws CR5 (the diode in series with R4 at the top of the sense divider) and Table 5-5 carries CR5 (1N4448, REF). The table is wrong, not the drawing.",
+      "refs": ["CR5", "R4"],
+      "source": "Schematic 732A-1002 (PDF p91); Table 5-5 (PDF p58); docs/review-notes.md"
+    },
+    {
+      "title": "Table 4-3 tolerances are assumed",
+      "text": "Table 4-3 prints '32V dc' and '≈18.5V dc' for the A4 rows with no tolerance. This dataset assumes ±5 % (±1.6 V) on the 32 V raw input and ±0.5 V on the 18.5 V regulator output; both entries are marked inferred. Edit them in Author Mode if the bench says otherwise.",
+      "refs": ["TP1", "TP2", "TP3"],
+      "source": "Table 4-3 (PDF p42)"
+    },
+    {
+      "title": "18.5 V or 18.6 V",
+      "text": "Table 4-3 and §3-4 (and Figure 3-1) say 18.5 V dc; §3-13, the schematic 732A-1002 and Figure 8-1 letter 18.6 V; Errata Change #7 says '+18.6V'. The dataset uses Table 4-3's 18.5 V as the nominal with a ±0.5 V band that contains 18.6 V, and calls the rail '+18.6 V' where it quotes the drawings.",
+      "refs": ["TP1", "TP2"],
+      "source": "Table 4-3 (PDF p42); §3-4, §3-13 (PDF p21); 732A-1002 (PDF p91); Figure 8-1 (PDF p85)"
+    },
+    {
+      "title": "The 32 V row assumes line power",
+      "text": "Table 4-3 marks conditions (battery installed, BATTERY OPR switch ON) only on the A3 charger rows. The 32 V at TP1–TP3 is the pre-regulator output and needs ac line power; on battery alone the bus sits at the battery voltage less the CR15 drop — about 24 to 31 V (Table 4-3 rear-panel EXT. PWR ≥24 V dc; Errata #10 §4-45d: charge ends at about 31 V, 27 V trickle) — and the regulator still holds 18.5 V at TP1–TP2 until the battery is nearly flat.",
+      "refs": ["TP1", "TP3", "CR15"],
+      "source": "Table 4-3 (PDF p42, EXT. PWR row); §3-11, §3-12; Errata #10 §4-45d"
+    },
+    {
+      "title": "Figure 8-1 is a simplified diagram and disagrees with the sheet in three places",
+      "text": "Figure 8-1 (sheet 'Interconnect') draws only the parts that take part in the interconnect. It draws the battery diode from P2-15 straight into the 18.6 V line (on the sheet CR15 feeds the +RAW bus, which is the same net, so this is only a simplification); it letters P2-12 NC (the 1983 sheet agrees, the errata's Figure 8 letters it '+18.6V'); and it letters '18.6V' on the A5 E11 (BRN) line beside U5, whereas the A4 sheet letters that line — P2-27, harness wire 11 — '-2 V' (the drop across R13 below COMMON, a negative supply for A5 U5). Trust the sheet for the net, Figure 8-1 for where the wire goes.",
+      "refs": ["CR15", "R13"],
+      "source": "Figure 8-1 (PDF p85); Figure 8-2 cont W1 table (PDF p87); schematic 732A-1002 (PDF p91); Errata #4"
+    },
+    {
+      "title": "P2-12 and P2-20 as lettered",
+      "text": "P2-12 is lettered NC on the 1983 sheet although it sits on the +RAW bus; Errata #4 (Figure 8, the redrawn latch) letters it '+18.6V'. P2-20 is lettered COMMON but on the board reaches only C7 (from the Q7 cathode / Q6 base node); its COMMON connection, and the IN CAL LED return (BLU 16), are made on the motherboard, where J2-20 is strapped to pin 4 (Figure 8-2 cont). Measuring COMMON, use TP2 or pins 2–5.",
+      "refs": ["C7", "Q6", "Q7"],
+      "source": "Schematic 732A-1002 (PDF p91); Errata #4; Figure 8-2 cont (PDF p87)"
+    },
+    {
+      "title": "Later units: thermal fuse F2 on the oven (Errata Change #7)",
+      "text": "Errata Change #7 adds a 58 °C thermal fuse F2, laid on the reference module, that interrupts the +18.6 V supply to the oven heater and disconnects the +18.6 V from the latch circuit Q6, so the IN CAL LED goes out and stays out until the fault is corrected. F2 is a final-assembly part (Table 5-1), not on A4; on such a unit an IN CAL indicator that will not reset with the regulator output correct may be an open F2.",
+      "refs": ["Q6", "Q14"],
+      "source": "Errata Change #7 (§3-29, §3-30 added; Table 5-1 F2 715110)"
+    },
+    {
+      "title": "R4, R20, R13, R25, R26: Table 5-5 and the schematic disagree",
+      "text": "Read at 600 dpi on both pages. R4: Table 5-5 (PDF p58) lists RES, MTL. FILM, 8.66K ±1%, 1/8W, T9 (330738, CMF558661F); the sheet 732A-1002 prints 9.53K 1/8W 1%. R20: Table 5-5 (PDF p59) lists RES, COMP, 8.2K ±5%, 1/4W (160796, CB8225); the sheet prints 6.81K 1/8W 1%. R13: 1W in Table 5-5, 1/2W 5% on the sheet. R25 and R26: 1/4W in Table 5-5, 1/2W on the sheet. The errata corrects none of these. Order by the parts list's stock number, and read the fitted part before trusting either value; the derived capacitor voltages in data/a4.caps.json do not depend on R4 or R20.",
+      "refs": ["R4", "R20", "R13", "R25", "R26"],
+      "source": "Table 5-5 (PDF p58–59); schematic 732A-1002 (PDF p91); docs/review-notes.md"
+    },
+    {
+      "title": "R22 has no published adjustment",
+      "text": "R22 (5 kΩ) sets the regulator output, but the manual publishes no procedure for it — §4-43 says the Battery Charger Adjustment is the only field service procedure. Do not disturb it to 'trim' a reading that is within the assumed band.",
+      "refs": ["R22"],
+      "source": "§4-43 (PDF p38); schematic 732A-1002"
+    },
+    {
+      "title": "Part roles marked 'traced' are read from the drawing",
+      "text": "§3 names the transistors' jobs (Q1–Q4 regulator, Q5–Q8 voltage monitor, Q12 reference series pass, Q13/Q14 oven driver) but says nothing about the diodes, the DS1 LED or the passive parts. Those roles were traced on the 600 dpi sheet and full-resolution crops (docs/review-notes.md); the topology — negative-leg regulator, Q5 switching only +BRIDGE, DS1 as a drive clamp — is what the drawing shows, not what the manual says.",
+      "refs": ["DS1", "Q5", "Q4"],
+      "source": "Schematic 732A-1002 (PDF p91); docs/review-notes.md"
+    }
+  ],
+
+  "tables": [
+    {
+      "title": "Table 4-3. Internal Measurements — A4 rows",
+      "source": "Table 4-3 (PDF p42, manual p4-18)",
+      "rows": [
+        { "PCB": "A4", "Test points": "TP1, TP3", "Correct voltage reading": "32V dc", "Corrective action": "Pre-Regulator, Motherboard" },
+        { "PCB": "A4", "Test points": "TP1, TP2", "Correct voltage reading": "≈18.5V dc", "Corrective action": "Regulator" }
+      ],
+      "note": "*Voltage measurements taken with Multimeter A (Table 4-1: 4½-digit display, Fluke 8050A / 8060A). Table 4-3 prints no polarity; on A4 TP1 is positive with respect to both TP2 and TP3 (schematic 732A-1002), which follows §4-44's habit of naming the positive point first (steps 7, 14). No tolerance is printed; the dataset assumes ±1.6 V and ±0.5 V (inferred)."
+    },
+    {
+      "title": "P2 pin legend (A4 732A-1002) with the destination from Figures 8-1 and 8-2",
+      "source": "Schematic 732A-1002 (PDF p91); Figure 8-1 (PDF p85); Figure 8-2 cont, W1/W2 harness tables (PDF p87); Errata #4",
+      "rows": [
+        { "Pin": "1", "Net on the sheet": "HEATER", "On the board": "Q14 emitter, R24, C10", "Goes to": "Oven heater E2 (return of HR1–HR4)" },
+        { "Pin": "2", "Net on the sheet": "-TEMP REG", "On the board": "COMMON (TP2)", "Goes to": "A5 E1 BRN (W1-1) — buffer amp / driver amp common" },
+        { "Pin": "3", "Net on the sheet": "-BRIDGE", "On the board": "COMMON (TP2)", "Goes to": "A5 E2 RED (W1-2)" },
+        { "Pin": "4", "Net on the sheet": "-REF", "On the board": "COMMON (TP2); J2-20 strapped here on the motherboard", "Goes to": "A5 E3 ORN (W1-3)" },
+        { "Pin": "5", "Net on the sheet": "GUARD BOX FRONT PANEL", "On the board": "COMMON (TP2)", "Goes to": "Figure 8-1: NC" },
+        { "Pin": "6", "Net on the sheet": "REF SUPPLY", "On the board": "R3 (24.3 Ω) from pin 7", "Goes to": "A5 E4 YEL (W1-4) — 10 V rail side" },
+        { "Pin": "7", "Net on the sheet": "REF SUPPLY", "On the board": "Q12 collector", "Goes to": "A5 E5 GRN (W1-5)" },
+        { "Pin": "8", "Net on the sheet": "REF SUPPLY", "On the board": "Q12 base, R2 to +18.6 V", "Goes to": "A5 E6 BLU (W1-6) — A5 Q1 drive" },
+        { "Pin": "9", "Net on the sheet": "REF SUPPLY", "On the board": "CR13 + R21 from +18.6 V", "Goes to": "A5 E7 VIO (W1-7)" },
+        { "Pin": "10", "Net on the sheet": "+TEMP REG", "On the board": "+18.6 V (TP1 rail), strapped to 11; C9 (+), R17", "Goes to": "A5 E8 GRA (W1-8) — lettered 18.6V" },
+        { "Pin": "11", "Net on the sheet": "+HEATER", "On the board": "+18.6 V, strapped to 10", "Goes to": "Oven heater E1 (high end of HR1–HR4); motherboard TP1" },
+        { "Pin": "12", "Net on the sheet": "NC (1983 sheet); +18.6V (Errata #4)", "On the board": "+RAW / +18.6 V bus, TP1", "Goes to": "Figure 8-1: NC" },
+        { "Pin": "13", "Net on the sheet": "+RAW", "On the board": "+RAW bus, tied to 14; C1 (+)", "Goes to": "A3 P3-2 via J3-2 (A3 TP6)" },
+        { "Pin": "14", "Net on the sheet": "+RAW", "On the board": "tied to 13", "Goes to": "as 13" },
+        { "Pin": "15", "Net on the sheet": "+BATTERY", "On the board": "CR15 anode → +RAW bus", "Goes to": "A3 P3-9/10 and A6 P4-1 (+) via J3" },
+        { "Pin": "16", "Net on the sheet": "+BRIDGE", "On the board": "Q5 collector, R15", "Goes to": "A5 E9 WHT (W1-9) — top of the thermistor bridge" },
+        { "Pin": "17", "Net on the sheet": "NC", "On the board": "—", "Goes to": "motherboard: from J3-3 (A3 SWITCH CONTROL)" },
+        { "Pin": "18", "Net on the sheet": "IN CAL LED", "On the board": "Q6 emitter", "Goes to": "A1 LED PCB 14 YEL (W2) — DS3 IN CAL +" },
+        { "Pin": "19", "Net on the sheet": "RESET", "On the board": "R23 to the Q7 gate", "Goes to": "A1 LED PCB 15 GRN (W2) — RESET pad behind the front panel" },
+        { "Pin": "20", "Net on the sheet": "COMMON", "On the board": "C7 only (from the Q7 cathode / Q6 base)", "Goes to": "A1 LED PCB 16 BLU (W2) — DS3 IN CAL −; strapped to pin 4 on the motherboard" },
+        { "Pin": "21", "Net on the sheet": "-BATTERY", "On the board": "-RAW bus (TP3), tied to 22–24", "Goes to": "A3 P3-17/18 and A6 P4-2 (−) via J3" },
+        { "Pin": "22", "Net on the sheet": "-BATTERY", "On the board": "tied to 21", "Goes to": "as 21" },
+        { "Pin": "23", "Net on the sheet": "-RAW", "On the board": "-RAW bus (TP3), tied to 24; C1 (−)", "Goes to": "A3 P3-8 via J3-8" },
+        { "Pin": "24", "Net on the sheet": "-RAW", "On the board": "tied to 23; TP3 on this line (Figure 8-1)", "Goes to": "as 23" },
+        { "Pin": "25", "Net on the sheet": "NC", "On the board": "—", "Goes to": "NC" },
+        { "Pin": "26", "Net on the sheet": "HEAT DRIVE", "On the board": "R26 → Q13 base", "Goes to": "A5 E10 BLK (W1-10) — U5 output" },
+        { "Pin": "27", "Net on the sheet": "-2 V", "On the board": "Q4 collector node (R13 top, C8, R18 top, Q13 collector)", "Goes to": "A5 E11 BRN (W1-11) — U5 negative supply (Figure 8-1 letters this line 18.6V; see caveat)" }
+      ],
+      "note": "Pins 2, 3, 4, 5 are strapped to COMMON on the board; 10 and 11, 13 and 14, 21–24 are strapped as shown. Harness numbers W1-n / W2-n are the wire numbers printed on Figure 8-2 cont."
+    }
+  ]
+}

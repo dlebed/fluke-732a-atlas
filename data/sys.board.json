@@ -1,0 +1,47 @@
+{
+  "_comment": [
+    "The system view: Figure 8-1, the interconnect diagram, stands in for a board",
+    "drawing, and Figure 8-2 (motherboard, battery module, LED PCB) is its sheet.",
+    "Its items are the blocks and off-board parts those two figures draw, and each",
+    "assembly block links to that assembly's own dataset. Page numbers are PDF",
+    "pages of 732A-manual.pdf with the printed manual page after them."
+  ],
+  "id": "SYS",
+  "name": "System interconnect",
+  "pca": "732A",
+  "pcb": "732A-1301",
+  "drawingNo": "732A-7201",
+  "rev": null,
+  "refs": {
+    "locator": "Figure 8-1 Interconnect Diagram (732A-1301), p85 / 8-3",
+    "schematic": "Figure 8-2 cont. (732A-1004 / -1005 / -1006), p87 / 8-5",
+    "parts": "Table 5-1 (final assembly), Table 5-2 (A1 LED), Table 5-3 (A2 motherboard), Table 5-7 (A6 battery module), p45-53, 64-65",
+    "theory": "§3-3 Overall Functional Description, Figure 3-1, p21-23 / 3-1-3-3",
+    "troubleshooting": "Table 4-2 External Symptom Troubleshooting, Table 4-3 Internal Measurements, p41-42 / 4-17-4-18"
+  },
+  "layers": [
+    {
+      "id": "drawing",
+      "label": "Interconnect diagram",
+      "src": "assets/sys/drawing.png",
+      "credit": "Figure 8-1, 732A Instruction Manual (732A-1301)",
+      "transform": "identity"
+    }
+  ],
+  "schematics": [
+    {
+      "id": "sh1",
+      "title": "Motherboard, battery module and LED PCB",
+      "src": "assets/sys/sch1.png",
+      "figure": "8-2 (cont), 732A-1004 / -1005 / -1006"
+    },
+    {
+      "id": "sh2",
+      "title": "A1 LED, A2 Motherboard and A6 Battery Module outlines",
+      "src": "assets/sys/sch2.png",
+      "figure": "8-2, 732A-1606 / -1605 / -1604"
+    }
+  ],
+  "virtual": true,
+  "_virtualComment": "virtual: this dataset is a diagram, not a board that can be pulled from the instrument; the log's fitment list and the service report skip it."
+}

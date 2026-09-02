@@ -1,0 +1,52 @@
+{
+  "_comment": [
+    "Which net each A3 capacitor sits on, and what that net runs at. The rated",
+    "voltage is NOT here -- it is read from the parts list (Table 5-4) at run",
+    "time, so a corrected BOM corrects the margin too.",
+    "",
+    "All eight capacitors on the board (C7 and C8 are not used) were traced on",
+    "schematic 732A-1003 (Figure 8-3 cont., PDF p89; 3x2 tiles and full-",
+    "resolution crops). source is used strictly:",
+    "  'schematic'  the net was traced AND Table 4-3 (PDF p42) publishes what it",
+    "               runs at: C1, C2 across TP3-TP4 (<=60 V), C6 across TP5-TP1",
+    "               (33.0 V).",
+    "  'inferred'   the net was traced but nothing in the manual states its",
+    "               voltage; the figure is derived and the note says from what.",
+    "               Do not read these as measurements.",
+    "appliedV is the worst case the note describes (for the <= limits it is the",
+    "limit itself), so the margin the app shows is the conservative one.",
+    "",
+    "The A3 returns: TP4 (-RAW, bridge CR1 -) and TP1 (-BATTERY) are the same",
+    "node at P3-17/18 on the sheet, so charger-side voltages measured from TP1",
+    "are also voltages from TP4. The charger has its own rectifier: CR2/CR3",
+    "from the two ends of the T1 secondary (E2/E4) into C3 (+), returning on the",
+    "TP4 node -- the same secondary the bridge CR1 rectifies into C1, so C3",
+    "charges to about the same peak as TP3-TP4."
+  ],
+
+  "caps": {
+    "C1": { "rail": "RAW", "net": "TP3 (bridge CR1 +) to TP4 (-RAW)", "appliedV": 60, "source": "schematic",
+      "note": "The raw filter: Table 4-3 'TP3, TP4 <=60V dc' is the voltage across C1. Rated 80 V. Polarised, + at TP3." },
+
+    "C2": { "rail": "RAW", "net": "TP3 / R9 node to TP4 (-RAW)", "appliedV": 60, "source": "schematic",
+      "note": "0.1 uF ceramic in parallel with C1 (its top connects to the TP3 vertical at the R9 node, its bottom to the TP4 return line). Sees the raw dc, <=60 V per Table 4-3. Rated 100 V." },
+
+    "C3": { "rail": "BATT", "net": "CR2/CR3 cathodes (charger rectified supply, +) to TP4 return (-)", "appliedV": 60, "source": "inferred",
+      "note": "The battery charger's own reservoir: CR2 and CR3 rectify the two ends of the T1 secondary (E2, E4) into C3 +, and C3 - is on the bridge - / TP4 line. It is the same secondary the bridge CR1 charges C1 from, so the peak is about the same as TP3-TP4: <=60 V (Table 4-3 limit for TP3-TP4). Rated 80 V. Polarised, + toward CR2/CR3 and the R3/R4/Q2 current source." },
+
+    "C4": { "rail": "BATT", "net": "Q3 collector (R6 bottom) to Q3 base (Q4 collector / CR11 anode node)", "appliedV": 54, "source": "inferred",
+      "note": "4700 pF speed-up / stabilising capacitor across the Q3 collector-base of the Schmitt trigger. With Q3 cut off its collector rises toward the charger supply (<=60 V) while its base is held near the Q3/Q4 emitter node, which sits at CR15's 5.6 V plus the drop across R10 (about 6 to 12 V above TP1), so up to about 54 V worst case; a volt or two while Q3 conducts. Table 5-4 prints NO voltage rating for C4 ('CAP, CER, 4700 PF +/-20%'); the manufacturer part number 8121-A100-W5R-472M denotes a 100 V part, which would leave adequate margin -- confirm before substituting." },
+
+    "C5": { "rail": "BATT", "net": "Q4 base node (CR21 cathode / R15 / CR23 anode, board name CR17) to TP1 (-BATTERY)", "appliedV": 14, "source": "inferred",
+      "note": "1 uF tantalum filtering the Schmitt trigger's sense input. The Q4 base is fed through R15 (CR23 in parallel) from the R13/R14 tap of the R12-R13-R14 divider hung from the CR14 anode (TP2 minus 5.2 V): about 17.4/66.8 of (TP2 - 5.2 V), i.e. roughly +7 V at the 32 V switching point; with the battery pack connected A6 RT2 (10 K at 25°C, P3-15/16) is in parallel with R12 and the ratio rises to about 17.4/56.8, giving no more than about 14 V even at the 45-50 V of §4-44 step 16. Rated 35 V. Polarised, + at the Q4 base." },
+
+    "C6": { "rail": "BATT", "net": "TP5 (Q6 base, trickle reference) to TP1 (-BATTERY)", "appliedV": 33, "source": "schematic",
+      "note": "0.01 uF from the trickle-charge reference node to -BATTERY: Table 4-3 'TP5, TP1 33.0V dc' is the voltage across C6. Rated 100 V." },
+
+    "C9": { "rail": "RAW", "net": "T1 secondary end E2 (AC SECONDARY) to shield terminal E3 (SHIELD #3) -- ac", "appliedV": 30, "source": "inferred",
+      "note": "C9 and C10 are in series from one end of the secondary (E2) to the other (E4) with their midpoint on the transformer shield lead E3, which connects to nothing else on the board, so the midpoint floats at the ac centre of the winding and each capacitor sees about half the secondary. A capacitor-input rectifier charges to the winding's peak, so with the raw dc at its 60 V limit each sees about 30 V peak (about 21 V rms), ac, either polarity. Rated 50 V." },
+
+    "C10": { "rail": "RAW", "net": "shield terminal E3 (SHIELD #3) to T1 secondary end E4 (AC SECONDARY) -- ac", "appliedV": 30, "source": "inferred",
+      "note": "The other half of the C9/C10 pair across the T1 secondary; see C9. About 30 V peak ac when the raw dc is at its 60 V limit. Rated 50 V." }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "_comment": [
+    "Which net each A4 capacitor sits on and what that net runs at. The rated",
+    "voltage is NOT here -- it is read from the parts list (Table 5-5) at run time.",
+    "",
+    "All ten capacitors were traced on schematic 732A-1002 (Figure 8-4 cont, PDF",
+    "p91) at 600 dpi (docs/review-notes.md). `source` is used strictly:",
+    "  'schematic'  the net was traced AND Table 4-3 publishes the voltage on it",
+    "               (32 V across +RAW/-RAW, ~18.5 V across +18.6 V/COMMON).",
+    "  'inferred'   the net was traced but nothing in the manual states its",
+    "               voltage; the figure is derived and the note says from what.",
+    "               Design points, not measurements.",
+    "The regulator is in the negative leg: the +RAW bus is the +18.6 V rail and",
+    "COMMON sits 18.6 V below it, so 'to COMMON from +18.6 V' means 18.6 V and",
+    "'to -RAW from +18.6 V' means the full 32 V input.",
+    "",
+    "Two derived figures depend on which zener the reference CR2 is (see the",
+    "CR2/CR4 caveat in data/a4.reference.json): with the parts list's 6.4 V",
+    "1N4571 the Q1/Q2 emitter node is 6.4 V below +18.6 V; with the errata's",
+    "1N5240 it is 10 V below (the 1N5240's data-sheet voltage; the errata prints",
+    "none). Both cases are given; the entered appliedV is the",
+    "6.4 V case, which the 1983 parts list describes.",
+    "",
+    "railClass -- how much energy is behind the net, which decides what a shorted",
+    "part does:",
+    "  A  the raw input bus. Behind the A3 pre-regulator AND the battery through",
+    "     CR15 -- the battery 'is capable of generating extremely high peak",
+    "     currents' (§4-51). A short here is a battery short.",
+    "  C  the output of the discrete series-pass regulator (Q4) or a node it",
+    "     holds: current limited only by R12 and the DS1 clamp, no thermal",
+    "     protection.",
+    "  S  a signal or bias node fed through a resistor or current-regulator",
+    "     diode; a short is contained by that series part.",
+    "Tantalums: C2 (82 µF 20 V), C3/C4 (10 µF 35 V), C9 (22 µF 25 V). C9 is the",
+    "tightest margin on the board -- a 25 V part on the 18.6 V rail (~74 %).",
+    "Hand-authored."
+  ],
+  "assembly": "A4",
+  "caps": {
+    "C1": {
+      "net": "+RAW / -RAW (TP1 to TP3)",
+      "rail": "RAWIN",
+      "appliedV": 32.0,
+      "railClass": "A",
+      "source": "schematic",
+      "note": "330 µF 80 V aluminium reservoir across the regulator input, + on the +RAW bus (P2-13/14, TP1), − on the -RAW bus (P2-23/24, TP3). 32 V is Table 4-3's reading for TP1 vs TP3 (PDF p42), the A3 pre-regulator output. On battery the bus is lower (about 24–31 V through CR15). An 80 V part at 40 % — generous, because the A3 raw rectified dc before the pre-regulator can reach 60 V (Table 4-3, A3 TP3–TP4) and a failed pre-regulator would put that here."
+    },
+    "C2": {
+      "net": "CR2 reference zener (+18.6 V to the Q1/Q2 emitter node)",
+      "rail": "REG",
+      "appliedV": 6.4,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "82 µF 20 V tantalum directly across the reference zener CR2, + on the +18.6 V (TP1) side. The voltage across it is the zener voltage: 6.4 V if CR2 is the parts list's 1N4571 (Table 5-5 'CR4', 6.4 V ±5 %), 10 V if it is the 1N5240 the 7/85 errata names for VR2 (Rev C) — 10 V is the 1N5240 data-sheet value; neither the manual nor the errata prints a voltage for it. Nothing in the manual states the node voltage; both cases sit under the 20 V rating (32 % / 50 %). Biased by current-regulator diode CR12. A short here removes the reference: Q1 turns hard on, Q2 and the pass pair turn off and the output (TP1–TP2) collapses toward 0 V."
+    },
+    "C3": {
+      "net": "+18.6 V to the R7/R8 junction of the Q2 base divider",
+      "rail": "REG",
+      "appliedV": 8.0,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "10 µF 35 V tantalum, + on the +18.6 V branch, − on the R7/R8 junction of the R7–R8–R9 (18 k + 91 k + 91 k to COMMON) load of Q1. The junction sits at 182/200 of the Q2 base voltage; the Q2 base is one V_BE below the CR2 node. With a 6.4 V CR2 that is about 10.6 V above COMMON, so about 8 V across C3; with a 10 V CR2 about 11 V. Derived from the divider values printed on the sheet; nothing publishes it. Well inside 35 V either way."
+    },
+    "C4": {
+      "net": "Q1 base (sense) node to COMMON",
+      "rail": "REG",
+      "appliedV": 11.6,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "10 µF 35 V tantalum, + on the R6 / Q1 base node, − on COMMON. The Q1 base rides one V_BE below the CR2 reference node: about 18.6 − 6.4 − 0.6 = 11.6 V above COMMON with a 6.4 V CR2, about 8 V with a 10 V CR2. Derived; nothing publishes it. A short here pulls the error amplifier's sense input to COMMON — the regulator reads that as far too much output, turns the pass pair off, and TP1–TP2 collapses toward 0 V."
+    },
+    "C5": {
+      "net": "Q8 collector to Q8 base (monitor)",
+      "rail": "REG",
+      "appliedV": 20.0,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "0.22 µF ceramic from the Q8 collector (R19 to the Q5 base) to the Q8 base (R18/R20 junction). With Q8 saturated — normal operation — it sees under a volt. When Q8 is off (raw input fallen to the monitor threshold) its collector rises to the +18.6 V bus less V_BE(Q5) while its base is a few volts above -RAW, so it sees roughly the raw input at the threshold, about 20 V; briefly up to the full 32 V at power-up before the regulator settles. Rated 25 V in Table 5-5 (the same Fluke 309849 is printed 50 V on the C10 row). Derived from the sheet."
+    },
+    "C6": {
+      "net": "Across R16: latch node (R15/R14) to the Q7 gate",
+      "rail": "REG",
+      "appliedV": 17.0,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "0.047 µF 50 V ceramic in parallel with R16 (1 MΩ). Latch off (IN CAL out): the gate follows the node through R16, near 0 V across it. Latch on (IN CAL lit): the gate sits about a volt above COMMON while the node is at the Q5 collector, about 18 V, so about 17 V across it. Derived; nothing publishes it."
+    },
+    "C7": {
+      "net": "Q7 cathode / Q6 base to P2-20 (COMMON via the motherboard strap)",
+      "rail": "REG",
+      "appliedV": 0.7,
+      "railClass": "S",
+      "source": "inferred",
+      "note": "0.01 µF 40 V ceramic from the Q7 cathode / Q6 base node to pin 20, which the motherboard straps to pin 4 (COMMON). About one V_BE (0.7 V) with the latch on, 0 V with it off. Derived. The pin-20 side is COMMON only through the motherboard — with A4 on an extender or out of the instrument this capacitor is open-ended."
+    },
+    "C8": {
+      "net": "Q4 collector node (-2 V line, P2-27) to COMMON",
+      "rail": "REG",
+      "appliedV": 2.0,
+      "railClass": "C",
+      "source": "inferred",
+      "note": "0.22 µF ceramic across R13 (2.7 Ω) between the Q4 collector node and COMMON. The Q13 collector and R18 also sit on the Q4 collector node. The sheet letters the line '-2 V' at P2-27; the actual drop is the regulator's load current through R13 (about 0.7 V at the approximately 260 mA battery drain of Errata #10 §4-45f). Entered at the sheet's 2 V as the upper figure. Derived from the sheet."
+    },
+    "C9": {
+      "net": "+18.6 V (P2-10/11 column) to COMMON",
+      "rail": "REG",
+      "appliedV": 18.6,
+      "railClass": "C",
+      "source": "schematic",
+      "note": "22 µF 25 V tantalum, + on the +TEMP REG / +HEATER column (the +18.6 V rail), − on COMMON: the regulated-output filter. 18.5–18.6 V is Table 4-3's TP1 vs TP2 reading (PDF p42) and the sheet's lettering. Table 5-5 (PDF p58) describes it as 25 V, though the Sprague part number it lists, 196D226X0035TE4, carries the 35 V code (0035) — read the fitted part. At 25 V it is about 74 %, the tightest margin on the board, and a tantalum on the output of a discrete regulator whose only current limit is R12/DS1; a 35 V part of the same value and case is the sensible replacement."
+    },
+    "C10": {
+      "net": "Heater return (P2-1, Q14 emitter) to COMMON",
+      "rail": "REG",
+      "appliedV": 18.6,
+      "railClass": "C",
+      "source": "inferred",
+      "note": "0.22 µF 50 V ceramic across Q14 (emitter to collector). With the heater off Q14 is open and the heater string pulls its return up to +18.6 V (P2-11), so the capacitor sees the full rail; with the heater on it sees Q14's saturation voltage, under a volt. Entered at the 18.6 V worst case (Table 4-3 rail voltage); the topology is traced."
+    }
+  }
+}

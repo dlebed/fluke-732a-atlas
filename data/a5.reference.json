@@ -1,0 +1,387 @@
+{
+  "_comment": [
+    "Reference material for the A5 Reference PCB Assembly (732A-4001; PCB 732A-1001",
+    "with the A7 Calibration PCB 732A-1007 on the same sheet). Transcribed from",
+    "§3-17..3-24 (PDF p22), §4-19/4-20 (PDF p30), §4-43 (PDF p38), §4-51..4-54",
+    "(PDF p40), Table 4-2 (PDF p41), Table 5-6 and its footnote (PDF p60-62),",
+    "Table 1-2 (PDF p10), Figure 8-5 cont. (PDF p93), Figure 8-1 (PDF p85), and",
+    "the Change/Errata sheet Issue 3 (7/85). Where a statement was read off the",
+    "sheet rather than out of a paragraph the text says so ('read from the",
+    "sheet'); the seams between the 3x2 review tiles were re-read on 600 dpi",
+    "crops of .build/a5/sch1_full.png.",
+    "",
+    "The manual's own words are kept in warnings and in the Table 4-2 rows. Part",
+    "functions come from §3 where §3 states them; the rest are what the sheet",
+    "draws. The Table 4-4 rows were checked as a set against the errata",
+    "transcription (198 value / stock-number pairs, all present)."
+  ],
+  "overview": {
+    "summary": "The Reference Circuit (A4Q12, Q1, Q2, Q5, U1, U2) reduces the 18.6 V output of the Regulator to precisely 10 V; it is a highly stable series-pass voltage regulator, and the entire reference supply except the pass transistor is enclosed in an oven (§3-18). U2, the Ref-Amp, is a transistor and zener diode on a common substrate with an extremely low temperature coefficient; it compares the 10 V output to its internal zener to derive an error voltage, amplified by op amp U1, which drives the series pass element (Q1, A4Q12). Q2 provides current limiting under short circuit; R20 allows a small adjustment (+/-50 uV) of the output; larger adjustments are made by jumper changes on the Calibration PCB A7 (§3-19). Read from the sheet: the zener half of U2 is fed from the 10 V sense line through R4 1.27 K, its transistor half has its base on the R7 / R8 / R11 / R10 / calibration-ladder divider of the 10 V output and its collector loaded by R5 from the CR2-held bias node (TP1 / TP2); U1 compares that collector with the R2 / R3 tap of the sensed 10 V. Two precision resistive dividers divide the 10 V to 1 V and 1.018 V, each adjustable over a limited range and both inside the oven (§3-21): on the sheet the chain under R58 (R56, R54, R53 / R52, R48, TP13 / TP14, R46 8.9 K, R44 1 K) reaches E35 1V HI and the chain under R59 (R57, R55, R50 / R51, R49, TP12 / TP11, R47 8.7 K, R45 1 K) reaches E34 1.018V HI -- see the caveat 'Which divider is which'. The Oven Controller (A4Q13, A4Q14, Q3, Q4, U3, U4, U5) holds the oven at 48 +/- 2 C with a high-thermal-gain proportional loop: thermistors in a bridge with R28 and R29, U3 buffering the bridge, differential amplifier/integrator U5 driving the oven driver and output transistors on A4, U4 shaping the loop response (§3-23, 3-24). On the sheet the two oven thermistors drawn under the OVEN bracket are RT3 and RT4 (final-assembly parts), RT1 is the board's own bridge thermistor, and RT2 is the front-panel OVEN TEMP THERMISTOR across E21/E22, wired to nothing else but R43/C1. Field repair: §4-43 says there is no field serviceable circuitry within the oven/reference supply assembly and §4-53 forbids repair of the Reference circuit; §4-20 nevertheless allows the oven to be opened 'to effect repairs on the Oven Controller circuit', and Errata §4-55 later makes the two divider strings field repairable.",
+    "connectors": "No edge connector. The board is wired through Teflon feed-through terminals (MP6): E1-E11 to the A2 mother board J2 by harness W1 (E1 BRN, E2 RED, E3 ORN, E4 YEL, E5 GRN, E6 BLU, E7 VIO, E8 GRA, E9 WHT, E10 BLK, E11 BRN), E21-E28 and E33-E36 to the front-panel binding posts and the protection term strip, and E14-E18 to the A7 Calibration PCB by five wires (BRN, RED, ORN, YEL, GRN). Table 5-6 lists none of the E numbers as designators; the dataset carries them as terminals read from the sheet (notInParts).",
+    "source": "§3-17..3-24 (PDF p22); Figure 8-5 (PDF p93); Figure 8-2 W1 legend (PDF p87)"
+  },
+  "railCircuits": {
+    "REF": {
+      "rails": "+10 V output (E4 in from the A4 pass element; E23 / E24 / E25 / E33 to the front panel), its bias node, and the 1 V / 1.018 V dividers",
+      "refAmp": ["U2", "R4", "R5", "R9", "R6", "R60"],
+      "errorAmp": ["U1", "C14", "C3", "R1", "C4", "R25"],
+      "passDrive": ["Q1", "Q2", "CR1"],
+      "protection": ["Q5", "C16", "CR6", "CR8", "CR7", "R64"],
+      "bias": ["CR5", "R9", "CR2", "C2"],
+      "senseDivider": ["R2", "R3", "C15", "R24"],
+      "baseDivider": ["R26", "R7", "R8", "R11", "R10", "R12", "R13", "R14", "R15", "R16", "R17", "R19", "R18", "R20", "C17"],
+      "divider1V": ["R58", "R56", "R54", "R53", "R52", "R48", "R46", "R44"],
+      "divider1018V": ["R57", "R59", "R55", "R50", "R51", "R49", "R47", "R45"],
+      "output": ["R62", "R63"],
+      "adjust": ["R20", "R58", "R59"],
+      "tps": ["TP1", "TP2", "TP3", "TP4", "TP11", "TP12", "TP13", "TP14"],
+      "note": "Read from the sheet. The pass element A4Q12 (on A4, wired through E4-E7: E4 YEL its output, E5 GRN, E6 BLU, E7 VIO its drive) delivers the 10 V onto E4; CR6 (12 V zener) clamps that node to the supply common, U1 runs from it (pin 7), and R62 2.7 ohm carries it to the 10 V HI bus node that leaves on E23 (10V HI, the force lead). Off that bus node R63 2.7 ohm feeds the CR2 anode / C2 / CR8 node, CR8 (12 V zener) clamping it to common. Two more '10V HI' wires come back from the front-panel post: E24 is the sense line -- the top of the R2 4.22 K / R3 10 K divider (C15 0.22 uF to R24 10 ohm to common) whose tap is U1's - input, the top of R4 1.27 K which feeds the zener half of U2, and one end of R26 51 -- and E25 is the other end of R26, from which R7 6.2 K goes to the Ref-Amp's base and on down R8 11.42 K (TP3), R11, R10 (TP4), the calibration ladder and R19 / R18 / R20 to LO (E26). U2's zener anode sits on the reference common (with R1 / C3 and R3); its transistor's emitter is the zener cathode, its base is the R7 / R8 tap, and its collector is loaded by R5 from the bias node TP2 and is U1's + input; C14 180 pF sits across U1's inputs and C3 1 uF + R1 200 shunt the + input to the reference common. U1's output goes through CR1 (5.2 V zener, cathode on E7) to E7 -- Q1's base -- and Q1 / Q2 drive A4Q12 (§3-19: U1 drives the series pass element Q1, A4Q12; Q2 provides current limiting). The bias node TP1 is fed from +18.6 V (E8) by CR5 (current-regulator diode) in parallel with R9 and held by CR2 (6.4 V compensated zener) one zener above the CR8 node, C2 across CR2; R60 and R6 (both SEL) drop it to TP2 and R5. Q5 is drawn with base and emitter tied to the U2 emitter/zener node and its collector on the U2 base line -- a transistor used as a low-leakage diode across the Ref-Amp's base-emitter, C16 0.047 uF in parallel. The board has two commons: the reference common (R1 / C3, R3, U2 zener anode, C17, a ground symbol; wired to the LO post by E27) and the supply common (E3 ORN to A4 -REF / COMMON; U1 pin 4, R25 / C4, R24 / C15, CR6 and CR8 anodes, a ground symbol; wired to the LO post by E28), joined on the board by R64 51 in parallel with CR7 (anode on the supply common). The 1 V chain hangs from the E33 10V HI wire: (R58 200 1V ADJ + R56 1 K) in parallel with R54 35 to TP13, then R53 + R52 (SEL, in series) shunted by R48 35 down to TP14, R46 8.9 K to E35 (1V HI) and R44 1 K to LO (E36). The 1.018 V chain: (R57 350 + R59 200 1.018V ADJ) in parallel with R55 35 to TP12, R50 + R51 (SEL) shunted by R49 35 to TP11, R47 8.7 K to E34 (1.018V HI) and R45 1 K to LO (E36). All of the ref-amp, error-amp, pass-drive, bias, output and divider parts are starred in Table 5-6.",
+      "source": "§3-18, 3-19, 3-21 (PDF p22); Figure 8-5 (PDF p93); Figure 8-1 (PDF p85)"
+    },
+    "OVEN": {
+      "rails": "+BRIDGE (E9 WHT, from A4 P2-16 via A4 Q5) feeding the thermistor bridge and the U3 / U4 / U5 controller; heat drive out on E10 (BLK) to A4 P2-26",
+      "sources": ["Q3", "Q4", "R21", "R27"],
+      "bridge": ["RT1", "R22", "CR3", "CR4", "R28", "R29", "C7", "C5"],
+      "buffer": ["U3"],
+      "integrator": ["U5", "R30", "R31", "R61", "R32", "R33", "R34", "C8", "C13", "R37"],
+      "loopShaping": ["U4", "R38", "R39", "R40", "R41", "R42", "R35", "R36", "C9", "C10", "C11", "C12", "R23"],
+      "filters": ["C6"],
+      "monitor": ["RT2", "R43", "C1"],
+      "tps": ["TP5", "TP6", "TP7", "TP8", "TP9", "TP10"],
+      "note": "§3-24 in the manual's words: thermistors RT1, series connected RT2, and RT3 are connected in a bridge configuration with R28 and R29 and are located inside the oven; U3 buffers the bridge output and drives differential amplifier/integrator U5 which drives the oven driver and output transistors (A4Q13, A4Q14) and subsequently the oven heaters; U4 shapes the overall loop frequency response. Read from the sheet, the designators differ: the two series thermistors under the OVEN bracket are RT3 and RT4 (10 K at 25 C, oven-assembly parts -- Table 5-1's RT1 in 1983, RT3/RT4 from Errata Change #7), RT1 (10 K, an A5 part) is the bridge's return leg to E2, and RT2 (the other A5 thermistor of Table 5-6) is the front-panel OVEN TEMP THERMISTOR between E21 and E22, which takes no part in the loop. Q3 and Q4 (2N3906 PNP, emitters through R21 SEL and R27 10 K to E9) are a current mirror sourcing from the +BRIDGE rail: Q4's base is tied to its own collector and Q3's base to that node (read at 600 dpi), so R27 sets the reference current and Q3 mirrors it scaled by R27 / R21 -- Q3 into the bridge node TP7 (RT3 leg, R22 17.4 K, CR3), Q4 through R28 7.5 K into the U3B input node. From TP7 the thermistor path is RT3 -> midpoint (TP8/TP9) -> RT4 -> TP10 -> RT1 -> E2, with R22 across RT3 + RT4. TP7 itself is U3A's + input (pin 3), with C7 4700 pF from it to E2 (600 dpi: the junction dot is on the CR3 anode and one vertical drops from it to the pin-3 line and through C7; the CR3 / CR4 junction connects to nothing else). CR3 -> CR4 in series run from TP7 to the other bridge node -- CR4 cathode / R28 / R29 / C5 0.22 uF, U3B's + input (pin 5) -- so they act as a clamp that limits how far the thermistor node can rise above the R28 / R29 node (a reading of the sheet; the manual does not describe the two diodes). U3 (LM358) runs from E9 (pin 8) to E1 (pin 4, BRN, -TEMP REG); both halves are drawn as followers. U5 (LM308H) takes U3B's output (pin 7) on its + input and U3A's output (pin 1) through R30 2.15 K on its - input, with R31 1 K, R32 6.2 M, R33 5.1 M, R34 2.4 M and C8 5 uF forming the integrator, C13 100 pF from its compensation pin 8 to E11, R61 1 M from the + input to its V+; U5 runs from +18.6 V (E8, pin 7) to -2 V (E11 BRN, pin 4; A4 P2-27) and its output leaves through R37 1 K on E10 (BLK) as HEAT DRIVE to A4 R26 / Q13. U4 (LM308H, pin 7 on E9, pin 4 on the E1 return, with C12 100 pF from its compensation pin 8 to that node and R23 51 from it to a ground symbol) is the loop-shaping stage: its + input (pin 3) takes the bridge signal through R38 51 K from the U3B output line and, through C10 4 uF, the U5 output through C9 0.47 uF in parallel with R36 + R35 (27 M each); its - input (pin 2) takes the same U3B output line through R39 51 K and its own output through R40 10 K from the R41 6.8 M / C11 270 pF feedback; its output goes through R42 51 K into U5's - input. C6 0.22 uF bypasses E9 to E2. Errata Change #7 adds a 58 C thermal fuse F2 (final assembly) on top of the reference module that interrupts the +18.6 V to the oven heater and to the A4 latch.",
+      "source": "§3-22..3-24 (PDF p22); §3-16 (PDF p21); Figure 8-5 (PDF p93); Figure 8-4 P2 legend (PDF p91); Errata Change #7"
+    },
+    "SUPPLY": {
+      "rails": "+18.6 V (E8 GRA, A4 P2-10 +TEMP REG), +BRIDGE (E9 WHT, A4 P2-16), -2 V (E11 BRN, A4 P2-27), returns E1 BRN (-TEMP REG, P2-2), E2 RED (-BRIDGE, P2-3), E3 ORN (-REF, P2-4)",
+      "consumers18V6": ["CR5", "R9", "U5"],
+      "consumersBridge": ["R21", "R27", "U3", "U4", "C6"],
+      "clamps": ["CR6", "CR8"],
+      "tps": [],
+      "note": "§3-4: the Regulator converts the 32 V to 18.5 V dc which powers the Oven Controller and the Reference (§3-13 and Figure 8-1 print 18.6 V). On A5 the raw +18.6 V arrives on E8 (GRA) only and feeds two things: the Ref-Amp bias node through CR5 / R9, and U5's V+ (pin 7). The E8 line ends at the CR5 / R9 node; the 10 V HI bus drawn just above it is a separate segment (checked at 600 dpi). The +BRIDGE rail on E9 (WHT) is the same 18.6 V after A4 Q5, the voltage monitor's switch (§3-16), and carries everything else in the oven controller: Q3 / Q4 through R21 / R27, U3 pin 8, U4 pin 7. E11 (BRN) is U5's negative supply, lettered -2 V on Figure 8-4's P2-27 (see the caveat about Figure 8-1). The three returns are separate wires that A4 straps together at its COMMON node (P2 pins 2, 3, 4 and 5, TP2 on A4): E1 for U3 and U4, E2 for the thermistor bridge and its capacitors, E3 for the reference's supply common (U1 pin 4 and R25 / C4 are wired to the E3 line itself; R24 / C15 and the CR6 and CR8 anodes end on ground symbols, taken as the same common -- see the caveat 'Two commons, two ground symbols'). The reference output is protected by CR6 and CR8 (12 V zeners to common) and, outside the board, by the term strip inside the front panel (final-assembly R1 2 ohm, C1 82 uF, CR1, RV1, DS1 across 10V HI / LO). No A5 test point sits on a supply line.",
+      "source": "§3-4, 3-13, 3-16 (PDF p21); Figure 8-1 (PDF p85); Figure 8-4 (PDF p91); Figure 8-5 (PDF p93)"
+    }
+  },
+  "functions": {
+    "U1": "Op amp (LM308A) that amplifies the Ref-Amp's error voltage and drives the series pass element Q1 / A4Q12 (§3-19). Runs from the 10 V rail E4 (pin 7) to the supply common (pin 4); + input on U2's collector, - input on the R2 / R3 tap of the sensed 10 V (read from the sheet). Not field repairable (§4-53).",
+    "U2": "The Ref-Amp: a transistor and zener diode mounted on a common substrate, compensating ambient temperature changes for an extremely low temperature coefficient; compares the 10 V output to its internal zener reference to derive the error voltage (§3-19). On the sheet: zener anode on the reference common, zener cathode = transistor emitter (fed by R4 from the 10 V sense line), base on the R7 / R8 tap of the 10 V output, collector loaded by R5 to U1's + input. Part of the REF AMP SET 732A-4502 with R5 and R9 (Table 5-6 645010; sheet note 3). Not field repairable (§4-53).",
+    "U3": "Dual op amp (LM358) buffering the thermistor bridge output and driving U5 (§3-24). U3B's + input (pin 5) is the CR4 / R28 / R29 / C5 node, U3A's + input (pin 3) is the TP7 thermistor node (RT3 leg, Q3 collector, R22, CR3 anode, C7) -- not the CR3 / CR4 junction, which connects to nothing else; both halves are followers (read from the sheet at 600 dpi). Supplied from E9 (pin 8) to E1 (pin 4).",
+    "U4": "Op amp (LM308H) that shapes the overall loop frequency response of the oven controller (§3-24). Read from the sheet: + input through R38 51 K from the U3B output line and through C10 4 uF from the U5 output branch (C9 0.47 uF in parallel with R36 + R35); - input through R39 51 K from the U3B output line and through R40 10 K from its own R41 6.8 M / C11 270 pF feedback; output through R42 51 K into U5's - input. Supplied from the +BRIDGE rail E9 (pin 7) to the E1 return (pin 4); C12 on its compensation pin 8; R23 51 ties that return node to a ground symbol.",
+    "U5": "Differential amplifier / integrator (LM308H) that drives the oven driver and output transistors A4Q13, A4Q14 and so the oven heaters (§3-24). + input from U3B (R61 1 M to V+), - input from U3A through R30 with R31 / R32 / R33 / R34 / C8 feedback and R42 from U4; output leaves through R37 on E10 (HEAT DRIVE); supplied from +18.6 V (E8, pin 7) and -2 V (E11, pin 4), C13 on pin 8 to E11 (read from the sheet).",
+    "Q1": "Series pass drive transistor (2N3904) with A4Q12: U1 drives the series pass element (Q1, A4Q12) (§3-19). Base on E7 (VIO) from CR1's cathode, collector E5 (GRN), emitter E6 (BLU) to A4 P2 7 / 8 / 9 (read from the sheet). Not field repairable (§4-53).",
+    "Q2": "Provides current limiting to protect the series pass element under short circuit conditions (§3-19). 2N3904; collector on the E4 10 V node, base E5, emitter E7 (read from the sheet). Not field repairable (§4-53).",
+    "Q3": "PNP (2N3906), the output side of the Q3 / Q4 current mirror: sources current from the +BRIDGE rail E9 through R21 (SEL, TP5 on its lower end) into the thermistor bridge node TP7; its base is on Q4's base / collector node, so its current is Q4's scaled by R27 / R21 (read from the sheet at 600 dpi; §3-23 lists it in the Oven Controller).",
+    "Q4": "PNP (2N3906), the diode-connected reference side of the Q3 / Q4 current mirror: emitter through R27 10 K to E9, base tied to its own collector, which feeds R28 7.5 K into the U3B input side of the bridge (read from the sheet at 600 dpi; §3-23 lists it in the Oven Controller).",
+    "Q5": "Listed with the Reference Circuit (§3-18) and among the parts §4-53 forbids repairing. On the sheet it is drawn with base and emitter tied to the U2 emitter/zener node and its collector on the U2 base line, C16 0.047 uF in parallel -- a double-diffused transistor (EN2484) used as a low-leakage diode protecting the Ref-Amp's base-emitter junction (read from the sheet; the manual does not state its function).",
+    "CR1": "5.2 V uncompensated zener between U1's output (anode) and E7 / Q1's base (cathode) -- a level shift in the pass-element drive (read from the sheet). VR1 from Rev C (Errata Change #1). Starred.",
+    "CR2": "6.4 V temperature-compensated zener (1N4571) holding the Ref-Amp bias node TP1 one zener above the R63 / CR8 node (cathode on TP1, anode on that node); C2 across it (read from the sheet). VR2 from Rev C (Errata Change #1). Starred.",
+    "CR3": "Switching diode (1N4448), anode on the TP7 thermistor node (Q3 collector, RT3, R22, C7, U3A + input), cathode to CR4's anode; the CR3 / CR4 junction connects to nothing else (read from the sheet at 600 dpi). With CR4 it ties the two bridge nodes together two diode drops apart -- a clamp on the bridge unbalance; the manual does not describe it.",
+    "CR4": "Switching diode (1N4448) in series with CR3; its cathode node (R28, R29, C5) is U3B's + input (read from the sheet). See CR3.",
+    "CR5": "Current-regulator diode (FED, 334839) from +18.6 V (E8) into the Ref-Amp bias node TP1, in parallel with R9 (read from the sheet). Starred.",
+    "CR6": "12 V 1 W zener from the E4 10 V node (cathode) to the supply common -- output clamp (read from the sheet). VR6 from Rev C (Errata Change #1). Starred.",
+    "CR7": "Switching diode (1N4448), anode on the supply common (E3 / U1 pin 4 line), cathode on the reference common (R3 / R1 / U2 zener anode line), in parallel with R64 51 -- the tie between the board's two commons (read from the sheet). Starred.",
+    "CR8": "12 V 1 W zener from the R63 / CR2-anode / C2 node (cathode) to the supply common -- output clamp (read from the sheet). VR8 from Rev C (Errata Change #1).",
+    "R1": "200 ohm in series with C3 1 uF from U1's + input (U2 collector) to the reference common (read from the sheet). Not the term strip's R1 2 ohm. Starred.",
+    "R2": "Half of the matched set with R3 (634824): 4.22 K from the E24 10 V sense line to the tap that is U1's - input (read from the sheet). Starred.",
+    "R3": "Half of the matched set with R2 (634824): 10 K from U1's - input tap to the reference common (read from the sheet). Starred.",
+    "R4": "1.27 K wirewound (634915) from the E24 10 V sense line to the U2 emitter / zener-cathode node: supplies the Ref-Amp zener's operating current from the 10 V output itself (read from the sheet at 600 dpi; the manual does not describe it). Starred.",
+    "R5": "Ref-Amp collector load, part of the REF AMP SET with R9 and U2 (Table 5-6 645010); from TP2 to U2's collector, crossing the 10 V sense line without a junction (read from the sheet).",
+    "R9": "Part of the REF AMP SET with R5 and U2; from +18.6 V (E8) to the bias node TP1, in parallel with CR5 (read from the sheet).",
+    "R6": "SEL (Table 5-6: 51.1 K 1%) between TP2 and R60 in the Ref-Amp bias path (read from the sheet). Starred.",
+    "R60": "SEL (Table 5-6: 51.1 K 1%) between TP1 and R6 in the Ref-Amp bias path (read from the sheet). Starred.",
+    "R7": "6.2 K, half of the REF. AMP DIVIDER SET with R8 (346304; 715706 from Errata Change #8): from the E25 / R26 node to the Ref-Amp's base (read from the sheet). Starred.",
+    "R8": "11.42 K, half of the REF. AMP DIVIDER SET with R7: from the Ref-Amp's base down to TP3 (read from the sheet). Starred.",
+    "R26": "51 ohm between the two 10V HI sense wires: the E24 node (R2 / R4 / C15) and the E25 node from which R7 feeds the Ref-Amp's base (read from the sheet). Starred.",
+    "R12": "20 ohm from TP4 to the calibration-ladder common row (post E18, BRN) -- the resistor the A7 jumpers parallel (read from the sheet). Starred.",
+    "R13": "125 ohm from TP4 to an unlettered spare post with no wire on the 1983 sheet (read from the sheet). Later stock no. 711184, Rev D (Errata Change #3). Starred.",
+    "R14": "250 ohm from TP4 to post E14, marked 40 (PPM), RED wire to the A7 Calibration PCB (read from the sheet). Starred.",
+    "R15": "500 ohm from TP4 to post E15, marked 20 (PPM), ORN wire to A7 (read from the sheet).",
+    "R16": "1 K from TP4 to post E16, marked 10 (PPM), YEL wire to A7 (read from the sheet). Starred.",
+    "R17": "2 K from TP4 to post E17, marked 5 (PPM), GRN wire to A7 (read from the sheet). Starred.",
+    "R18": "500 ohm in series with R20 from the ladder common row to LO (E26) (read from the sheet). Starred.",
+    "R19": "35 ohm from the ladder common row to LO (E26), in parallel with R18 + R20 (read from the sheet). Starred.",
+    "R20": "10V ADJ: variable resistor allowing a small adjustment (+/-50 uV) in the output voltage of the Reference (§3-19); 100 ohm cermet pot, wiper tied to its LO end, in series with R18 (read from the sheet). Table 1-2: 10 V adjustment range +/-50 uV, resolution <0.05 ppm. Starred.",
+    "R58": "1V ADJ by the sheet: 200 ohm pot, wiper tied to its lower end, in series with R56 1 K at the top of the chain that reaches E35 1V HI (read from the sheet; about +/-10 uV of range by the printed values against Table 1-2's +/-5 uV for 1 V). Figure 8-1 letters the pots without R numbers; Errata §4-55 step 3 pairs R58 with the 1.018 V reading -- see the caveat 'Which divider is which'. Starred.",
+    "R59": "1.018V ADJ by the sheet: 200 ohm 10-turn pot, wiper tied to its lower end, in series with R57 350 at the top of the chain that reaches E34 1.018V HI (read from the sheet; about +/-55 uV of range by the printed values against Table 1-2's +/-50 uV for 1.018 V). Errata §4-55 step 3 pairs R59 with the 1.0 V reading -- see the caveat 'Which divider is which'. Starred.",
+    "R22": "17.4 K across the two series oven thermistors RT3 + RT4, between TP10 and TP7 (read from the sheet).",
+    "R28": "7.5 K bridge resistor (§3-24) from Q4's collector into the U3B input node (read from the sheet).",
+    "R29": "19.1 K bridge resistor (§3-24) from the U3B input node to the E2 return (read from the sheet).",
+    "R21": "SEL (Table 5-6: 4.553 K 0.1%) in Q3's emitter, setting the bridge current; TP5 on its lower end (read from the sheet).",
+    "R27": "10 K in Q4's emitter from E9 (read from the sheet).",
+    "R23": "51 ohm from the U4 pin 4 / C12 / E1-return node to a ground symbol (read from the sheet).",
+    "R35": "27 M in series with R36 from U5's output up to the C10 / C9 node of U4's input network (read from the sheet).",
+    "R36": "27 M in series with R35 (read from the sheet).",
+    "R37": "1 K between U5's output and E10 (BLK), the HEAT DRIVE wire to A4 P2-26 (read from the sheet).",
+    "R38": "51 K from the U3B output line to U4's + input (read from the sheet).",
+    "R39": "51 K from the U3B output line to U4's - input (read from the sheet).",
+    "R40": "10 K from the R41 / C11 feedback node to U4's - input (read from the sheet).",
+    "R41": "6.8 M feedback from U4's output, with C11 270 pF across it, into R40 (read from the sheet).",
+    "R42": "51 K from U4's output into U5's - input (read from the sheet).",
+    "R43": "100 K from the E22 OVEN TEMP THERMISTOR terminal to a ground symbol, with C1 across it (read from the sheet).",
+    "R61": "1 M from U5's + input to its V+ pin 7 (read from the sheet).",
+    "R62": "2.7 ohm 1/2 W between the E4 10 V node (pass-element output, U1 supply, CR6) and the 10 V HI bus node that leaves on E23 (read from the sheet). Starred.",
+    "R63": "2.7 ohm 1/2 W from the E23 10 V HI bus node to the CR2-anode / C2 / CR8 node (read from the sheet at 600 dpi). Starred.",
+    "R64": "51 ohm in parallel with CR7 between the supply common (E3) and the reference common (read from the sheet). Starred.",
+    "R44": "1 K from the E35 1V HI node to LO (E36); half of the sealed set with R46 (652784) (read from the sheet). Errata Change #9 (Rev E): MATCHED RESISTOR SET, 1.0V, 751917, on the A5A8 piggyback PCB; field repairable per Errata §4-55. Starred.",
+    "R45": "1 K from the E34 1.018V HI node to LO (E36); half of the sealed set with R47 (652792) (read from the sheet). Errata Change #9 (Rev E): MATCHED RESISTOR SET, 1.018V, 751925, on the A5A8 piggyback PCB; field repairable per Errata §4-55. Starred.",
+    "R46": "8.9 K from TP14 to the E35 1V HI node; half of the sealed set with R44 (read from the sheet). Starred.",
+    "R47": "8.7 K from TP11 to the E34 1.018V HI node; half of the sealed set with R45 (read from the sheet). Starred.",
+    "R48": "35 ohm across the R53 + R52 trim pair, TP13 to TP14, in the 1 V chain (read from the sheet). Starred.",
+    "R49": "35 ohm across the R50 + R51 trim pair, TP12 to TP11, in the 1.018 V chain (read from the sheet). Starred.",
+    "R50": "SEL trim resistor (Table 5-6: 250 ohm WW) in the 1.018 V chain between TP12 and TP11, in series with R51; selected from Table 4-4 per Errata §4-55 (read from the sheet). Starred.",
+    "R51": "SEL trim resistor in the 1.018 V chain between TP12 and TP11, in series with R50; selected from Table 4-4 per Errata §4-55 (read from the sheet). Starred.",
+    "R52": "SEL trim resistor in the 1 V chain between TP13 and TP14, in series with R53; selected from Table 4-4 per Errata §4-55 (read from the sheet). Starred.",
+    "R53": "SEL trim resistor in the 1 V chain between TP13 and TP14, in series with R52; selected from Table 4-4 per Errata §4-55 (read from the sheet). Starred.",
+    "R54": "35 ohm shunt across R58 + R56 at the top of the 1 V chain, E33 to TP13 (read from the sheet). Starred.",
+    "R55": "35 ohm shunt across R57 + R59 at the top of the 1.018 V chain, E33 to TP12 (read from the sheet). Starred.",
+    "R56": "1 K in series with the 1V ADJ R58 at the top of the 1 V chain (read from the sheet). Starred.",
+    "R57": "350 ohm in series with the 1.018V ADJ R59 at the top of the 1.018 V chain (read from the sheet). Starred.",
+    "RT1": "10 K at 25 C thermistor on the board, the bridge's return leg from TP10 to E2 (read from the sheet). §3-24 names RT1 in the bridge. Table 5-6 104596.",
+    "RT2": "The front-panel OVEN TEMP THERMISTOR: 10 K at 25 C between E22 and E21, read externally at the OVEN TEMP THERMISTOR binding posts (§1-4, §4-31 step 3, Errata §2-35a); on the sheet it connects to nothing else but R43 / C1 and is not in the control bridge. Table 5-6 104596. §3-24's 'series connected RT2' is the sheet's RT4 -- see the caveat.",
+    "C1": "0.22 uF ceramic across R43 100 K from the E22 THERMISTOR terminal to a ground symbol (read from the sheet). Not the term strip's C1 82 uF.",
+    "C2": "0.22 uF across CR2 on the Ref-Amp bias node (read from the sheet). Starred.",
+    "C3": "1 uF poly, with R1 200 in series, from U1's + input (U2 collector) to the reference common (read from the sheet). Starred.",
+    "C14": "180 pF across U1's inputs (read from the sheet). Starred.",
+    "C15": "0.22 uF from the E24 10 V sense line to R24 10 ohm to the supply common (read from the sheet). Starred.",
+    "C16": "0.047 uF across Q5, between the Ref-Amp's base line and its emitter/zener node (read from the sheet).",
+    "C17": "1200 pF from TP3 (R8 / R11 junction) to the reference common (read from the sheet). Starred.",
+    "C6": "0.22 uF bypass from the +BRIDGE rail E9 to the E2 return (read from the sheet).",
+    "C8": "5 uF poly integrating capacitor of U5, from its output to the R32 / R31 feedback node (read from the sheet).",
+    "C9": "0.47 uF poly from U5's output to the C10 / R36 node of U4's input network, in parallel with R35 + R36 (read from the sheet).",
+    "C10": "4 uF poly from U4's + input (pin 3, R38 node) to the C9 / R36 node (read from the sheet at 600 dpi: the R39 / R40 lead crosses this line without a junction).",
+    "C11": "270 pF mica across R41 6.8 M, U4 output to the R40 node (read from the sheet).",
+    "C12": "100 pF mica from U4's compensation pin 8 to its pin 4 / R23 / E1 node (read from the sheet).",
+    "C13": "100 pF mica from U5's compensation pin 8 to E11 (read from the sheet).",
+    "TP1": "Ref-Amp bias node (CR2 / CR5 / R9); no published value.",
+    "TP2": "Ref-Amp bias after R6 / R60, top of R5; no published value.",
+    "TP3": "Ref-Amp base divider tap R8 / R11; no published value.",
+    "TP4": "Top of the calibration ladder, after R10; no published value.",
+    "TP5": "Q3 emitter / R21, the bridge current source; no published value.",
+    "TP6": "The +BRIDGE rail E9; no published value.",
+    "TP7": "Bridge node: RT3 leg, Q3 collector, R22, CR3 anode, C7, U3A + input; no published value.",
+    "TP8": "RT4 / RT3 midpoint (with TP9); no published value.",
+    "TP9": "RT4 / RT3 midpoint (with TP8); no published value.",
+    "TP10": "Bridge node: RT4 leg, R22, RT1; no published value.",
+    "TP11": "1.018 V chain (E34), R51 / R49 / R47 junction; Errata §4-55 repair point with TP12.",
+    "TP12": "1.018 V chain (E34), R59 wiper / R55 / R50 node; Errata §4-55 repair point with TP11.",
+    "TP13": "1 V chain (E35), R56 / R54 / R53 junction; Errata §4-55 repair point with TP14.",
+    "TP14": "1 V chain (E35), R52 / R48 / R46 junction; Errata §4-55 repair point with TP13."
+  },
+  "faultCodes": [
+    {
+      "code": "T4-2 drift",
+      "title": "Output voltage drifts.",
+      "measure": "Oven or reference.",
+      "verdict": "(1) The Reference portion of the Oven/Reference Supply assembly is not field repairable. Refer repair to a Fluke Technical Service Center. -- Before condemning it: record the OVEN TEMP THERMISTOR value at the front panel (Errata §2-35a: 'On a short term basis, variations of +/-20 ohms from day to day indicate probable oven problems. Changes of +/-100 ohms short term would affect the 1.0 and 1.018V outputs appreciably but would be unlikely to have appreciable effect on the 10V output.'), and check that the IN CAL indicator has stayed on (a latched-off IN CAL means the oven was disabled by the voltage monitor, §3-15).",
+      "refs": ["U2", "U1", "RT2", "U5", "U3"],
+      "source": "Table 4-2 (PDF p41); Errata #3 §2-35a"
+    },
+    {
+      "code": "T4-2 temp",
+      "title": "Temperature sensitive.",
+      "measure": "Oven.",
+      "verdict": "Check oven controller circuit. §4-20 allows the oven to be disassembled only to repair the Oven Controller circuit -- Q3, Q4, U3, U4, U5 and the bridge on A5 (RT1, R22, R28, R29, CR3, CR4), A4Q13 / A4Q14 and the heaters HR1-HR4 off the board. The +BRIDGE rail is at TP6; the bridge nodes are TP7-TP10 and the current source at TP5 (no published values). Confirm the oven is enabled: E9 is switched by the A4 voltage monitor (§3-16), and from Errata Change #7 the 58 C thermal fuse F2 on the reference module interrupts the heater supply.",
+      "refs": ["U3", "U4", "U5", "Q3", "Q4", "RT1", "R22", "R28", "R29", "CR3", "CR4", "TP5", "TP6", "TP7", "TP8", "TP9", "TP10"],
+      "source": "Table 4-2 (PDF p41); §4-20 (PDF p30); §3-16 (PDF p21)"
+    },
+    {
+      "code": "T4-2 wrong",
+      "title": "Output voltage not correct.",
+      "measure": "Reference.",
+      "verdict": "Perform calibration procedure (§4-32: Procedure A to a certified 732A, or Procedure B to standard cells). The calibration potentiometers are reached through the front-panel access holes with the non-conducting adjustment tool P/N 686113: 10V ADJ is R20; by the sheet the 1V ADJ is R58 and the 1.018V ADJ is R59 (Figure 8-1 letters the holes, not the R numbers -- see the caveat 'Which divider is which'). Adjustment ranges, Table 1-2: 10 V +/-50 uV, 1.018 V +/-50 uV, 1 V +/-5 uV. Larger 10 V shifts are corrected by jumpers on the A7 Calibration PCB in 40 / 20 / 10 / 5 ppm steps (§3-19, §4-54, Figure 8-5).",
+      "refs": ["R20", "R58", "R59", "R12", "R14", "R15", "R16", "R17"],
+      "source": "Table 4-2 (PDF p41); §4-32..4-40 (PDF p32-38); Table 1-2 (PDF p10)"
+    },
+    {
+      "code": "T4-2 adjust",
+      "title": "Output voltages not adjustable to specifications.",
+      "measure": "Reference.",
+      "verdict": "(1) The Reference portion of the Oven/Reference Supply assembly is not field repairable. Refer repair to a Fluke Technical Service Center. -- For the 10 V output, §4-54: shifts which cannot be compensated for by adding or removing jumpers from the A7 Calibration PCB require the entire Oven Assembly to be returned to Fluke and exchanged. For the 1.0 V and 1.018 V outputs only, Errata Issue 3 §4-55 makes the divider strings field repairable: if the hermetically sealed resistors R45 / R47 or R44 / R46 are defective (the outputs cannot be adjusted to nominal), replace them and reselect the trim resistors R50-R53 from Table 4-4 -- see the §4-55 procedure.",
+      "refs": ["R20", "R58", "R59", "R44", "R45", "R46", "R47", "R50", "R51", "R52", "R53", "TP11", "TP12", "TP13", "TP14"],
+      "source": "Table 4-2 (PDF p41); §4-54 (PDF p40); Errata Issue 3 (7/85) Errata #13 §4-55"
+    }
+  ],
+  "warnings": [
+    "WARNING (§4-51, PDF p40): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+    "CAUTION (§4-51): The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+    "CAUTION (§4-51): To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness.",
+    "§4-53 Oven Repair (4-54, PDF p40): Shifts in the output level which cannot be compensated for by adding or removing jumpers from the A7 Calibration PCB will require the entire Oven Assembly to be returned to Fluke and exchanged for a working unit. Do not attempt to repair the circuitry involving U1, U2, Q1, Q2, Q5, the resistors associated with TP11 through TP14, or any other component(s) associated with the aforementioned components. Special procedures and auxilliary test equipment are necessary for component replacement within the Reference circuit. Module exchange is provided as the most economical and expedient method of repair for the user.",
+    "Table 5-6 footnote (foot of the table, PDF p62), on every part marked *: IF ANY OF THESE COMPONENTS NEED TO BE REPLACED, EITHER RETURN THE INSTRUMENT TO YOUR NEAREST FLUKE SERVICE CENTER FOR REPAIR, OR REPLACE THE ENTIRE REFERENCE PCB ASSEMBLY, PART NO. 644914.",
+    "§4-43 (PDF p38): The Battery Charger Adjustment procedure is the only field service procedure for the 732A. There is no field serviceable circuitry within the oven/reference supply assembly. All adjustments within the oven must be made at the Factory or at a Fluke Technical Service Center. -- Qualified by Errata Issue 3 (7/85) §4-55, which makes the 1.0 V and 1.018 V divider strings field repairable.",
+    "§4-20 Oven Disassembly (PDF p30): Use this procedure only if access is necessary to effect repairs on the Oven Controller circuit. Do not attempt to repair the Reference circuit. NOTE: Do not turn the screws on the outside clamshell as this will cause difficult disassembly and reassembly.",
+    "§4-14 NOTE (PDF p26): Either module, but NOT both, may be removed without loss of standardization. If the AC Module is removed, ensure that the rear panel, BATTERY OPR switch is set to ON and that the battery is charged before removing the AC Module. This will insure continued standardization. §4-15 NOTE (PDF p27): Since the Regulator PCB Assembly removal requires the removal of BOTH rear modules, standardization will not be maintained after this procedure. -- Dataset note: oven removal disconnects the oven harness (§4-17 step 7), so standardization has to be re-verified by calibration (§4-32) after any work inside the oven.",
+    "§4-4 NOTE (PDF p25): To limit thermally induced errors, use Fluke Low Thermal EMF Assembly Cable (an accessory) or copper wire, preferably shielded twisted pair, with crimped and soldered low-thermal lugs, clamped in the binding posts for all interconnections. Avoid the use of ordinary nickel-plated banana plugs. CAUTION: To avoid cracking the plastic binding post insulator, tighten only with finger pressure. Do not use tools."
+  ],
+  "caveats": [
+    {
+      "title": "Not field repairable -- with one later exception",
+      "text": "§4-43, §4-53 and Table 4-2 note (1) say the reference is not field repairable and that module exchange is the repair; Table 5-6 stars every part of the Ref-Amp, error amplifier, pass drive, bias, output dividers and calibration ladder with the footnote to return the instrument or replace the whole PCB (644914). The one exception is the Change/Errata sheet Issue 3 (7/85), Errata #13, which adds §4-55: the 1.0 V and 1.018 V divider strings (R44/R46, R45/R47 and the trim resistors R50-R53) are field repairable by the procedure carried in this dataset. The Oven Controller is a second, older qualification: §4-20 says to disassemble the oven 'only if access is necessary to effect repairs on the Oven Controller circuit. Do not attempt to repair the Reference circuit', so the controller (Q3, Q4, U3, U4, U5 and the bridge parts, none of them starred) is outside §4-53's prohibition even though §4-43 says there is no field serviceable circuitry within the oven/reference supply assembly. Everything else stands as the manual says. No A5 test point has a published value.",
+      "refs": ["U1", "U2", "Q1", "Q2", "Q5", "R44", "R45", "R46", "R47", "R50", "R51", "R52", "R53"],
+      "source": "§4-43, §4-53, Table 4-2, Table 5-6; Errata Issue 3 §4-55"
+    },
+    {
+      "title": "Which divider is which (TP11-TP14, R58, R59)",
+      "text": "The sheet decides it: the chain under R59 (R57 350, R55 35, R50 / R51, R49 35, TP12, TP11) ends in R47 8.7 K and R45 1 K and lands on E34, lettered 1.018V HI; the chain under R58 (R56 1 K, R54 35, R53 / R52, R48 35, TP13, TP14) ends in R46 8.9 K and R44 1 K and lands on E35, lettered 1V HI (checked at 600 dpi: R46's lead crosses the E34 line without a junction dot and dots on E35). The printed values agree with the lettering -- 1 K under 8.9 K plus a few tens of ohms of trim is 1.000 V from 10 V and 1 K under 8.7 K is 1.018 V; a 200 ohm rheostat through 350 ohm shunted by 35 ohm moves the tap about +/-55 uV (Table 1-2: 1.018 V +/-50 uV), through 1 K shunted by 35 ohm about +/-10 uV (Table 1-2: 1 V +/-5 uV) -- and so does the errata's Figure 10 (R47 -> E34 1.018V HI, R46 -> E35 1V HI) and its Change #9 set names (R44, R46 'MATCHED RESISTOR SET, 1.0V'; R45, R47 '1.018V'). Two sources say the reverse: docs/review-notes.md calls the R59 chain 'the 1 V tap side', and Errata §4-55 step 3 reads 'Adjust R59 or R58 to get a reading of 1.0V or 1.108V (respectively)', with steps 2 and 5 listing R50/R51 and TP11/12 first. This dataset follows the sheet: R58 is the 1V ADJ and R59 the 1.018V ADJ. Figure 8-1 letters the adjustment holes 1.018V ADJ / 1V ADJ / 10V ADJ without R numbers, so at the front panel go by the lettering. When repairing a divider, identify the chain by the post its sealed pair reaches (E34 or E35), not by the errata's order.",
+      "refs": ["R58", "R59", "R44", "R45", "R46", "R47", "R50", "R51", "R52", "R53", "TP11", "TP12", "TP13", "TP14"],
+      "source": "Figure 8-5 (PDF p93) at 600 dpi; Table 1-2 (PDF p10); Errata Issue 3 Change #9, Figure 10, §4-55; docs/review-notes.md"
+    },
+    {
+      "title": "Sheet sh2 (Figure 8-1) is simplified",
+      "text": "Figure 8-1 draws only the parts that take part in the interconnect (U1, U2, U5, Q1, Q2, R2, R3, CR2, CR5, RT2, RT3, RT4, the three ADJ pots and one (SEL) resistor) and none of the others; it prints no R numbers on the pots. Use it to see which wire goes where, not to find a part.",
+      "refs": ["U1", "U2", "U5", "Q1", "Q2", "R2", "R3", "CR2", "CR5", "RT2"],
+      "source": "Figure 8-1 (PDF p85); docs/review-notes.md"
+    },
+    {
+      "title": "Starred parts and matched sets",
+      "text": "The asterisk on the sheet (note 3) marks the REF AMP SET 732A-4502 -- R5, R9 and U2 -- which Table 5-6 carries as one line, 645010, with R9 and U2 as REF rows; they are replaced only as a set. Other sets: R2/R3 MATCHED RESISTOR SET 634824; R7/R8 REF. AMP DIVIDER SET 346304 (715706 from Errata Change #8, which prints only R8); R44/R46 RES SET 652784 and R45/R47 RES SET 652792 (from Rev E, Errata Change #9: MATCHED RESISTOR SET 751917 and 751925 on the A5A8 piggyback PCB). The asterisk in Table 5-6 itself is broader: it marks every part covered by the return-to-Fluke footnote.",
+      "refs": ["R5", "R9", "U2", "R2", "R3", "R7", "R8", "R44", "R46", "R45", "R47"],
+      "source": "Figure 8-5 note 3; Table 5-6 (PDF p60-62); Errata Changes #8, #9"
+    },
+    {
+      "title": "Which thermistor is which",
+      "text": "§3-24 says 'Thermistors RT1, series connected RT2, and RT3 are connected in a bridge configuration with R28 and R29, and are located inside the oven'. The sheet disagrees with the text: the two series-connected thermistors under the OVEN bracket are lettered RT3 and RT4 (10 K, 25 C), RT1 (10 K) is on the board as the bridge's return leg, and RT2 (10 K) is the front-panel OVEN TEMP THERMISTOR between E21 and E22 -- it takes no part in the control loop and is read externally (§1-4, §4-31 step 3). Table 5-6 lists RT1 and RT2 only (104596, qty 2); RT3 and RT4 are oven-assembly parts on Table 5-1, where the 1983 table calls the oven thermistor RT1 and Errata Change #7 renames it RT3, RT4 (Figure 5-1 oven views I and II). The dataset follows the sheet and the parts list; the manual's 'RT2' in §3-24 should be read as the sheet's RT4.",
+      "refs": ["RT1", "RT2", "R28", "R29"],
+      "source": "§3-24 (PDF p22); Figure 8-5 (PDF p93); Table 5-6; Errata Change #7"
+    },
+    {
+      "title": "CR1, CR2, CR6, CR8 are VR1, VR2, VR6, VR8 from Rev C",
+      "text": "Errata Change #1 (Rev C, A5 732A-4001) renames the four zeners in Table 5-6, Figure 5-6 and Figure 8-5. The 1983 drawings used here print CR, and so does this dataset's parts list (transcribed from the 1983 Table 5-6); search for CR1 / CR2 / CR6 / CR8 when a Rev C or later board says VR. Change #2's second part also tells Figure 5-6 to change 'CR1, CR2, CR9' to 'VR1, VR2, VR9' for A5 Rev B -- A5 has no CR9 (Figure 8-5's REF DESIGNATIONS box: highest CR8); transcribed as printed, not applied.",
+      "refs": ["CR1", "CR2", "CR6", "CR8"],
+      "source": "Errata Issue 3 (7/85) Changes #1 and #2"
+    },
+    {
+      "title": "E11 is -2 V, not 18.6 V; E2 is a return",
+      "text": "Figure 8-4's P2 legend names pin 27 (W1 wire 11, to E11 BRN) '-2 V' and pin 3 (wire 2, to E2 RED) '-BRIDGE', one of the four pins strapped to COMMON on A4. On Figure 8-1 the lettering '18.6V' appears beside U5 close to the E11 line; on the A5 sheet U5's pin 7 (V+) rises to the E8 (GRA, 18.6 V) line, its pin 4 sits on E11 and its compensation pin 8 reaches E11 through C13 (checked at 600 dpi). So: E8 is the only +18.6 V into A5, E9 is +BRIDGE (18.6 V through A4 Q5), E11 is U5's -2 V negative supply, and E1 / E2 / E3 are returns. Do not probe E2 expecting a supply.",
+      "refs": ["U5", "C6", "RT1", "C13"],
+      "source": "Figure 8-4 P2 legend (PDF p91); Figure 8-5 (PDF p93); Figure 8-1 (PDF p85)"
+    },
+    {
+      "title": "Four wires marked 10V HI and four marked LO are eight different nets on the board",
+      "text": "E23, E24, E25 and E33 are all '10V HI' and meet at the front-panel post, but on the board E23 is the force lead (R62 from the pass element, R63 to the clamp node), E24 the sense lead (R2/R3 divider that U1 compares, R4 for the Ref-Amp zener, C15), E25 the sense lead for the Ref-Amp's base divider (R7 ... R20; R26 51 ties E24 and E25 on the board), and E33 the top of the two output dividers. Likewise E26, E27, E28 and E36 are all 'LO': E26 is the bottom of the calibration ladder (R19, R18 / R20), E27 the reference common (R1 / C3, R3, U2 zener anode, C17), E28 the supply common (E3, U1 pin 4, the clamps) and E36 the bottom of R44 / R45. This is why §4-51 says not to replace individual wires in the reference output wiring harness: a swapped or lengthened wire changes what the loop regulates.",
+      "refs": ["R63", "R2", "R3", "R4", "R26", "R7", "R62", "R19", "R64", "CR7", "R44", "R45"],
+      "source": "Figure 8-5 (PDF p93) at 600 dpi; Figure 8-1 (PDF p85); §4-51 CAUTION"
+    },
+    {
+      "title": "Two commons, two ground symbols",
+      "text": "The sheet draws a ground symbol on the E3 (ORN) line -- the supply common, to which U1 pin 4 and R25 / C4 are wired directly -- and another on the line that carries R1 / C3, R3, the U2 zener anode and C17 -- the reference common (wired to E27). The two are joined only by R64 51 ohm in parallel with CR7 (anode on the supply common), so supply and clamp currents do not flow in the reference's return; both reach the LO post by separate wires (E28, E27). Four more parts end on ground symbols of their own rather than on either line: R24 / C15, the CR6 anode, the CR8 anode (these three the dataset takes as the supply common, which is what the board's copper decides, not the sheet), and R43 / C1 and R23 in the oven controller. Reading a 'common' on this board, say which one.",
+      "refs": ["R64", "CR7", "R1", "R3", "C17", "U1", "R25", "R24", "CR6", "CR8"],
+      "source": "Figure 8-5 (PDF p93) at 600 dpi"
+    },
+    {
+      "title": "Term-strip parts on the sheet share A5 designators",
+      "text": "The dashed box 'TERM STRIP INSIDE FRT PAN.' on Figure 8-5 draws R1 2 ohm, C1 82 uF, CR1, RV1 and DS1 across 10V HI / LO. Those are the final assembly's parts (Table 5-1, PDF p45-47: R1 RES, COMP, 2.7 +/-5%, 1W 159376; C1 CAP, TA, 82 UF 20V 357392; CR1 1N4817 116111; RV1 VARISTOR 200 PF 22V 500777; DS1 LAMP, NEON 100347), not A5's, and they collide by name with A5's own R1 200 ohm, C1 0.22 uF and CR1 5.2 V zener. The sheet letters the term-strip R1 '2' with its ohm glyph (600 dpi) while Table 5-1 says 2.7 ohm -- a source disagreement; value per parts list. Markers on this board point at the A5 parts only.",
+      "refs": ["R1", "C1", "CR1"],
+      "source": "Figure 8-5 (PDF p93); docs/review-notes.md"
+    },
+    {
+      "title": "Rev E: the divider taps moved to an A5A8 piggyback PCB; not in this parts list",
+      "text": "Errata Change #9 (Rev E) adds A5A8 PIGGYBACK PCB 751560, pins J1-J5 (printed 'JI-J5'), the matched sets R44/R46 (751917) and R45/R47 (751925) and a spacer MP2, and replaces Figures 5-6 and 8-5 with errata Figures 9 and 10. Figure 10 letters the piggyback '732A-1008'. The 1983 drawing and sheet used by this atlas do not show the piggyback, and this dataset's parts list is the 1983 Table 5-6: A5A8 and J1-J5 are not designators here, the Rev E parts are carried in the table 'Rev E additions (Errata Change #9)' below. The errata's MP2 spacer collides with the 1983 table's MP2 heatsink (W/U2).",
+      "refs": ["R44", "R45", "R46", "R47", "MP2"],
+      "source": "Errata Issue 3 (7/85) Change #9, Figures 9 and 10"
+    },
+    {
+      "title": "Derived figures are derived",
+      "text": "Voltages quoted in notes (about +16.4 V at TP1, about +7.0 V at the R2/R3 tap, +18.6 V on E8/E9, 6.4 V across C2, about 1.00 V and 1.02 V above LO at TP14 and TP11) come from printed part values and Figure 8-1's lettering. Nothing on A5 is tabulated in Table 4-3; these are for recognising a reading, not for passing one.",
+      "refs": ["TP1", "TP2", "TP6", "TP11", "TP14", "C2"],
+      "source": "Table 4-3 (PDF p42); Figure 8-5"
+    },
+    {
+      "title": "Q5's and R4's jobs are read from the sheet",
+      "text": "§3-18 lists Q5 in the Reference Circuit and §4-53 forbids repairing it, but the manual never says what it does. The sheet draws it base-to-emitter tied on the U2 emitter/zener node with its collector on the U2 base line, C16 across -- a protection diode for the Ref-Amp's base-emitter. R4 1.27 K is not mentioned in §3 at all; the sheet draws it from the E24 10 V sense line to the U2 emitter/zener node, which makes it the Ref-Amp zener's current source from the 10 V output. Both readings are the dataset's, not Fluke's.",
+      "refs": ["Q5", "C16", "U2", "R4"],
+      "source": "Figure 8-5 (PDF p93); §3-18"
+    }
+  ],
+  "foreignStepRefs": {
+    "4-55": {}
+  },
+  "tables": [
+    {
+      "title": "A7 Calibration PCB jumper posts (10 V coarse adjustment)",
+      "source": "Figure 8-5 cont. (PDF p93), 732A-1001 / 732A-1007 lettering; §3-19, §4-54",
+      "rows": [
+        { "post": "E18", "wire": "BRN", "resistor": "R12 20 ohm", "marked": "(ladder common)", "role": "Return of every jumper: the common row at the bottom of the ladder, which runs on through R19 35 and R18 500 + R20 100 (10V ADJ) to LO (E26)" },
+        { "post": "E14", "wire": "RED", "resistor": "R14 250 ohm", "marked": "40 PPM", "role": "Jumper 40 on A7 (the sheet draws this one dashed) puts R14 in parallel with R12" },
+        { "post": "E15", "wire": "ORN", "resistor": "R15 500 ohm", "marked": "20 PPM", "role": "Jumper 20 puts R15 in parallel with R12" },
+        { "post": "E16", "wire": "YEL", "resistor": "R16 1 K", "marked": "10 PPM", "role": "Jumper 10 puts R16 in parallel with R12" },
+        { "post": "E17", "wire": "GRN", "resistor": "R17 2 K", "marked": "5 PPM", "role": "Jumper 5 puts R17 in parallel with R12" },
+        { "post": "(unlettered)", "wire": "none", "resistor": "R13 125 ohm", "marked": "-", "role": "Spare post beside E18, no wire on the 1983 sheet" }
+      ],
+      "note": "All six resistors hang from TP4 (the bottom of R10) and end on posts; only R12 is tied to the common row. On the Calibration PCB the five wires end on a row of pins lettered 40 20 10 5 PPM, whose lower pins are all strapped together and to the BRN pin; a jumper from a PPM pin to the pin below it adds that resistor in parallel with R12, shifting the 10 V output by the marked amount. The Reference PCB itself also draws an unlettered second post on the common row under each of E14-E17 (marked 40, 20, 10, 5 there too); the manual gives them no use. §3-19: larger adjustments than R20's +/-50 uV are made by jumper changes on A7; §4-54: shifts that cannot be compensated by adding or removing jumpers require the oven assembly to be exchanged. E12, E13, E19, E20 and E29-E32 are not used (REF DESIGNATIONS box). The ppm marks are the sheet's; the manual gives no procedure for choosing them (§4-37 / 4-39 do not mention the jumpers)."
+    },
+    {
+      "title": "Table 1-2 -- Transfer uncertainty at 18 C to 28 C",
+      "source": "Table 1-2 (PDF p10, manual p1-2)",
+      "rows": [
+        { "output": "10V", "30 days": "0.5 ppm", "90 days": "1.5 ppm", "6 months": "3.0 ppm", "1 year": "6.0 ppm" },
+        { "output": "1.018V", "30 days": "1.5 ppm", "90 days": "4.0 ppm", "6 months": "8.0 ppm", "1 year": "12.0 ppm" },
+        { "output": "1V", "30 days": "1.5 ppm", "90 days": "4.0 ppm", "6 months": "8.0 ppm", "1 year": "12.0 ppm" }
+      ],
+      "note": "These specifications assume the unit has been continuously powered up with either ac or battery or both. The specifications include effects due to line regulation."
+    },
+    {
+      "title": "Table 1-2 -- Output adjustment and resolution, and temperature coefficient",
+      "source": "Table 1-2 (PDF p10); pot assignment read from Figure 8-5 (see the caveat 'Which divider is which')",
+      "rows": [
+        { "output": "10V", "adjustment": "R20 (10V ADJ) and A7 jumpers", "adj. range": "+/-50 uV", "adj. resolution": "<0.05 ppm", "tempco 0-18 C / 28-40 C": "+/-0.05 ppm/C" },
+        { "output": "1.018V", "adjustment": "R59 (10-turn) by the sheet", "adj. range": "+/-50 uV", "adj. resolution": "<0.25 ppm", "tempco 0-18 C / 28-40 C": "+/-1.0 ppm/C" },
+        { "output": "1.0V", "adjustment": "R58 by the sheet", "adj. range": "+/-5 uV", "adj. resolution": "<0.10 ppm", "tempco 0-18 C / 28-40 C": "+/-1.0 ppm/C" }
+      ],
+      "note": "Output impedance 10 V <= 5 milliohms, 1.018 V and 1 V about 1 kilohm (R45 / R44); output current 10 V 12 mA maximum, the 1 V taps current limited by the 1 k source impedance. Table 1-2 names the outputs, not the pots; the R numbers are the sheet's chains traced to the E34 / E35 posts."
+    },
+    {
+      "title": "Harness W1 -- A5 terminals to A2 J2 / A4 P2, with A4's net names",
+      "source": "Figure 8-2 W1 legend (PDF p87); Figure 8-4 P2 legend (PDF p91); Figure 8-1 (PDF p85); Figure 8-5 (PDF p93)",
+      "rows": [
+        { "E": "E1", "colour": "BRN", "W1": "1", "J2 pin": "2", "A4 net": "-TEMP REG (COMMON)", "on A5": "U3 pin 4 (V-), U4 pin 4 (V-) with C12; R23 51 from this node to a ground symbol" },
+        { "E": "E2", "colour": "RED", "W1": "2", "J2 pin": "3", "A4 net": "-BRIDGE (COMMON)", "on A5": "Bridge return: RT1, R29, C5, C6, C7" },
+        { "E": "E3", "colour": "ORN", "W1": "3", "J2 pin": "4", "A4 net": "-REF (COMMON)", "on A5": "Supply common (ground symbol): U1 pin 4, R25 / C4, R24 / C15, CR6 / CR8 anodes; R64 / CR7 to the reference common (R1 / C3, R3, U2 zener anode, C17); also wired to the LO post by E28" },
+        { "E": "E4", "colour": "YEL", "W1": "4", "J2 pin": "6", "A4 net": "REF SUPPLY, R3 24.3 ohm (pass-element output)", "on A5": "+10 V in: CR6, Q2 collector, U1 pin 7, R62" },
+        { "E": "E5", "colour": "GRN", "W1": "5", "J2 pin": "7", "A4 net": "REF SUPPLY, Q12 emitter / R1", "on A5": "Q2 base, Q1 collector" },
+        { "E": "E6", "colour": "BLU", "W1": "6", "J2 pin": "8", "A4 net": "REF SUPPLY, Q12 base / R2", "on A5": "Q1 emitter" },
+        { "E": "E7", "colour": "VIO", "W1": "7", "J2 pin": "9", "A4 net": "REF SUPPLY, CR13 / R21", "on A5": "Q1 base, Q2 emitter, CR1 cathode" },
+        { "E": "E8", "colour": "GRA", "W1": "8", "J2 pin": "10", "A4 net": "+TEMP REG -- 18.6V on Figure 8-1", "on A5": "+18.6 V: CR5, R9, U5 pin 7" },
+        { "E": "E9", "colour": "WHT", "W1": "9", "J2 pin": "16", "A4 net": "+BRIDGE (through A4 Q5)", "on A5": "+BRIDGE rail: TP6, R21, R27, U3 pin 8, U4 pin 7, C6" },
+        { "E": "E10", "colour": "BLK", "W1": "10", "J2 pin": "26", "A4 net": "HEAT DRIVE (R26 / Q13)", "on A5": "U5 output through R37" },
+        { "E": "E11", "colour": "BRN", "W1": "11", "J2 pin": "27", "A4 net": "-2 V", "on A5": "U5 pin 4 (V-); pin 8 through C13" }
+      ],
+      "note": "A4 P2 pins 2, 3, 4 and 5 are strapped to the COMMON node (A4 TP2), so E1, E2 and E3 are the same potential at A4 and separate returns on A5. The 'on A5' column is read from the sheet."
+    },
+    {
+      "title": "Front-panel wiring -- A5 terminals E21-E36",
+      "source": "Figure 8-5 (PDF p93) at 600 dpi; Figure 8-1 (PDF p85)",
+      "rows": [
+        { "E": "E21", "lettering": "THERMISTOR", "on A5": "RT2 (other end)", "front panel": "OVEN TEMP THMS (GRA)" },
+        { "E": "E22", "lettering": "THERMISTOR", "on A5": "RT2, R43 100 K / C1 0.22 uF to a ground symbol", "front panel": "OVEN TEMP THMS (GRA)" },
+        { "E": "E23", "lettering": "10V HI", "on A5": "The 10 V HI bus node: R62 from E4, R63 to the CR2 / C2 / CR8 node (force)", "front panel": "10V HI post (strapped with E24, E25, E33)" },
+        { "E": "E24", "lettering": "10V HI", "on A5": "Sense line: R2 (to the R3 tap, U1 - input), R4 (to the U2 zener), C15, R26", "front panel": "10V HI post" },
+        { "E": "E25", "lettering": "10V HI", "on A5": "R26's other end; R7 -> Ref-Amp base -> R8 ... R20 divider", "front panel": "into the term strip: R1 2 ohm + C1 82 uF, CR1, RV1, DS1 to LO" },
+        { "E": "E26", "lettering": "LO", "on A5": "Bottom of the calibration ladder: R19, R18 + R20 (10V ADJ)", "front panel": "term strip LO; LO post (strapped with E27, E28, E36)" },
+        { "E": "E27", "lettering": "LO", "on A5": "Reference common: R1 / C3, R3, U2 zener anode, C17 (ground symbol)", "front panel": "LO post" },
+        { "E": "E28", "lettering": "LO", "on A5": "Supply common, the E3 line (ground symbol): U1 pin 4, R25, R24, CR6 / CR8 anodes", "front panel": "LO post" },
+        { "E": "E33", "lettering": "10V HI", "on A5": "Top of the 1 V chain (R54, R58) and the 1.018 V chain (R55, R57) -- and nothing else: the divider current comes back from the post on this wire, E33 is not joined to E23 on the board", "front panel": "10V HI post" },
+        { "E": "E34", "lettering": "1.018V HI", "on A5": "R47 8.7 K / R45 1 K junction (the R59 chain: TP12, TP11)", "front panel": "1.018V HI post" },
+        { "E": "E35", "lettering": "1V HI", "on A5": "R46 8.9 K / R44 1 K junction (the R58 chain: TP13, TP14)", "front panel": "1V HI post" },
+        { "E": "E36", "lettering": "LO", "on A5": "Bottom of R44 and R45", "front panel": "LO post" }
+      ],
+      "note": "§4-51 CAUTION: do not attempt to replace individual wires in the reference output wiring harness; replace the entire harness. Term-strip parts are final-assembly parts (Table 5-1)."
+    },
+    {
+      "title": "Rev E additions to Table 5-6 (Errata Change #9) -- not designators in this dataset",
+      "source": "Errata Issue 3 (7/85), Change #9 - 20128, Rev E A5 732A-4001 (errata PDF p15)",
+      "rows": [
+        { "ref des": "A5A8", "description": "PIGGYBACK PCB", "Fluke stock no.": "751560", "mfr": "89536", "mfr part": "751560", "qty": "1" },
+        { "ref des": "J1-J5 (printed 'JI-J5')", "description": "CONNECTOR, INAC, PIN, SINGLE PWB, 0.025 SQ", "Fluke stock no.": "601914", "mfr": "00779", "mfr part": "9-87022-9", "qty": "5" },
+        { "ref des": "R44, R46", "description": "MATCHED RESISTOR SET, 1,0V (as printed)", "Fluke stock no.": "751917", "mfr": "89536", "mfr part": "751917", "qty": "2" },
+        { "ref des": "R45, R47", "description": "MATCHED RESISTOR SET, 1.018V", "Fluke stock no.": "751925", "mfr": "89536", "mfr part": "751917 (as printed)", "qty": "2" },
+        { "ref des": "MP2", "description": "SPACER, SWAGED, RNP, BRASS, 2-56X0.375", "Fluke stock no.": "342956", "mfr": "89536", "mfr part": "342956", "qty": "1" }
+      ],
+      "note": "Transcribed as the errata prints it, including the letter I in 'JI-J5' and the repeated mfr part 751917 on the R45, R47 row. The set names agree with the sheet: R44 / R46 is the 1 V tap (E35), R45 / R47 the 1.018 V tap (E34). Other stock-number changes: R13 213934 -> 711184 (Rev D, Change #3); R8 REF. AMP DIVIDER SET 346304 -> 715706 (Change #8)."
+    },
+    {
+      "title": "Table 4-4 -- 1.0V and 1.018V Tap Trim Resistors (Errata Issue 3)",
+      "source": "Errata Issue 3 (7/85), Errata #13, Table 4-4 (errata PDF p14)",
+      "rows": [{"ohms":15,"Fluke stock no.":"215038"},{"ohms":16,"Fluke stock no.":"215020"},{"ohms":17,"Fluke stock no.":"215012"},{"ohms":18,"Fluke stock no.":"215004"},{"ohms":19,"Fluke stock no.":"214999"},{"ohms":20,"Fluke stock no.":"214981"},{"ohms":21,"Fluke stock no.":"214973"},{"ohms":22,"Fluke stock no.":"214965"},{"ohms":23,"Fluke stock no.":"214957"},{"ohms":24,"Fluke stock no.":"214940"},{"ohms":25,"Fluke stock no.":"214932"},{"ohms":26,"Fluke stock no.":"214924"},{"ohms":27,"Fluke stock no.":"214916"},{"ohms":28,"Fluke stock no.":"214908"},{"ohms":29,"Fluke stock no.":"214890"},{"ohms":30,"Fluke stock no.":"214882"},{"ohms":31,"Fluke stock no.":"214874"},{"ohms":32,"Fluke stock no.":"214866"},{"ohms":33,"Fluke stock no.":"214858"},{"ohms":34,"Fluke stock no.":"214841"},{"ohms":35,"Fluke stock no.":"214833"},{"ohms":36,"Fluke stock no.":"214825"},{"ohms":37,"Fluke stock no.":"214817"},{"ohms":38,"Fluke stock no.":"214809"},{"ohms":39,"Fluke stock no.":"214791"},{"ohms":40,"Fluke stock no.":"214783"},{"ohms":41,"Fluke stock no.":"214775"},{"ohms":42,"Fluke stock no.":"214767"},{"ohms":43,"Fluke stock no.":"214769"},{"ohms":44,"Fluke stock no.":"214742"},{"ohms":45,"Fluke stock no.":"214734"},{"ohms":46,"Fluke stock no.":"214726"},{"ohms":47,"Fluke stock no.":"214718"},{"ohms":48,"Fluke stock no.":"214700"},{"ohms":49,"Fluke stock no.":"214692"},{"ohms":50,"Fluke stock no.":"214684"},{"ohms":51,"Fluke stock no.":"214676"},{"ohms":52,"Fluke stock no.":"214668"},{"ohms":53,"Fluke stock no.":"214660"},{"ohms":54,"Fluke stock no.":"214643"},{"ohms":55,"Fluke stock no.":"214635"},{"ohms":56,"Fluke stock no.":"214627"},{"ohms":57,"Fluke stock no.":"214619"},{"ohms":58,"Fluke stock no.":"214601"},{"ohms":59,"Fluke stock no.":"214593"},{"ohms":60,"Fluke stock no.":"214585"},{"ohms":61,"Fluke stock no.":"214577"},{"ohms":62,"Fluke stock no.":"214569"},{"ohms":63,"Fluke stock no.":"214551"},{"ohms":64,"Fluke stock no.":"214544"},{"ohms":65,"Fluke stock no.":"214536"},{"ohms":66,"Fluke stock no.":"214528"},{"ohms":67,"Fluke stock no.":"214510"},{"ohms":68,"Fluke stock no.":"214502"},{"ohms":69,"Fluke stock no.":"214494"},{"ohms":70,"Fluke stock no.":"214486"},{"ohms":71,"Fluke stock no.":"214478"},{"ohms":72,"Fluke stock no.":"214460"},{"ohms":73,"Fluke stock no.":"214452"},{"ohms":74,"Fluke stock no.":"214445"},{"ohms":75,"Fluke stock no.":"214437"},{"ohms":76,"Fluke stock no.":"214429"},{"ohms":77,"Fluke stock no.":"214411"},{"ohms":78,"Fluke stock no.":"214403"},{"ohms":79,"Fluke stock no.":"214395"},{"ohms":80,"Fluke stock no.":"214387"},{"ohms":81,"Fluke stock no.":"214379"},{"ohms":82,"Fluke stock no.":"214361"},{"ohms":83,"Fluke stock no.":"214353"},{"ohms":84,"Fluke stock no.":"214346"},{"ohms":85,"Fluke stock no.":"214338"},{"ohms":86,"Fluke stock no.":"214320"},{"ohms":87,"Fluke stock no.":"214312"},{"ohms":88,"Fluke stock no.":"214304"},{"ohms":89,"Fluke stock no.":"214296"},{"ohms":90,"Fluke stock no.":"214288"},{"ohms":91,"Fluke stock no.":"214270"},{"ohms":92,"Fluke stock no.":"214262"},{"ohms":93,"Fluke stock no.":"214254"},{"ohms":94,"Fluke stock no.":"214247"},{"ohms":95,"Fluke stock no.":"214239"},{"ohms":96,"Fluke stock no.":"214221"},{"ohms":97,"Fluke stock no.":"214213"},{"ohms":98,"Fluke stock no.":"214205"},{"ohms":99,"Fluke stock no.":"214197"},{"ohms":100,"Fluke stock no.":"214189"},{"ohms":101,"Fluke stock no.":"214171"},{"ohms":102,"Fluke stock no.":"214163"},{"ohms":103,"Fluke stock no.":"214165"},{"ohms":104,"Fluke stock no.":"214148"},{"ohms":105,"Fluke stock no.":"214130"},{"ohms":106,"Fluke stock no.":"214122"},{"ohms":107,"Fluke stock no.":"214114"},{"ohms":108,"Fluke stock no.":"214106"},{"ohms":109,"Fluke stock no.":"214098"},{"ohms":110,"Fluke stock no.":"214080"},{"ohms":111,"Fluke stock no.":"214072"},{"ohms":112,"Fluke stock no.":"214064"},{"ohms":113,"Fluke stock no.":"214056"},{"ohms":114,"Fluke stock no.":"214049"},{"ohms":115,"Fluke stock no.":"214031"},{"ohms":116,"Fluke stock no.":"214023"},{"ohms":117,"Fluke stock no.":"214015"},{"ohms":118,"Fluke stock no.":"214007"},{"ohms":119,"Fluke stock no.":"213991"},{"ohms":120,"Fluke stock no.":"213983"},{"ohms":121,"Fluke stock no.":"213975"},{"ohms":122,"Fluke stock no.":"213967"},{"ohms":123,"Fluke stock no.":"213959"},{"ohms":124,"Fluke stock no.":"213942"},{"ohms":125,"Fluke stock no.":"213934"},{"ohms":126,"Fluke stock no.":"213926"},{"ohms":127,"Fluke stock no.":"213918"},{"ohms":128,"Fluke stock no.":"213900"},{"ohms":129,"Fluke stock no.":"213892"},{"ohms":130,"Fluke stock no.":"213884"},{"ohms":131,"Fluke stock no.":"213876"},{"ohms":132,"Fluke stock no.":"213868"},{"ohms":133,"Fluke stock no.":"213850"},{"ohms":134,"Fluke stock no.":"213843"},{"ohms":135,"Fluke stock no.":"213835"},{"ohms":136,"Fluke stock no.":"213827"},{"ohms":137,"Fluke stock no.":"213819"},{"ohms":138,"Fluke stock no.":"213801"},{"ohms":139,"Fluke stock no.":"213793"},{"ohms":140,"Fluke stock no.":"213785"},{"ohms":141,"Fluke stock no.":"213777"},{"ohms":142,"Fluke stock no.":"213769"},{"ohms":143,"Fluke stock no.":"213751"},{"ohms":144,"Fluke stock no.":"213744"},{"ohms":145,"Fluke stock no.":"213736"},{"ohms":146,"Fluke stock no.":"213728"},{"ohms":147,"Fluke stock no.":"213710"},{"ohms":148,"Fluke stock no.":"213702"},{"ohms":149,"Fluke stock no.":"213694"},{"ohms":150,"Fluke stock no.":"213686"},{"ohms":151,"Fluke stock no.":"213678"},{"ohms":152,"Fluke stock no.":"213660"},{"ohms":153,"Fluke stock no.":"213652"},{"ohms":154,"Fluke stock no.":"213645"},{"ohms":155,"Fluke stock no.":"213637"},{"ohms":156,"Fluke stock no.":"213629"},{"ohms":157,"Fluke stock no.":"213611"},{"ohms":158,"Fluke stock no.":"213603"},{"ohms":159,"Fluke stock no.":"213595"},{"ohms":160,"Fluke stock no.":"213587"},{"ohms":161,"Fluke stock no.":"213579"},{"ohms":162,"Fluke stock no.":"213561"},{"ohms":163,"Fluke stock no.":"213553"},{"ohms":164,"Fluke stock no.":"213546"},{"ohms":165,"Fluke stock no.":"213538"},{"ohms":166,"Fluke stock no.":"213520"},{"ohms":167,"Fluke stock no.":"213512"},{"ohms":168,"Fluke stock no.":"213504"},{"ohms":169,"Fluke stock no.":"213496"},{"ohms":170,"Fluke stock no.":"213488"},{"ohms":171,"Fluke stock no.":"213470"},{"ohms":172,"Fluke stock no.":"213462"},{"ohms":173,"Fluke stock no.":"213454"},{"ohms":174,"Fluke stock no.":"213447"},{"ohms":175,"Fluke stock no.":"213439"},{"ohms":176,"Fluke stock no.":"213421"},{"ohms":177,"Fluke stock no.":"213413"},{"ohms":178,"Fluke stock no.":"213405"},{"ohms":179,"Fluke stock no.":"213397"},{"ohms":180,"Fluke stock no.":"213389"},{"ohms":181,"Fluke stock no.":"213371"},{"ohms":182,"Fluke stock no.":"213363"},{"ohms":183,"Fluke stock no.":"213355"},{"ohms":184,"Fluke stock no.":"213348"},{"ohms":185,"Fluke stock no.":"213330"},{"ohms":186,"Fluke stock no.":"213322"},{"ohms":187,"Fluke stock no.":"213314"},{"ohms":188,"Fluke stock no.":"213306"},{"ohms":189,"Fluke stock no.":"213298"},{"ohms":190,"Fluke stock no.":"213280"},{"ohms":191,"Fluke stock no.":"213272"},{"ohms":192,"Fluke stock no.":"213264"},{"ohms":193,"Fluke stock no.":"213256"},{"ohms":194,"Fluke stock no.":"213249"},{"ohms":195,"Fluke stock no.":"213231"},{"ohms":196,"Fluke stock no.":"213223"},{"ohms":197,"Fluke stock no.":"213215"},{"ohms":198,"Fluke stock no.":"213207"},{"ohms":199,"Fluke stock no.":"213199"},{"ohms":200,"Fluke stock no.":"213181"},{"ohms":300,"Fluke stock no.":"227686"},{"ohms":400,"Fluke stock no.":"131698"},{"ohms":600,"Fluke stock no.":"195388"},{"ohms":600,"Fluke stock no.":"279711"},{"ohms":700,"Fluke stock no.":"279703"},{"ohms":800,"Fluke stock no.":"341701"},{"ohms":900,"Fluke stock no.":"228742"},{"ohms":1000,"Fluke stock no.":"131706"},{"ohms":1100,"Fluke stock no.":"238949"},{"ohms":1200,"Fluke stock no.":"278077"},{"ohms":1300,"Fluke stock no.":"278069"},{"ohms":1400,"Fluke stock no.":"278051"}],
+      "note": "Resistor value in ohms against Fluke stock number, for selecting R50-R53 in §4-55 step 5; sorted by value here (the errata prints four pairs per line). Every cell was checked against the errata page image (400 dpi render): the 164 ohm row prints 213546 (docs/manual/errata-issue3-1985.md has 213646, a transcription slip -- the glyph is the 5 of the 165 / 166 rows and the 2135xx sequence continues from 163 ohm 213553); 43 ohm 214769 and 103 ohm 214165 break the otherwise regular stock-number sequence but are printed so. The row for 600 ohms appears twice in the source (195388 and 279711) -- transcribed exactly as printed; one may be intended as 500 (195388 is Table 5-6's stock number for the 500 ohm R15 / R18). When adjusting the 1.0 V tap, select two resistors and add them; for the 1.018 V tap (printed '1.08V tap') measure each installed trim resistor and select only one."
+    }
+  ]
+}

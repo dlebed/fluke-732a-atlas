@@ -1,0 +1,37 @@
+# Build intermediates. Full-resolution page renders, crops and OCR tiles are
+# large and are regenerated from ../732A-manual.pdf by tools/extract_assets.sh.
+# The reader's own output (ocr_*.json) is kept for every board because
+# tesseract is not bit-for-bit reproducible and data/<asm>.coords.overrides.json
+# names its corrections against exactly those reads.
+.build/*
+!.build/a3/
+!.build/a4/
+!.build/a5/
+!.build/sys/
+.build/a3/*
+.build/a4/*
+.build/a5/*
+.build/sys/*
+!.build/*/ocr_*.json
+!.build/*/vlm_*.json
+!.build/*/review.txt
+
+__pycache__/
+
+# Machine-local Claude Code state.
+.claude.local.md
+.claude/settings.local.json
+.claude/.cc-writes/
+.claude/worktrees/
+
+# Built by tools/make_release.sh: copies of what is already tracked.
+dist/
+
+# A service record exported from the app — readings taken against one physical
+# instrument. Operator's data, not the tool's; not reproducible from here.
+test-logs/
+
+# Author Mode exports dropped in for folding into data/<asm>.coords.overrides.json.
+author-exports/
+
+.DS_Store

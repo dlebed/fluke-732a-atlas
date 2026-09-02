@@ -1,0 +1,56 @@
+{
+  "_comment": [
+    "Procedures for the A4 Regulator PCB. The manual has one field service",
+    "procedure (§4-44, the battery charger adjustment, on A3) and none for A4;",
+    "what A4 has is its two rows of Table 4-3 Internal Measurements (PDF p42),",
+    "governed by §4-51/§4-52 (PDF p40). Those rows are written here as steps,",
+    "with the manual's own reading and corrective-action words and the",
+    "measurement each step asks for. Tolerances are not printed in Table 4-3;",
+    "the ones in `measure` are the dataset's assumptions (inferred: true, see",
+    "data/a4.testpoints.json).",
+    "Step 4 points at the Front Panel / Rear Panel rows, which live on the SYS",
+    "dataset; no A4 ref is offered for them."
+  ],
+  "assembly": "A4",
+  "procedures": [
+    {
+      "id": "4-52-A4",
+      "title": "Internal voltage measurements — A4 rows of Table 4-3",
+      "source": "§4-51, §4-52 and Table 4-3 (PDF p40 and p42; manual p4-16 and p4-18)",
+      "prereq": "§4-52: 'It is assumed that the external symptoms given in Table 4-2 have been examined and that the primary circuit of the power transformer is operable. This procedure is conducted with the instrument energized, observe the previously stated WARNINGS and CAUTIONS.' Instrument energized: ac line power applied (the 32 V row needs the pre-regulator running); battery installed and BATTERY OPR switch ON, the conditions Table 4-3 marks (footnote **) on its charger rows. Top cover removed for access to A4. Meter: Multimeter A of Table 4-1 (4½-digit display, 200 mV to 200 V dc; Fluke 8050A or 8060A) — Table 4-3 footnote *.",
+      "warnings": [
+        "WARNING (§4-51): TO AVOID ELECTRICAL SHOCK HAZARD, OBSERVE THE FOLLOWING PRECAUTIONS WHILE WORKING ON THE INSIDE OF THE 732A. REMOVE ANY JEWELRY BEFORE BEGINNING TESTING. HIGH VOLTAGE AC MAY BE PRESENT DURING THE FOLLOWING TESTS, DO NOT PERFORM ALONE. EXERCISE APPROPRIATE CAUTION TO AVOID ELECTRICAL SHOCK WHEN WORKING IN OR AROUND THE VICINITY OF THE AC POWER CONNECTOR, FUSEHOLDER, AND POWER TRANSFORMER. THE BATTERY ASSEMBLY IS CAPABLE OF GENERATING EXTREMELY HIGH PEAK CURRENTS. AVOID ACCIDENTAL SHORTING OF BATTERY TERMINALS.",
+        "CAUTION (§4-51): The following tests are conducted with power applied to the instrument. To avoid instrument damage, exercise appropriate caution to avoid inadvertently shorting adjacent test points or circuit board traces with test probes or other instrument(s).",
+        "CAUTION (§4-51): To insure continued instrument performance, do not attempt to replace individual wires in the reference output wiring harness. Replace the entire harness."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "text": "Locate test points TP1, TP2 and TP3 on the A4 Regulator PCB Assembly (Figure 8-4). TP2 is COMMON (the regulated-output return, beside the ground symbol on the schematic); TP3 is the -RAW / -BATTERY bus (the regulator's negative input). TP1 is the +RAW bus, which is also the +18.6 V rail — it is positive with respect to both. Set Multimeter A to dc volts, 200 V range.",
+          "refs": ["TP1", "TP2", "TP3"]
+        },
+        {
+          "n": 2,
+          "text": "Raw input. Connect the Multimeter A low lead to TP3 and the high lead to TP1. Correct voltage reading: 32V dc (Table 4-3, A4 row 'TP1, TP3'). Corrective action if not: 'Pre-Regulator, Motherboard' — the 32 V is made by the pre-regulator on A3 (its own Table 4-3 row is TP6 vs TP4, 32 V) and reaches this board through the mother board A2 at P2-13/14 (+RAW) and P2-23/24 (-RAW). On A4 only the reservoir C1 and the battery diode CR15 sit on this bus. Note: with ac power off the bus is the battery voltage less the CR15 drop, about 24 to 31 V, not 32 V.",
+          "refs": ["TP1", "TP3", "C1", "CR15"],
+          "measure": [
+            { "point": "TP1", "ref": "TP3", "nominal": 32, "tolerance": 1.6, "unit": "V", "inferred": true, "source": "Table 4-3 (PDF p42): 32V dc; ±5 % assumed" }
+          ]
+        },
+        {
+          "n": 3,
+          "text": "Regulator output. Move the Multimeter A low lead to TP2 (COMMON), high lead still on TP1. Correct voltage reading: ≈18.5V dc (Table 4-3, A4 row 'TP1, TP2'; the schematic and Figure 8-1 letter this rail 18.6 V). Corrective action if not: 'Regulator' — the series-pass regulator Q1, Q2, Q3, Q4 (§3-13): the CR2 reference with C2 and its bias CR12, the Q1/Q2 error amplifier, CR14 into the Q3/Q4 pass pair, R12 and the DS1 drive clamp, and the R22 adjustment on the sense divider. With the input (step 2) correct: a reading well above 18.6 V, toward 32 V, means Q4 is being driven fully on and pulls COMMON down to -RAW (the error amplifier sees too little output — the R22 wiper / R6 path to the Q1 base open so Q1 is off, or Q2 or Q3 shorted; an open reference — CR2 or CR12 — takes the drive away and gives the low reading instead); a reading near 0 V means the pass pair is not conducting (no drive through Q2/CR14/Q3, Q4 open, or a shorted C2 or C4 turning Q1 hard on) or the output is shorted to +RAW, so the load pulls COMMON up to the +RAW bus.",
+          "refs": ["TP1", "TP2", "Q1", "Q2", "Q3", "Q4", "CR2", "CR12", "CR14", "R12", "DS1", "R22", "C9"],
+          "measure": [
+            { "point": "TP1", "ref": "TP2", "nominal": 18.5, "tolerance": 0.5, "unit": "V", "inferred": true, "source": "Table 4-3 (PDF p42): ≈18.5V dc; ±0.5 V assumed. Schematic 732A-1002 and Figure 8-1: 18.6V" }
+          ]
+        },
+        {
+          "n": 4,
+          "text": "If both readings are correct the fault is not in the A4 regulator. Continue with the remaining rows of Table 4-3 on the System view: Front Panel 10V, 1V and 1.018V outputs against COM (10.00000, 1.000000, 1.018000 V dc — Oven, Reference Supply, Output Divider) and Rear Panel EXT. PWR ≥ 24 V dc (Battery). If the IN CAL indicator is out with both A4 readings correct, the voltage monitor and latch (Q8, Q5, Q7, Q6) are the suspects; restore the indicator as in Procedure A step 19 (§4-37, PDF p34) or Procedure B step 34 (§4-39, PDF p37–38) — a short wire from one of the front panel COMMON terminals touched momentarily to the circuit board behind the RESET hole — once standardization has been verified.",
+          "refs": ["Q8", "Q5", "Q7", "Q6"]
+        }
+      ]
+    }
+  ]
+}

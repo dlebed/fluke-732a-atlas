@@ -1,0 +1,55 @@
+{
+  "_comment": [
+    "Identity and image assets of the A3 Pre-Regulator PCB Assembly. Hand-written;",
+    "assemble.py copies it into data/a3.js. Page numbers are PDF pages of",
+    "732A-manual.pdf (P/N 645051, May 1983) with the printed manual page after them.",
+    "The revision letter comes from Appendix 7A, which lists the assembly revision",
+    "levels this manual documents; see manual-text/06-07-accessories-general.md."
+  ],
+  "id": "A3",
+  "name": "Pre-Regulator PCB Assembly",
+  "pca": "642264",
+  "pcb": "732A-1003",
+  "drawingNo": "732A-4003",
+  "rev": "B",
+  "refs": {
+    "locator": "Figure 8-3 (732A-1603), p88 / 8-6; also Figure 5-4, p56 / 5-14",
+    "schematic": "Figure 8-3 cont. (732A-1003), p89 / 8-7",
+    "parts": "Table 5-4, p54-55 / 5-12-5-13",
+    "theory": "§3-10 Power Supply (A3 and A4), §3-25 Battery Charger, p21-22 / 3-1-3-2",
+    "troubleshooting": "§4-44 Battery Charger Adjustment, Table 4-3 Internal Measurements, Figure 4-12, p38-42 / 4-14-4-18"
+  },
+  "layers": [
+    {
+      "id": "drawing",
+      "label": "Board drawing",
+      "src": "assets/a3/drawing.png",
+      "credit": "Figure 8-3, 732A Instruction Manual (732A-1603), cropped to the PCB outline",
+      "transform": "identity"
+    }
+  ],
+  "schematics": [
+    {
+      "id": "sh1",
+      "title": "Pre-Regulator PCB schematic",
+      "src": "assets/a3/sch1.png",
+      "figure": "8-3 (cont), 732A-1003"
+    },
+    {
+      "id": "sh2",
+      "title": "Interconnect diagram (simplified)",
+      "src": "assets/sys/drawing.png",
+      "figure": "8-1, 732A-1301",
+      "shared": true,
+      "note": "Figure 8-1 is a simplified system diagram: it draws only the parts that take part in the interconnect and omits the rest of the board."
+    },
+    {
+      "id": "sh3",
+      "title": "Motherboard, battery module and LED PCB",
+      "src": "assets/sys/sch1.png",
+      "figure": "8-2 (cont), 732A-1004 / -1005 / -1006",
+      "shared": true
+    }
+  ],
+  "revSource": "Table 7A-1 (PDF p82): the PCB revision level this manual documents; later revisions are in manual-text/errata-issue3-1985.md"
+}
