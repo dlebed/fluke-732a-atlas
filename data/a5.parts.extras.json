@@ -311,6 +311,26 @@
    "ref": "R8",
    "laterFluke": "715706",
    "notes": "Later stock no. 715706 (same part, RES, REF. AMP DIVIDER SET) -- Errata Issue 3 (7/85), Change #8. The 1983 table prints 346304."
+  },
+  {
+   "ref": "R44",
+   "laterFluke": "751917",
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.0V, 751917 (R44/R46) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652784. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55)."
+  },
+  {
+   "ref": "R46",
+   "laterFluke": "751917",
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.0V, 751917 (R44/R46) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652784. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55)."
+  },
+  {
+   "ref": "R45",
+   "laterFluke": "751925",
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.018V, 751925 (R45/R47) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652792. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55)."
+  },
+  {
+   "ref": "R47",
+   "laterFluke": "751925",
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.018V, 751925 (R45/R47) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652792. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55)."
   }
  ]
 }

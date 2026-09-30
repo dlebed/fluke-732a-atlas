@@ -209,8 +209,8 @@ BoardExplorer.register({
  ],
  "caveats": [
   {
-   "title": "CR2 / CR4: the reference zener's designator and value disagree between sources",
-   "text": "Table 5-5 (PDF p58) lists CR4 — DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571 (Fluke 330829) — and no CR2. The schematic 732A-1002 draws CR2 as the circled reference zener beside C2 at the Q1/Q2 emitters and its REF DES table says CR4 (with CR5 and CR11) is not used; the board drawing (Figure 8-4) prints CR2 and no CR4. So the part Table 5-5 calls CR4 is CR2 on the board and schematic; this dataset carries both designators for the one part — CR4 as the Table 5-5 row (with its stock number) and CR2 (aliases CR4, VR2) as the printed designator the markers use. The 7/85 errata, Change #2 (Rev C, A4 732A-4002), then renames CR1, CR2, CR9 to VR1, VR2, VR9 — all 1N5240 (uncompensated; the 10 V is the 1N5240 data-sheet value, the manual prints none), quantity 3 — without touching the 1N4571 line, so on a Rev C board the reference may be a 1N5240 and the 6.4 V part is unexplained by the drawing. Do not order by designator alone: read the marking on the fitted part. The circuit works with either a 6.4 V CR2 and 10 V CR9 or the reverse, so the arithmetic does not settle it.",
+   "title": "CR2 / CR4 / VR2: the reference zener's designator differs between sources; it is a 1N4571",
+   "text": "Table 5-5 (PDF p58) lists CR4 — DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571 (Fluke 330829) — and no CR2. The schematic 732A-1002 draws CR2 as the circled reference zener beside C2 at the Q1/Q2 emitters and its REF DES table says CR4 (with CR5 and CR11) is not used; the board drawing (Figure 8-4) prints CR2 and no CR4. So the part Table 5-5 calls CR4 is CR2 on the board and schematic; this dataset carries both designators for the one part — CR4 as the Table 5-5 row (with its stock number) and CR2 (aliases CR4, VR2) as the printed designator the markers use. The 7/85 errata, Change #2 (Rev C, A4 732A-4002), then renames CR1, CR2, CR9 to VR1, VR2, VR9 — all 1N5240 (uncompensated; the 10 V is the 1N5240 data-sheet value, the manual prints none), quantity 3 — without touching the 1N4571 line. The May 1986 manual's Table 5-5 (PDF p60) settles it: VR1 and VR9 are 1N5240 (473744, 10 V), and VR2 is * ZENER, COMP, 6.4V, 5%, 5 PPM TC, 1.0MA — 1N4571, Fluke 330829, qty 1; there is no CR4 row. So CR2 on the 1983 drawings is the 6.4 V temperature-compensated 1N4571 and C2 sits across about 6.4 V; the errata's 'all 1N5240' is wrong for VR2. The designators here stay CR2/CR4 because the 1983 drawings (the clearer scans) print CR2.",
    "refs": [
     "CR2",
     "CR4",
@@ -218,7 +218,7 @@ BoardExplorer.register({
     "CR9",
     "C2"
    ],
-   "source": "Table 5-5 (PDF p58); schematic 732A-1002 REF DES table (PDF p91); Figure 8-4 (PDF p90); Errata Change #2; docs/review-notes.md"
+   "source": "Table 5-5 (PDF p58); schematic 732A-1002 REF DES table (PDF p91); Figure 8-4 (PDF p90); Errata Change #2; May 1986 manual Table 5-5 (PDF p60); docs/review-notes.md"
   },
   {
    "title": "CR5 is drawn and listed but the sheet's REF DES table says 'not used'",
@@ -838,13 +838,13 @@ BoardExplorer.register({
    "mfrCode": "07910",
    "mfrPart": "1N5240",
    "qty": "2",
-   "notes": "1; VR1 from Rev C (Errata Change #2)",
+   "notes": "1; VR1 from Rev C (Errata Change #2); the May 1986 Table 5-5 lists VR1 as 1N5240 (473744)",
    "page": 58,
    "src": "Table 5-5",
    "aliases": [
     "VR1"
    ],
-   "function": "Zener (1N5240; VR1 from Rev C, Errata Change #2) from +18.6 V, biased by current-regulator diode CR10 to -RAW; CR3 clamps the R8/R9 divider junction to its anode node (traced).",
+   "function": "Zener (1N5240, 10 V; VR1 from Rev C, Errata Change #2; confirmed by the May 1986 Table 5-5) from +18.6 V, biased by current-regulator diode CR10 to -RAW; CR3 clamps the R8/R9 divider junction to its anode node (traced).",
    "board": {
     "x": 0.40278,
     "y": 0.34385,
@@ -907,10 +907,10 @@ BoardExplorer.register({
    "mfrCode": "07910",
    "mfrPart": "1N4571",
    "qty": "1",
-   "notes": "1; not printed on the board drawing or schematic, which letter this 6.4 V reference zener CR2 (see CR2 and the CR2/CR4 caveat)",
+   "notes": "1; not printed on the board drawing or schematic, which letter this 6.4 V reference zener CR2; the May 1986 Table 5-5 lists it as VR2 (see CR2 and the CR2/CR4 caveat)",
    "page": 58,
    "src": "Table 5-5",
-   "function": "Table 5-5's row for the reference zener (DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571). Not printed on the board drawing or schematic, which letter this part CR2 — the same physical part as CR2 in this dataset; see CR2 and the CR2/CR4 caveat.",
+   "function": "Table 5-5's row for the reference zener (DIODE, ZEN, COMP, ±5%, 6.4V, 1 MA, 1N4571). Not printed on the board drawing or schematic, which letter this part CR2 — the same physical part as CR2 in this dataset; the May 1986 Table 5-5 lists it as VR2. See CR2 and the CR2/CR4 caveat.",
    "notOnDrawing": true
   },
   {
@@ -1050,13 +1050,13 @@ BoardExplorer.register({
    "mfrCode": "07910",
    "mfrPart": "1N5240",
    "qtyRef": true,
-   "notes": "VR9 from Rev C (Errata Change #2)",
+   "notes": "VR9 from Rev C (Errata Change #2); the May 1986 Table 5-5 lists VR9 as 1N5240 (473744)",
    "page": 58,
    "src": "Table 5-5",
    "aliases": [
     "VR9"
    ],
-   "function": "Zener (1N5240; VR9 from Rev C, Errata Change #2) at the bottom of the output-sense divider, to COMMON (traced).",
+   "function": "Zener (1N5240, 10 V; VR9 from Rev C, Errata Change #2; confirmed by the May 1986 Table 5-5) at the bottom of the output-sense divider, to COMMON (traced).",
    "board": {
     "x": 0.69333,
     "y": 0.35552,
@@ -2696,14 +2696,19 @@ BoardExplorer.register({
   {
    "ref": "CR2",
    "kind": "zener",
-   "desc": "Zener drawn on the board and schematic beside C2 (82 uF) at the Q1/Q2 error amplifier; not in Table 5-5, which lists CR4 (1N4571, 6.4 V) instead; VR2 (1N5240) from Rev C per the 7/85 errata",
-   "src": "Figure 8-4, errata Change #2",
-   "notInParts": true,
+   "desc": "ZENER, COMP, 6.4V, 5%, 5 PPM TC, 1.0MA",
+   "fluke": "330829",
+   "mfrCode": "07910",
+   "mfrPart": "1N4571",
+   "qty": "1",
+   "recQty": "1",
+   "notes": "Reference zener beside C2 (82 uF) at the Q1/Q2 error amplifier. Row from the May 1986 manual's Table 5-5, where it is VR2; the 1983 table lists the same part (same stock number) as CR4, the 7/85 errata's 'all 1N5240' for VR2 is superseded",
+   "src": "Table 5-5 of the May 1986 manual (VR2, PDF p60); Figure 8-4",
    "aliases": [
     "CR4",
     "VR2"
    ],
-   "function": "The Regulator's voltage reference — the circled zener beside C2 at the Q1/Q2 emitters, from +18.6 V, with C2 across it and current-regulator diode CR12 as its constant-current bias to COMMON (§3-13; traced). Its value is in doubt: Table 5-5 has no CR2 and lists CR4, a 6.4 V 1N4571 temperature-compensated zener that the drawings do not print; the 7/85 errata (Rev C) renames CR2 to VR2 as a 1N5240. The parts list carries the Table 5-5 row as CR4 and the drawing's CR2 (aliases CR4, VR2) beside it — one physical part; see the caveat.",
+   "function": "The Regulator's voltage reference — the circled zener beside C2 at the Q1/Q2 emitters, from +18.6 V, with C2 across it and current-regulator diode CR12 as its constant-current bias to COMMON (§3-13; traced). It is a 1N4571: ZENER, COMP, 6.4 V, ±5%, 5 ppm/°C, at 1.0 mA (Fluke 330829) — the May 1986 manual's Table 5-5 row VR2, the same stock number the 1983 table lists as CR4. So C2 sits across about 6.4 V. The 1983 parts list carries the part as CR4 and the drawings as CR2 (aliases CR4, VR2) — one physical part; see the caveat.",
    "board": {
     "x": 0.69278,
     "y": 0.4,

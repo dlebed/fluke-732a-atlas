@@ -27,6 +27,8 @@ what was found. Findings that affect the data are carried into the relevant
   beside C2 (82 µF) at the Q1/Q2 error amplifier and says CR4, CR5 and CR11
   are not used; the board drawing prints CR2 (in the CR6..CR9 column) and no
   CR4. So the part the parts list calls CR4 is CR2 on the board and schematic.
+  The May 1986 manual (`../Fluke_732A_AN_Instruction_Manual_May1986.pdf`) settles
+  its value -- see *A4 Rev C* below.
 - **A4 CR5.** The schematic's REF DESIG table says CR5 is not used, yet the
   sheet draws CR5 (diode in series with R4 9.53 kΩ at the top) and the parts
   list carries CR5 (1N4448, REF). The table is wrong, not the drawing.
@@ -124,9 +126,18 @@ separate 18-page PDF). Items that alter the atlas data:
   also confirms **CR23** on the A3 schematic and shows CR28 (".47 mA"), CR22
   and CR10 ("1 mA") as current-regulator diodes.
 - **A4 Rev C** (Change #2): CR1, CR2, CR9 → VR1, VR2, VR9, all 1N5240 (qty 3).
-  So the board's CR2 is a 1N5240 zener; the 1983 parts list's CR4 (1N4571,
-  6.4 V) is not renamed and stays unexplained by the drawing. Record as a
-  caveat; do not guess.
+  Read literally that made CR2 a 1N5240 and left the 1983 table's CR4 (1N4571,
+  6.4 V) unexplained. **Superseded for VR2 by the May 1986 manual**, Table 5-5
+  (A4 Regulator PCA), PDF p60, read by eye at 300 dpi (2026-09-30):
+
+      VR  1  * ZENER,UNCOMP, 10.0V, 5%, 20.0MA, 0.5W   473744 07910 1N5240  1 1
+      VR  2  * ZENER,COMP, 6.4V, 5%, 5 PPM TC, 1.0MA   330829 07910 1N4571  1 1
+      VR  9  * ZENER,UNCOMP, 10.0V, 5%, 20.0MA, 0.5W   473744 07910 1N5240  1 1
+
+  and no CR1, CR2, CR4 or CR9 row. So CR2 (the drawings' designator, kept) is
+  the 1N4571 6.4 V temperature-compensated reference and C2 sits across about
+  6.4 V; the 1983 table's CR4 is the same part. CR1 and CR9 are 1N5240. The
+  1983 scans stay the drawing source: the 1986 schematics are poorer copies.
 - **A4 Errata #4**: Figure 8-4 latch circuit redrawn; the pin list now reads
   16 = +BRIDGE, **12 = +18.6V** (the 1983 sheet prints P2-12 as NC), 18 = IN
   CAL LED, 20 = COMMON.

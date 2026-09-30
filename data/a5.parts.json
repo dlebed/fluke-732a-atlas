@@ -1331,11 +1331,12 @@
    "qty": "1",
    "qtyRef": false,
    "recQty": null,
-   "notes": null,
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.0V, 751917 (R44/R46) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652784. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55).",
    "esd": false,
    "star": true,
    "page": 61,
-   "src": "Table 5-6"
+   "src": "Table 5-6",
+   "laterFluke": "751917"
   },
   {
    "ref": "R45",
@@ -1347,11 +1348,12 @@
    "qty": "1",
    "qtyRef": false,
    "recQty": null,
-   "notes": null,
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.018V, 751925 (R45/R47) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652792. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55).",
    "esd": false,
    "star": true,
    "page": 61,
-   "src": "Table 5-6"
+   "src": "Table 5-6",
+   "laterFluke": "751925"
   },
   {
    "ref": "R46",
@@ -1363,11 +1365,12 @@
    "qty": null,
    "qtyRef": true,
    "recQty": null,
-   "notes": null,
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.0V, 751917 (R44/R46) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652784. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55).",
    "esd": false,
    "star": true,
    "page": 61,
-   "src": "Table 5-6"
+   "src": "Table 5-6",
+   "laterFluke": "751917"
   },
   {
    "ref": "R47",
@@ -1379,11 +1382,12 @@
    "qty": null,
    "qtyRef": true,
    "recQty": null,
-   "notes": null,
+   "notes": "From Rev E: MATCHED RESISTOR SET, 1.018V, 751925 (R45/R47) on the A5A8 piggyback PCB -- Errata Issue 3 (7/85), Change #9. The 1983 table prints set 652792. Field repairable, but the trim resistors must be reselected (Errata #13, section 4-55).",
    "esd": false,
    "star": true,
    "page": 61,
-   "src": "Table 5-6"
+   "src": "Table 5-6",
+   "laterFluke": "751925"
   },
   {
    "ref": "R48",

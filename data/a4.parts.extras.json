@@ -1,16 +1,18 @@
 {
   "_comment": [
-    "Items lettered on the A4 drawing or schematic with no row in Table 5-5. CR2 is the",
-    "reference zener the drawing and schematic print where the parts list has CR4 (1N4571,",
-    "6.4 V); the 7/85 errata renames CR2 to VR2 (1N5240). See docs/review-notes.md."
+    "Items lettered on the A4 drawing or schematic with no row in the 1983 Table 5-5. CR2 is",
+    "the reference zener the drawing and schematic print where the 1983 parts list has CR4;",
+    "its stock number and value are the May 1986 manual's Table 5-5 row VR2 (1N4571, 6.4 V,",
+    "Fluke 330829), which settles the 7/85 errata's 'VR1, VR2, VR9 all 1N5240'. Kept as CR2",
+    "to match the 1983 drawings. See docs/review-notes.md."
   ],
   "components": [
     { "ref": "P2", "kind": "connector", "desc": "Edge connector, 27 contacts, mates A2 J2 (motherboard)", "src": "Figure 8-4 / 8-1", "notInParts": true },
-    { "ref": "CR2", "kind": "zener", "desc": "Zener drawn on the board and schematic beside C2 (82 uF) at the Q1/Q2 error amplifier; not in Table 5-5, which lists CR4 (1N4571, 6.4 V) instead; VR2 (1N5240) from Rev C per the 7/85 errata", "src": "Figure 8-4, errata Change #2", "notInParts": true, "aliases": ["CR4", "VR2"] }
+    { "ref": "CR2", "kind": "zener", "desc": "ZENER, COMP, 6.4V, 5%, 5 PPM TC, 1.0MA", "fluke": "330829", "mfrCode": "07910", "mfrPart": "1N4571", "qty": "1", "recQty": "1", "notes": "Reference zener beside C2 (82 uF) at the Q1/Q2 error amplifier. Row from the May 1986 manual's Table 5-5, where it is VR2; the 1983 table lists the same part (same stock number) as CR4, the 7/85 errata's 'all 1N5240' for VR2 is superseded", "src": "Table 5-5 of the May 1986 manual (VR2, PDF p60); Figure 8-4", "notInParts": false, "aliases": ["CR4", "VR2"] }
   ],
   "amend": [
-    { "ref": "CR1", "aliases": ["VR1"], "notes": "VR1 from Rev C (Errata Change #2)" },
-    { "ref": "CR9", "aliases": ["VR9"], "notes": "VR9 from Rev C (Errata Change #2)" },
-    { "ref": "CR4", "notes": "not printed on the board drawing or schematic, which letter this 6.4 V reference zener CR2 (see CR2 and the CR2/CR4 caveat)" }
+    { "ref": "CR1", "aliases": ["VR1"], "notes": "VR1 from Rev C (Errata Change #2); the May 1986 Table 5-5 lists VR1 as 1N5240 (473744)" },
+    { "ref": "CR9", "aliases": ["VR9"], "notes": "VR9 from Rev C (Errata Change #2); the May 1986 Table 5-5 lists VR9 as 1N5240 (473744)" },
+    { "ref": "CR4", "notes": "not printed on the board drawing or schematic, which letter this 6.4 V reference zener CR2; the May 1986 Table 5-5 lists it as VR2 (see CR2 and the CR2/CR4 caveat)" }
   ]
 }
